@@ -58,6 +58,11 @@ test("documents the local and git version boundary", async () => {
   assert.match(page, /setDrawerOpen\(true\)/);
   assert.match(page, /selectedLayers/);
   assert.match(page, /selectedStages/);
+  assert.match(page, /selectedLocations/);
+  assert.match(page, /縣市/);
+  assert.match(page, /對應縣市/);
+  assert.match(page, /台北市/);
+  assert.match(page, /待逐案整理/);
   assert.match(page, /selectionSummary/);
   assert.match(page, /關閉/);
   assert.match(page, /查核摘要/);
@@ -107,7 +112,7 @@ test("uses dropdown multiselect filters", async () => {
   assert.match(page, /<details className="select-menu">/);
   assert.match(page, /className="stage-option"/);
   assert.match(page, /type="checkbox"/);
-  assert.match(css, /\.filter-grid/);
+  assert.match(css, /\.filter-grid\s*\{[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
   assert.match(css, /\.select-options/);
   assert.match(css, /\.stage-option/);
   assert.doesNotMatch(css, /position: sticky/);

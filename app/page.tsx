@@ -58,6 +58,7 @@ const flows = [
     source: "行政院跨部會科技預算",
     actors: ["運動部/前體育署", "國科會", "經濟部", "地方政府", "學研單位"],
     associations: ["棒球", "羽球", "桌球", "自由車", "游泳", "田徑"],
+    locations: ["全國/跨縣市", "待逐案整理"],
     stage: "executing" as Stage,
     layer: "central" as Layer,
     publicness: "政策總額明確，逐年逐案流向仍需對帳。",
@@ -76,6 +77,7 @@ const flows = [
     source: "科技部/國科會科研預算",
     actors: ["大學研究團隊", "國家隊支援系統", "國家運動科學中心"],
     associations: ["羽球", "桌球", "棒球", "舉重", "自由車"],
+    locations: ["全國/跨縣市"],
     stage: "verified" as Stage,
     layer: "research" as Layer,
     publicness: "歷史專案與成果可辨識，但分年支出仍需細表。",
@@ -94,6 +96,7 @@ const flows = [
     source: "運動部公務預算 + 地方配合款",
     actors: ["14 縣市", "場館營運者", "科技廠商", "地方體育局"],
     associations: ["游泳", "田徑", "棒球", "全民運動"],
+    locations: ["台北市", "新北市", "桃園市", "嘉義市", "高雄市", "待逐案整理"],
     stage: "executing" as Stage,
     layer: "local" as Layer,
     publicness: "案件數可辨識，逐案決標、驗收、維運需另查。",
@@ -112,6 +115,7 @@ const flows = [
     source: "運動發展基金",
     actors: ["運動產業", "新創團隊", "法人", "地方政府"],
     associations: ["依合作案而定"],
+    locations: ["全國/跨縣市", "待逐案整理"],
     stage: "executing" as Stage,
     layer: "industry" as Layer,
     publicness: "年度科目可辨識，受補助名單與成果需逐案整理。",
@@ -130,6 +134,7 @@ const flows = [
     source: "體育署/運動部年度公務預算",
     actors: ["地方政府", "學校", "委辦團隊", "場域夥伴"],
     associations: ["依場域而定"],
+    locations: ["全國/跨縣市", "待逐案整理"],
     stage: "verified" as Stage,
     layer: "central" as Layer,
     publicness: "科目案例清楚，但非所有運動科技經費總額。",
@@ -148,6 +153,7 @@ const flows = [
     source: "爭取 115 年度國科會科技預算",
     actors: ["國科會", "運動部", "天母棒球場經驗模型", "縣市場館"],
     associations: ["棒球"],
+    locations: ["台北市", "待擴散縣市"],
     stage: "proposal" as Stage,
     layer: "research" as Layer,
     publicness: "目前宜列提案/爭取，不宜寫成已全面執行。",
@@ -166,6 +172,7 @@ const flows = [
     source: "運動部產業與科技相關預算",
     actors: ["陽明交通大學 IAPS", "新創團隊", "國際市場夥伴"],
     associations: ["依場域測試而定"],
+    locations: ["全國/跨縣市", "待逐案整理"],
     stage: "executing" as Stage,
     layer: "industry" as Layer,
     publicness: "活動與成果可見，完整成本拆分仍待公開。",
@@ -184,6 +191,7 @@ const flows = [
     source: "大學/研究中心/國科會/運動部計畫轉介",
     actors: ["單項協會", "教練", "選手", "研究團隊"],
     associations: ["棒球", "羽球", "桌球", "舉重", "自由車"],
+    locations: ["全國/跨縣市", "待逐案整理"],
     stage: "unknown" as Stage,
     layer: "association" as Layer,
     publicness: "需逐案釐清協會是受補助者、合作方或應用場域。",
@@ -204,6 +212,13 @@ const stageOrder: Stage[] = [
   "unknown",
 ];
 
+const locationNames: Record<string, string> = Object.fromEntries(
+  Array.from(new Set(flows.flatMap((flow) => flow.locations))).map((location) => [
+    location,
+    location,
+  ]),
+);
+
 function selectionSummary<T extends string>(
   selected: T[],
   labels: Record<T, string>,
@@ -217,6 +232,7 @@ function selectionSummary<T extends string>(
 export default function Home() {
   const [selectedLayers, setSelectedLayers] = useState<Layer[]>([]);
   const [selectedStages, setSelectedStages] = useState<Stage[]>([]);
+  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
   const [activeFlow, setActiveFlow] = useState(flows[0].id);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -227,9 +243,12 @@ export default function Home() {
           selectedLayers.length === 0 || selectedLayers.includes(flow.layer);
         const stageMatch =
           selectedStages.length === 0 || selectedStages.includes(flow.stage);
-        return layerMatch && stageMatch;
+        const locationMatch =
+          selectedLocations.length === 0 ||
+          flow.locations.some((location) => selectedLocations.includes(location));
+        return layerMatch && stageMatch && locationMatch;
       }),
-    [selectedLayers, selectedStages],
+    [selectedLayers, selectedLocations, selectedStages],
   );
 
   const active =
@@ -341,6 +360,43 @@ export default function Home() {
                   ))}
                 </div>
               </details>
+
+              <details className="select-menu">
+                <summary>
+                  <span>縣市</span>
+                  <strong>{selectionSummary(selectedLocations, locationNames)}</strong>
+                </summary>
+                <div className="select-options">
+                  <label>
+                    <input
+                      checked={selectedLocations.length === 0}
+                      onChange={() => {
+                        setSelectedLocations([]);
+                        setDrawerOpen(false);
+                      }}
+                      type="checkbox"
+                    />
+                    <span>全部</span>
+                  </label>
+                  {Object.keys(locationNames).map((location) => (
+                    <label key={location}>
+                      <input
+                        checked={selectedLocations.includes(location)}
+                        onChange={() => {
+                          setSelectedLocations((current) =>
+                            current.includes(location)
+                              ? current.filter((item) => item !== location)
+                              : [...current, location],
+                          );
+                          setDrawerOpen(false);
+                        }}
+                        type="checkbox"
+                      />
+                      <span>{location}</span>
+                    </label>
+                  ))}
+                </div>
+              </details>
             </div>
 
             <span className="control-label">圖例</span>
@@ -435,6 +491,14 @@ export default function Home() {
                     <ul className="inline-list">
                       {active.associations.map((association) => (
                         <li key={association}>{association}</li>
+                      ))}
+                    </ul>
+                  </section>
+                  <section>
+                    <h3>對應縣市</h3>
+                    <ul className="inline-list">
+                      {active.locations.map((location) => (
+                        <li key={location}>{location}</li>
                       ))}
                     </ul>
                   </section>
