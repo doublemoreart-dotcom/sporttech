@@ -299,16 +299,18 @@ h1 {
 }
 
 .legend {
-  display: grid;
-  gap: 8px;
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
 }
 
 .legend-row {
   align-items: center;
-  display: grid;
-  gap: 8px;
-  grid-template-columns: 12px 1fr;
+  display: inline-flex;
+  gap: 7px;
   line-height: 1.45;
+  white-space: nowrap;
 }
 
 .lane-map {
