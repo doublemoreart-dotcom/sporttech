@@ -104,6 +104,8 @@ test("uses dropdown multiselect filters", async () => {
   assert.match(css, /\.filter-grid/);
   assert.match(css, /\.select-options/);
   assert.match(css, /\.stage-option/);
+  assert.match(css, /\.workbench > \.panel\s*\{[\s\S]*position: sticky/);
+  assert.match(css, /\.workbench > \.panel\s*\{[\s\S]*top: 12px/);
   assert.doesNotMatch(page, /chip-row|className=\{selectedLayer|className=\{selectedStage/);
   assert.doesNotMatch(css, /\.chip\b|\.chip-row/);
 });
