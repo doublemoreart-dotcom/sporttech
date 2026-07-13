@@ -1,0 +1,61 @@
+import assert from "node:assert/strict";
+import { access, readFile } from "node:fs/promises";
+import test from "node:test";
+
+async function render() {
+  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
+  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
+  const { default: worker } = await import(workerUrl.href);
+
+  return worker.fetch(
+    new Request("http://localhost/", {
+      headers: { accept: "text/html" },
+    }),
+    {
+      ASSETS: {
+        fetch: async () => new Response("Not found", { status: 404 }),
+      },
+    },
+    {
+      waitUntil() {},
+      passThroughOnException() {},
+    },
+  );
+}
+
+test("server-renders the sporttech budget map", async () => {
+  const response = await render();
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
+
+  const html = await response.text();
+  assert.match(html, /2022-2026 運動科技預算流向地圖/);
+  assert.match(html, /運動科技預算流向地圖/);
+  assert.match(html, /協會通常不是科技預算的第一手承接者/);
+  assert.match(html, /14 縣市 \/ 30 案/);
+  assert.match(html, /公開程度提示/);
+  assert.match(html, /台灣運動 x 科技行動計畫/);
+  assert.match(html, /精準運動科學研究專案/);
+  assert.match(html, /Git 版控版/);
+  assert.doesNotMatch(html, /Your site is taking shape|Codex is working|react-loading-skeleton/i);
+});
+
+test("documents the local and git version boundary", async () => {
+  const [page, layout, readme] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../README.md", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(page, /本機版/);
+  assert.match(page, /Git 版控版/);
+  assert.match(page, /交付版/);
+  assert.match(layout, /lang="zh-Hant"/);
+  assert.match(readme, /## 網站架構/);
+  assert.match(readme, /## 本機版/);
+  assert.match(readme, /## Git 版控版/);
+  assert.match(readme, /## 交付版/);
+  assert.doesNotMatch(page, /_sites-preview|SkeletonPreview|codex-preview/);
+
+  await assert.rejects(access(new URL("../app/_sites-preview/SkeletonPreview.tsx", import.meta.url)));
+});
