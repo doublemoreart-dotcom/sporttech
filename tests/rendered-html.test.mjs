@@ -33,10 +33,6 @@ test("server-renders the sporttech budget map", async () => {
   assert.match(html, /運動科技預算流向地圖/);
   assert.match(html, /協會通常不是科技預算的第一手承接者/);
   assert.match(html, /14 縣市 \/ 30 案/);
-  assert.match(html, /查核摘要/);
-  assert.match(html, /展開完整資料/);
-  assert.match(html, /補充判斷/);
-  assert.match(html, /下一步問法/);
   assert.match(html, /台灣運動 x 科技行動計畫/);
   assert.match(html, /精準運動科學研究專案/);
   assert.match(html, /版號/);
@@ -57,7 +53,14 @@ test("documents the local and git version boundary", async () => {
   assert.match(page, /版號/);
   assert.match(page, /v0\.2\.0/);
   assert.match(page, /更新日期/);
+  assert.match(page, /drawerOpen/);
+  assert.match(page, /setDrawerOpen\(true\)/);
+  assert.match(page, /關閉/);
+  assert.match(page, /查核摘要/);
+  assert.match(page, /補充判斷/);
+  assert.match(page, /下一步問法/);
   assert.doesNotMatch(page, /<h2>本機版<\/h2>|<h2>Git 版控版<\/h2>|<h2>交付版<\/h2>/);
+  assert.doesNotMatch(page, /<details|展開完整資料/);
   assert.match(layout, /lang="zh-Hant"/);
   assert.match(readme, /## 網站架構/);
   assert.match(readme, /## 本機版/);
@@ -73,5 +76,13 @@ test("keeps the workbench and lane cards vertically sequenced", async () => {
 
   assert.match(css, /\.workbench\s*\{[\s\S]*grid-template-columns: minmax\(0, 1fr\)/);
   assert.match(css, /grid-template-areas:\s*"dot year"\s*"\. title"\s*"\. amount"/);
-  assert.match(css, /\.detail-panel\s*\{[\s\S]*min-height: 0/);
+});
+
+test("uses a bottom drawer for detail reading", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(css, /\.drawer-panel\s*\{[\s\S]*height: 70vh/);
+  assert.match(css, /\.drawer-scroll\s*\{[\s\S]*overflow: auto/);
+  assert.match(css, /@keyframes drawer-rise/);
+  assert.doesNotMatch(css, /detail-disclosure/);
 });

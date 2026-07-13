@@ -163,6 +163,7 @@ export default function Home() {
   const [selectedLayer, setSelectedLayer] = useState<Layer | "all">("all");
   const [selectedStage, setSelectedStage] = useState<Stage | "all">("all");
   const [activeFlow, setActiveFlow] = useState(flows[0].id);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const filtered = useMemo(
     () =>
@@ -212,7 +213,10 @@ export default function Home() {
             <div className="chip-row">
               <button
                 className={selectedLayer === "all" ? "chip active" : "chip"}
-                onClick={() => setSelectedLayer("all")}
+                onClick={() => {
+                  setSelectedLayer("all");
+                  setDrawerOpen(false);
+                }}
               >
                 全部
               </button>
@@ -220,7 +224,10 @@ export default function Home() {
                 <button
                   className={selectedLayer === layer ? "chip active" : "chip"}
                   key={layer}
-                  onClick={() => setSelectedLayer(layer)}
+                  onClick={() => {
+                    setSelectedLayer(layer);
+                    setDrawerOpen(false);
+                  }}
                 >
                   {layerNames[layer]}
                 </button>
@@ -231,7 +238,10 @@ export default function Home() {
             <div className="chip-row">
               <button
                 className={selectedStage === "all" ? "chip active" : "chip"}
-                onClick={() => setSelectedStage("all")}
+                onClick={() => {
+                  setSelectedStage("all");
+                  setDrawerOpen(false);
+                }}
               >
                 全部
               </button>
@@ -239,7 +249,10 @@ export default function Home() {
                 <button
                   className={selectedStage === stage ? "chip active" : "chip"}
                   key={stage}
-                  onClick={() => setSelectedStage(stage)}
+                  onClick={() => {
+                    setSelectedStage(stage);
+                    setDrawerOpen(false);
+                  }}
                 >
                   {stages[stage]}
                 </button>
@@ -263,7 +276,10 @@ export default function Home() {
             <button
               className={active?.id === flow.id ? "lane active" : "lane"}
               key={flow.id}
-              onClick={() => setActiveFlow(flow.id)}
+              onClick={() => {
+                setActiveFlow(flow.id);
+                setDrawerOpen(true);
+              }}
             >
               <span className={`stage-dot ${flow.stage}`} />
               <span className="timeline-year">{flow.year}</span>
@@ -278,14 +294,23 @@ export default function Home() {
             <div className="empty-state">目前沒有符合這組條件的公開可辨識項目。</div>
           )}
         </section>
+      </section>
 
-        <article className="panel detail-panel">
-          {active ? (
-            <div className="panel-inner">
+      {active && drawerOpen && (
+        <div className="drawer-layer" role="dialog" aria-modal="true" aria-label={`${active.title} 詳細資料`}>
+          <button className="drawer-backdrop" aria-label="關閉詳細資料" onClick={() => setDrawerOpen(false)} />
+          <article className="drawer-panel">
+            <div className="drawer-handle" aria-hidden="true" />
+            <div className="drawer-topline">
               <div className="detail-header">
                 <span>{layerNames[active.layer]}</span>
                 <span>{stages[active.stage]}</span>
               </div>
+              <button className="close-button" onClick={() => setDrawerOpen(false)}>
+                關閉
+              </button>
+            </div>
+            <div className="drawer-scroll">
               <h2>{active.title}</h2>
               <dl className="facts compact-facts">
                 <div>
@@ -305,54 +330,46 @@ export default function Home() {
                 <h3>查核摘要</h3>
                 <p>{active.publicness}</p>
               </div>
-              <details className="detail-disclosure">
-                <summary>展開完整資料</summary>
-                <div className="detail-expanded">
-                  <div className="flow-diagram" aria-label="預算流向">
-                    <span>中央/基金</span>
-                    <span>執行單位</span>
-                    <span>場域/協會</span>
-                    <span>選手/民眾</span>
-                  </div>
-                  <div className="detail-groups">
-                    <section>
-                      <h3>主要執行或合作單位</h3>
-                      <ul className="inline-list">
-                        {active.actors.map((actor) => (
-                          <li key={actor}>{actor}</li>
-                        ))}
-                      </ul>
-                    </section>
-                    <section>
-                      <h3>對應協會或運動種類</h3>
-                      <ul className="inline-list">
-                        {active.associations.map((association) => (
-                          <li key={association}>{association}</li>
-                        ))}
-                      </ul>
-                    </section>
-                  </div>
-                  <div className="audit-summary secondary-summary">
-                    <h3>補充判斷</h3>
-                    <p>{active.note}</p>
-                    <dl>
-                      <div>
-                        <dt>下一步問法</dt>
-                        <dd>這筆錢是政策總額、年度科目、委辦案、地方配合款，還是協會直接補助？</dd>
-                      </div>
-                    </dl>
-                  </div>
+              <div className="drawer-detail-grid">
+                <div className="flow-diagram" aria-label="預算流向">
+                  <span>中央/基金</span>
+                  <span>執行單位</span>
+                  <span>場域/協會</span>
+                  <span>選手/民眾</span>
                 </div>
-              </details>
+                <div className="detail-groups">
+                  <section>
+                    <h3>主要執行或合作單位</h3>
+                    <ul className="inline-list">
+                      {active.actors.map((actor) => (
+                        <li key={actor}>{actor}</li>
+                      ))}
+                    </ul>
+                  </section>
+                  <section>
+                    <h3>對應協會或運動種類</h3>
+                    <ul className="inline-list">
+                      {active.associations.map((association) => (
+                        <li key={association}>{association}</li>
+                      ))}
+                    </ul>
+                  </section>
+                </div>
+                <div className="audit-summary secondary-summary">
+                  <h3>補充判斷</h3>
+                  <p>{active.note}</p>
+                  <dl>
+                    <div>
+                      <dt>下一步問法</dt>
+                      <dd>這筆錢是政策總額、年度科目、委辦案、地方配合款，還是協會直接補助？</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
             </div>
-          ) : (
-            <div className="panel-inner">
-              <h2>沒有符合條件的項目</h2>
-              <p className="note">請調整預算層級或執行程度篩選。</p>
-            </div>
-          )}
-        </article>
-      </section>
+          </article>
+        </div>
+      )}
 
       <section className="release-strip" aria-label="版本資訊">
         <p>
