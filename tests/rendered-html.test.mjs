@@ -34,7 +34,9 @@ test("server-renders the sporttech budget map", async () => {
   assert.match(html, /協會通常不是科技預算的第一手承接者/);
   assert.match(html, /14 縣市 \/ 30 案/);
   assert.match(html, /查核摘要/);
-  assert.match(html, /公開程度/);
+  assert.match(html, /展開完整資料/);
+  assert.match(html, /補充判斷/);
+  assert.match(html, /下一步問法/);
   assert.match(html, /台灣運動 x 科技行動計畫/);
   assert.match(html, /精準運動科學研究專案/);
   assert.match(html, /版號/);

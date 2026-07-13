@@ -301,44 +301,49 @@ export default function Home() {
                   <dd>{active.source}</dd>
                 </div>
               </dl>
-              <div className="flow-diagram" aria-label="預算流向">
-                <span>中央/基金</span>
-                <span>執行單位</span>
-                <span>場域/協會</span>
-                <span>選手/民眾</span>
-              </div>
-              <div className="detail-groups">
-                <section>
-                  <h3>主要執行或合作單位</h3>
-                  <ul className="inline-list">
-                    {active.actors.map((actor) => (
-                      <li key={actor}>{actor}</li>
-                    ))}
-                  </ul>
-                </section>
-                <section>
-                  <h3>對應協會或運動種類</h3>
-                  <ul className="inline-list">
-                    {active.associations.map((association) => (
-                      <li key={association}>{association}</li>
-                    ))}
-                  </ul>
-                </section>
-              </div>
-              <div className="audit-summary">
+              <div className="audit-summary compact-summary">
                 <h3>查核摘要</h3>
-                <p>{active.note}</p>
-                <dl>
-                  <div>
-                    <dt>公開程度</dt>
-                    <dd>{active.publicness}</dd>
-                  </div>
-                  <div>
-                    <dt>下一步問法</dt>
-                    <dd>這筆錢是政策總額、年度科目、委辦案、地方配合款，還是協會直接補助？</dd>
-                  </div>
-                </dl>
+                <p>{active.publicness}</p>
               </div>
+              <details className="detail-disclosure">
+                <summary>展開完整資料</summary>
+                <div className="detail-expanded">
+                  <div className="flow-diagram" aria-label="預算流向">
+                    <span>中央/基金</span>
+                    <span>執行單位</span>
+                    <span>場域/協會</span>
+                    <span>選手/民眾</span>
+                  </div>
+                  <div className="detail-groups">
+                    <section>
+                      <h3>主要執行或合作單位</h3>
+                      <ul className="inline-list">
+                        {active.actors.map((actor) => (
+                          <li key={actor}>{actor}</li>
+                        ))}
+                      </ul>
+                    </section>
+                    <section>
+                      <h3>對應協會或運動種類</h3>
+                      <ul className="inline-list">
+                        {active.associations.map((association) => (
+                          <li key={association}>{association}</li>
+                        ))}
+                      </ul>
+                    </section>
+                  </div>
+                  <div className="audit-summary secondary-summary">
+                    <h3>補充判斷</h3>
+                    <p>{active.note}</p>
+                    <dl>
+                      <div>
+                        <dt>下一步問法</dt>
+                        <dd>這筆錢是政策總額、年度科目、委辦案、地方配合款，還是協會直接補助？</dd>
+                      </div>
+                    </dl>
+                  </div>
+                </div>
+              </details>
             </div>
           ) : (
             <div className="panel-inner">
