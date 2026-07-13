@@ -332,7 +332,7 @@ h1 {
 }
 
 .detail-panel {
-  min-height: 618px;
+  min-height: 560px;
 }
 
 .detail-header {
@@ -354,75 +354,78 @@ h1 {
 
 .detail-panel h2 {
   color: var(--ink);
-  font-size: clamp(1.65rem, 4vw, 2.75rem);
-  line-height: 1.08;
-  margin-bottom: 18px;
+  font-size: clamp(1.55rem, 3vw, 2.25rem);
+  line-height: 1.12;
+  margin-bottom: 14px;
+  text-wrap: balance;
 }
 
 .facts {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin: 0 0 20px;
+  gap: 7px;
+  margin: 0 0 16px;
 }
 
 .facts div {
-  border-top: 3px solid var(--ink);
-  padding-top: 9px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 58px minmax(0, 1fr);
 }
 
 .facts dt {
   color: var(--muted);
   font-size: 0.82rem;
-  margin-bottom: 6px;
+  line-height: 1.55;
+  margin: 0;
 }
 
 .facts dd {
   color: var(--ink);
   font-weight: 800;
+  line-height: 1.55;
   margin: 0;
 }
 
 .flow-diagram {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin: 22px 0;
+  gap: 6px;
+  margin: 16px 0;
 }
 
 .flow-diagram span {
-  background: var(--ink);
-  color: var(--panel);
-  min-height: 58px;
-  border-radius: 8px;
+  background: #efe6d7;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  min-height: 38px;
+  border-radius: 999px;
   display: grid;
   place-items: center;
-  padding: 9px;
+  padding: 7px 9px;
   position: relative;
   text-align: center;
 }
 
 .flow-diagram span:not(:last-child)::after {
-  border-bottom: 8px solid transparent;
-  border-left: 10px solid var(--ink);
-  border-top: 8px solid transparent;
-  content: "";
+  color: var(--muted);
+  content: "→";
+  font-weight: 800;
   position: absolute;
-  right: -10px;
-  top: calc(50% - 8px);
+  right: -11px;
+  top: calc(50% - 0.75em);
   z-index: 1;
 }
 
-.two-col {
+.detail-groups {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 12px;
 }
 
-.two-col h3 {
+.detail-groups h3,
+.audit-summary h3 {
   color: var(--ink);
   font-size: 1rem;
-  margin-bottom: 9px;
+  margin-bottom: 8px;
 }
 
 ul {
@@ -434,35 +437,57 @@ li {
   line-height: 1.7;
 }
 
-.note {
+.inline-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  list-style: none;
+  padding-left: 0;
+}
+
+.inline-list li {
+  background: #f0e6d6;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: #354145;
+  line-height: 1.35;
+  padding: 5px 9px;
+}
+
+.audit-summary {
   background: #f0e6d6;
   border-left: 5px solid var(--red);
   color: #354145;
   line-height: 1.75;
-  margin: 20px 0 0;
+  margin: 16px 0 0;
   padding: 13px 15px;
 }
 
-.checklist {
+.audit-summary p {
+  margin: 0 0 10px;
+}
+
+.audit-summary dl {
   display: grid;
-  gap: 10px;
-  margin-top: 18px;
+  gap: 8px;
+  margin: 0;
 }
 
-.check {
-  border-top: 1px solid var(--line);
-  padding-top: 10px;
+.audit-summary div {
+  border-top: 1px solid rgba(21, 25, 27, 0.16);
+  padding-top: 8px;
 }
 
-.check strong {
+.audit-summary dt {
   color: var(--ink);
-  display: block;
-  margin-bottom: 4px;
+  font-weight: 800;
+  margin-bottom: 2px;
 }
 
-.check span {
+.audit-summary dd {
   color: var(--muted);
   line-height: 1.55;
+  margin: 0;
 }
 
 .release-strip {
@@ -519,19 +544,15 @@ li {
   }
 
   .metrics,
-  .facts,
   .flow-diagram,
-  .two-col,
   .lane {
     grid-template-columns: 1fr;
   }
 
   .flow-diagram span:not(:last-child)::after {
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-top: 10px solid var(--ink);
+    content: "↓";
     bottom: -10px;
-    left: calc(50% - 8px);
+    left: calc(50% - 0.35em);
     right: auto;
     top: auto;
   }

@@ -287,17 +287,17 @@ export default function Home() {
                 <span>{stages[active.stage]}</span>
               </div>
               <h2>{active.title}</h2>
-              <dl className="facts">
+              <dl className="facts compact-facts">
                 <div>
                   <dt>期間</dt>
                   <dd>{active.year}</dd>
                 </div>
                 <div>
-                  <dt>可辨識金額</dt>
+                  <dt>金額</dt>
                   <dd>{active.amount}</dd>
                 </div>
                 <div>
-                  <dt>預算來源</dt>
+                  <dt>來源</dt>
                   <dd>{active.source}</dd>
                 </div>
               </dl>
@@ -307,34 +307,37 @@ export default function Home() {
                 <span>場域/協會</span>
                 <span>選手/民眾</span>
               </div>
-              <div className="two-col">
-                <div>
+              <div className="detail-groups">
+                <section>
                   <h3>主要執行或合作單位</h3>
-                  <ul>
+                  <ul className="inline-list">
                     {active.actors.map((actor) => (
                       <li key={actor}>{actor}</li>
                     ))}
                   </ul>
-                </div>
-                <div>
+                </section>
+                <section>
                   <h3>對應協會或運動種類</h3>
-                  <ul>
+                  <ul className="inline-list">
                     {active.associations.map((association) => (
                       <li key={association}>{association}</li>
                     ))}
                   </ul>
-                </div>
+                </section>
               </div>
-              <p className="note">{active.note}</p>
-              <div className="checklist">
-                <div className="check">
-                  <strong>公開程度提示</strong>
-                  <span>{active.publicness}</span>
-                </div>
-                <div className="check">
-                  <strong>查核問法</strong>
-                  <span>這筆錢是政策總額、年度科目、委辦案、地方配合款，還是協會直接補助？</span>
-                </div>
+              <div className="audit-summary">
+                <h3>查核摘要</h3>
+                <p>{active.note}</p>
+                <dl>
+                  <div>
+                    <dt>公開程度</dt>
+                    <dd>{active.publicness}</dd>
+                  </div>
+                  <div>
+                    <dt>下一步問法</dt>
+                    <dd>這筆錢是政策總額、年度科目、委辦案、地方配合款，還是協會直接補助？</dd>
+                  </div>
+                </dl>
               </div>
             </div>
           ) : (
