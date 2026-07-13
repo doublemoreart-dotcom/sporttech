@@ -36,7 +36,11 @@ test("server-renders the sporttech budget map", async () => {
   assert.match(html, /公開程度提示/);
   assert.match(html, /台灣運動 x 科技行動計畫/);
   assert.match(html, /精準運動科學研究專案/);
-  assert.match(html, /Git 版控版/);
+  assert.match(html, /版號/);
+  assert.match(html, /v0\.2\.0/);
+  assert.match(html, /更新日期/);
+  assert.match(html, /2026-07-13/);
+  assert.doesNotMatch(html, /本機版|Git 版控版|交付版/);
   assert.doesNotMatch(html, /Your site is taking shape|Codex is working|react-loading-skeleton/i);
 });
 
@@ -47,9 +51,10 @@ test("documents the local and git version boundary", async () => {
     readFile(new URL("../README.md", import.meta.url), "utf8"),
   ]);
 
-  assert.match(page, /本機版/);
-  assert.match(page, /Git 版控版/);
-  assert.match(page, /交付版/);
+  assert.match(page, /版號/);
+  assert.match(page, /v0\.2\.0/);
+  assert.match(page, /更新日期/);
+  assert.doesNotMatch(page, /<h2>本機版<\/h2>|<h2>Git 版控版<\/h2>|<h2>交付版<\/h2>/);
   assert.match(layout, /lang="zh-Hant"/);
   assert.match(readme, /## 網站架構/);
   assert.match(readme, /## 本機版/);

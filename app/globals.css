@@ -181,8 +181,7 @@ h1 {
 }
 
 .panel,
-.empty-state,
-.versioning > div {
+.empty-state {
   background: rgba(251, 248, 239, 0.9);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -420,8 +419,7 @@ h1 {
   gap: 16px;
 }
 
-.two-col h3,
-.versioning h2 {
+.two-col h3 {
   color: var(--ink);
   font-size: 1rem;
   margin-bottom: 9px;
@@ -467,27 +465,41 @@ li {
   line-height: 1.55;
 }
 
-.versioning {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+.release-strip {
+  align-items: center;
+  border-top: 4px double var(--ink);
+  color: var(--ink);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  justify-content: flex-end;
   margin-top: 20px;
+  padding-top: 16px;
 }
 
-.versioning > div {
-  padding: 16px;
+.release-strip div {
+  align-items: baseline;
+  display: flex;
+  gap: 8px;
 }
 
-.versioning p {
+.release-strip span {
   color: var(--muted);
-  line-height: 1.7;
-  margin: 0;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.release-strip strong {
+  color: var(--ink);
+  font-size: 1rem;
 }
 
 @media (max-width: 1040px) {
   .masthead,
-  .workbench,
-  .versioning {
+  .workbench {
     grid-template-columns: 1fr;
   }
 

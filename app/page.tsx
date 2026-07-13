@@ -346,18 +346,14 @@ export default function Home() {
         </article>
       </section>
 
-      <section className="versioning">
+      <section className="release-strip" aria-label="版本資訊">
         <div>
-          <h2>本機版</h2>
-          <p>用於快速試作、截圖與修改。依賴、快取與 build 產物留在本機，不進 Git。</p>
+          <span>版號</span>
+          <strong>v0.2.0</strong>
         </div>
         <div>
-          <h2>Git 版控版</h2>
-          <p>只保留可重建的原始碼、設定、文件與鎖檔。正式上 Git 前跑 build/test/lint。</p>
-        </div>
-        <div>
-          <h2>交付版</h2>
-          <p>放在 outputs，供審閱、分享或轉成截圖，不混進正式網站 repo。</p>
+          <span>更新日期</span>
+          <strong>2026-07-13</strong>
         </div>
       </section>
     </main>
