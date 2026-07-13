@@ -187,12 +187,6 @@ h1 {
   border-radius: 8px;
 }
 
-.workbench > .panel {
-  position: sticky;
-  top: 12px;
-  z-index: 10;
-}
-
 .panel-inner {
   padding: 16px;
 }
