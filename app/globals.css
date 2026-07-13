@@ -523,7 +523,8 @@ h1 {
 
 .detail-groups h3,
 .audit-summary h3,
-.public-info h3 {
+.public-info h3,
+.source-links h3 {
   color: var(--ink);
   font-size: 1rem;
   margin-bottom: 8px;
@@ -627,6 +628,42 @@ li {
   color: #354145;
   font-size: 0.9rem;
   padding-left: 18px;
+}
+
+.source-links {
+  display: grid;
+  gap: 10px;
+}
+
+.source-links ul {
+  display: grid;
+  gap: 8px;
+  list-style: none;
+  padding-left: 0;
+}
+
+.source-links li {
+  align-items: start;
+  background: rgba(251, 248, 239, 0.72);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 4px;
+  padding: 11px 12px;
+}
+
+.source-links a {
+  color: var(--ink);
+  font-weight: 900;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.source-links span {
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.55;
 }
 
 .drawer-layer {

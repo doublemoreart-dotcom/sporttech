@@ -10,6 +10,51 @@ type PublicInfo = {
   openData: string[];
 };
 
+const sourceCatalog = {
+  ey: {
+    label: "行政院全球資訊網",
+    url: "https://www.ey.gov.tw/",
+    note: "政策新聞、院會與跨部會計畫線索。",
+  },
+  nstc: {
+    label: "國科會全球資訊網",
+    url: "https://www.nstc.gov.tw/",
+    note: "科技計畫、研究補助、新聞資料與查詢入口。",
+  },
+  gstp: {
+    label: "政府科技計畫資訊網",
+    url: "https://gstp.stpi.narl.org.tw/",
+    note: "跨部會科技計畫與年度科技預算查詢入口。",
+  },
+  grb: {
+    label: "政府研究資訊系統 GRB",
+    url: "https://www.grb.gov.tw/",
+    note: "研究計畫名稱、主持人、關鍵字與成果摘要查詢。",
+  },
+  sports: {
+    label: "運動部全民運動署",
+    url: "https://www.sa.gov.tw/",
+    note: "運動科技、場域、補助與政策公告入口。",
+  },
+  dgbas: {
+    label: "行政院主計總處",
+    url: "https://www.dgbas.gov.tw/",
+    note: "中央政府預算、決算與補捐助資訊入口。",
+  },
+  pcc: {
+    label: "公共工程委員會",
+    url: "https://www.pcc.gov.tw/",
+    note: "政府採購、決標與委辦案追蹤入口。",
+  },
+  data: {
+    label: "政府資料開放平臺",
+    url: "https://data.gov.tw/",
+    note: "open data 資料集與 API 查詢入口。",
+  },
+} as const;
+
+type SourceKey = keyof typeof sourceCatalog;
+
 const stages: Record<Stage, string> = {
   proposal: "提案/爭取",
   approved: "已核定",
@@ -63,6 +108,7 @@ const flows = [
     layer: "central" as Layer,
     publicness: "政策總額明確，逐年逐案流向仍需對帳。",
     note: "政策總額，分散於跨部會與跨年度項目，不宜直接視為運動部單一預算。",
+    sourceRefs: ["ey", "nstc", "gstp", "dgbas", "data"] satisfies SourceKey[],
     publicInfo: {
       news: ["新聞與政策報導多以 2022-2026、46 億元跨部會投入為主，較少逐案列明年度支出。"],
       announcements: ["中央層級以行政院、科技會報、國科會與運動部政策說明為主要線索。"],
@@ -82,6 +128,7 @@ const flows = [
     layer: "research" as Layer,
     publicness: "歷史專案與成果可辨識，但分年支出仍需細表。",
     note: "重點在 AI 訓練、動作分析、疲勞監控、傷害預防與競技表現。",
+    sourceRefs: ["nstc", "grb", "gstp", "sports"] satisfies SourceKey[],
     publicInfo: {
       news: ["公開討論包含精準運動科學研究、國科會補助與國家隊科技支援成果。"],
       announcements: ["中央線索在科技部/國科會研究計畫、學校研究公告與國家運動科學中心成果。"],
@@ -101,6 +148,7 @@ const flows = [
     layer: "local" as Layer,
     publicness: "案件數可辨識，逐案決標、驗收、維運需另查。",
     note: "公開資料顯示累計約 30 案；各案核定、決標、驗收、維運狀態不一致。",
+    sourceRefs: ["sports", "pcc", "dgbas", "data"] satisfies SourceKey[],
     publicInfo: {
       news: ["地方案例常以智慧走跑、科技防溺、智慧場館或運動科技體驗活動形式出現在地方新聞。"],
       announcements: ["地方政府體育局、教育局公告、議會預算與政府採購決標是主要追蹤路徑。"],
@@ -120,6 +168,7 @@ const flows = [
     layer: "industry" as Layer,
     publicness: "年度科目可辨識，受補助名單與成果需逐案整理。",
     note: "偏向產品、服務、數位轉型、產學合作和商業模式驗證。",
+    sourceRefs: ["sports", "dgbas", "pcc", "data"] satisfies SourceKey[],
     publicInfo: {
       news: ["較常出現在運動產業創新、數位轉型、新創補助與產學合作報導。"],
       announcements: ["線索集中在運動發展基金年度預算、補助要點、受補助名單或成果發表。"],
@@ -139,6 +188,7 @@ const flows = [
     layer: "central" as Layer,
     publicness: "科目案例清楚，但非所有運動科技經費總額。",
     note: "用於地方科技場域、跨域人才與應用推廣；只是特定年度可辨識科目。",
+    sourceRefs: ["sports", "dgbas", "pcc", "data"] satisfies SourceKey[],
     publicInfo: {
       news: ["多以運動科技應用、地方場域、人才培育、體驗競賽等活動型新聞出現。"],
       announcements: ["主要查運動部/前體育署年度預算、單位預算與相關委辦、補助公告。"],
@@ -158,6 +208,7 @@ const flows = [
     layer: "research" as Layer,
     publicness: "目前宜列提案/爭取，不宜寫成已全面執行。",
     note: "目前較適合列為提案/預算爭取，不宜描述為已全面執行。",
+    sourceRefs: ["nstc", "gstp", "sports", "pcc"] satisfies SourceKey[],
     publicInfo: {
       news: ["目前公開資訊多指向天母棒球場經驗、棒球科技場域與國產技術驗證構想。"],
       announcements: ["應追蹤 115 年度國科會科技預算、運動部提案與後續採購或補助公告。"],
@@ -177,6 +228,7 @@ const flows = [
     layer: "industry" as Layer,
     publicness: "活動與成果可見，完整成本拆分仍待公開。",
     note: "可見活動與成果，但完整委辦金額、新創補助與行政成本仍需對帳。",
+    sourceRefs: ["sports", "pcc", "dgbas", "data"] satisfies SourceKey[],
     publicInfo: {
       news: ["公開資訊以 ASPN 國際運動科技創新加速器徵案、入選團隊、國際展會與 Demo Day 為主。"],
       announcements: ["可追陽明交通大學 IAPS、運動部產業科技計畫、委辦或徵案公告。"],
@@ -196,6 +248,7 @@ const flows = [
     layer: "association" as Layer,
     publicness: "需逐案釐清協會是受補助者、合作方或應用場域。",
     note: "協會多為合作場域、選手資料與應用端，不一定是科技預算直接受補助者。",
+    sourceRefs: ["sports", "nstc", "grb", "data"] satisfies SourceKey[],
     publicInfo: {
       news: ["協會端多出現在特定運動科技導入、國家隊訓練、選手數據分析或賽事情蒐報導。"],
       announcements: ["需比對單項協會、國訓中心、國家運動科學中心與研究團隊合作公告。"],
@@ -531,6 +584,22 @@ export default function Home() {
                       </ul>
                     </section>
                   </div>
+                </section>
+                <section className="source-links">
+                  <h3>相關數據與連結來源</h3>
+                  <ul>
+                    {active.sourceRefs.map((sourceKey) => {
+                      const source = sourceCatalog[sourceKey];
+                      return (
+                        <li key={sourceKey}>
+                          <a href={source.url} rel="noreferrer" target="_blank">
+                            {source.label}
+                          </a>
+                          <span>{source.note}</span>
+                        </li>
+                      );
+                    })}
+                  </ul>
                 </section>
                 <div className="audit-summary secondary-summary">
                   <h3>補充判斷</h3>
