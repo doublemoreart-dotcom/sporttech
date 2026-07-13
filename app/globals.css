@@ -176,7 +176,7 @@ h1 {
 .workbench {
   display: grid;
   gap: 18px;
-  grid-template-columns: 310px minmax(0, 1fr) 310px;
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
 }
 
@@ -247,9 +247,13 @@ h1 {
   color: var(--foreground);
   display: grid;
   gap: 12px;
-  grid-template-columns: 16px 110px minmax(0, 1fr) 110px;
-  min-height: 86px;
-  padding: 13px;
+  grid-template-areas:
+    "dot year"
+    ". title"
+    ". amount";
+  grid-template-columns: 16px minmax(0, 1fr);
+  min-height: 0;
+  padding: 16px;
   text-align: left;
   transition:
     border-color 160ms ease,
@@ -266,6 +270,7 @@ h1 {
 }
 
 .lane > .stage-dot {
+  grid-area: dot;
   margin-top: 5px;
 }
 
@@ -273,11 +278,17 @@ h1 {
   color: var(--muted);
   font-size: 0.76rem;
   font-weight: 800;
+  grid-area: year;
+}
+
+.lane > span:nth-child(3) {
+  grid-area: title;
 }
 
 .lane strong {
   color: var(--ink);
   display: block;
+  font-size: 1.15rem;
   line-height: 1.35;
 }
 
@@ -295,8 +306,10 @@ h1 {
   color: var(--ink);
   font-size: 0.86rem;
   font-weight: 800;
+  grid-area: amount;
+  justify-self: start;
   padding: 8px;
-  text-align: center;
+  text-align: left;
 }
 
 .stage-dot {
@@ -332,7 +345,7 @@ h1 {
 }
 
 .detail-panel {
-  min-height: 430px;
+  min-height: 0;
 }
 
 .detail-header {
@@ -564,8 +577,7 @@ li {
 }
 
 @media (max-width: 1040px) {
-  .masthead,
-  .workbench {
+  .masthead {
     grid-template-columns: 1fr;
   }
 
@@ -584,8 +596,7 @@ li {
   }
 
   .metrics,
-  .flow-diagram,
-  .lane {
+  .flow-diagram {
     grid-template-columns: 1fr;
   }
 

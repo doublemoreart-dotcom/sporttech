@@ -67,3 +67,11 @@ test("documents the local and git version boundary", async () => {
 
   await assert.rejects(access(new URL("../app/_sites-preview/SkeletonPreview.tsx", import.meta.url)));
 });
+
+test("keeps the workbench and lane cards vertically sequenced", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(css, /\.workbench\s*\{[\s\S]*grid-template-columns: minmax\(0, 1fr\)/);
+  assert.match(css, /grid-template-areas:\s*"dot year"\s*"\. title"\s*"\. amount"/);
+  assert.match(css, /\.detail-panel\s*\{[\s\S]*min-height: 0/);
+});
