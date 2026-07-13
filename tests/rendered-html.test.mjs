@@ -99,9 +99,11 @@ test("uses dropdown multiselect filters", async () => {
   ]);
 
   assert.match(page, /<details className="select-menu">/);
+  assert.match(page, /className="stage-option"/);
   assert.match(page, /type="checkbox"/);
   assert.match(css, /\.filter-grid/);
   assert.match(css, /\.select-options/);
+  assert.match(css, /\.stage-option/);
   assert.doesNotMatch(page, /chip-row|className=\{selectedLayer|className=\{selectedStage/);
   assert.doesNotMatch(css, /\.chip\b|\.chip-row/);
 });

@@ -277,7 +277,7 @@ export default function Home() {
                     <span>全部</span>
                   </label>
                   {stageOrder.map((stage) => (
-                    <label key={stage}>
+                    <label className="stage-option" key={stage}>
                       <input
                         checked={selectedStages.includes(stage)}
                         onChange={() => {
@@ -290,6 +290,7 @@ export default function Home() {
                         }}
                         type="checkbox"
                       />
+                      <span className={`stage-dot ${stage}`} />
                       <span>{stages[stage]}</span>
                     </label>
                   ))}

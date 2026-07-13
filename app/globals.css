@@ -287,6 +287,19 @@ h1 {
   padding: 8px;
 }
 
+.select-options label:has(input:checked) {
+  background: #efe6d7;
+}
+
+.select-options .stage-option {
+  grid-template-columns: 16px 12px minmax(0, 1fr);
+}
+
+.select-options .stage-option .stage-dot {
+  height: 11px;
+  width: 11px;
+}
+
 .select-options label:hover {
   background: #efe6d7;
 }
