@@ -522,7 +522,8 @@ h1 {
 }
 
 .detail-groups h3,
-.audit-summary h3 {
+.audit-summary h3,
+.public-info h3 {
   color: var(--ink);
   font-size: 1rem;
   margin-bottom: 8px;
@@ -596,6 +597,36 @@ li {
 
 .secondary-summary {
   margin-top: 0;
+}
+
+.public-info {
+  display: grid;
+  gap: 10px;
+}
+
+.public-info-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.public-info-grid section {
+  background: rgba(240, 230, 214, 0.58);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 13px;
+}
+
+.public-info h4 {
+  color: var(--ink);
+  font-size: 0.88rem;
+  margin: 0 0 7px;
+}
+
+.public-info ul {
+  color: #354145;
+  font-size: 0.9rem;
+  padding-left: 18px;
 }
 
 .drawer-layer {
@@ -753,6 +784,10 @@ li {
     left: calc(50% - 0.35em);
     right: auto;
     top: auto;
+  }
+
+  .public-info-grid {
+    grid-template-columns: 1fr;
   }
 
   .release-strip {

@@ -61,6 +61,11 @@ test("documents the local and git version boundary", async () => {
   assert.match(page, /selectionSummary/);
   assert.match(page, /關閉/);
   assert.match(page, /查核摘要/);
+  assert.match(page, /公開資訊進度/);
+  assert.match(page, /新聞\/報導線索/);
+  assert.match(page, /中央或地方府會公告/);
+  assert.match(page, /open data \/ 對帳進度/);
+  assert.match(page, /publicInfo/);
   assert.match(page, /補充判斷/);
   assert.match(page, /下一步問法/);
   assert.doesNotMatch(page, /<h2>本機版<\/h2>|<h2>Git 版控版<\/h2>|<h2>交付版<\/h2>/);
@@ -88,6 +93,7 @@ test("uses a bottom drawer for detail reading", async () => {
 
   assert.match(css, /\.drawer-panel\s*\{[\s\S]*height: 70vh/);
   assert.match(css, /\.drawer-scroll\s*\{[\s\S]*overflow: auto/);
+  assert.match(css, /\.public-info-grid\s*\{[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
   assert.match(css, /@keyframes drawer-rise/);
   assert.doesNotMatch(css, /detail-disclosure/);
 });

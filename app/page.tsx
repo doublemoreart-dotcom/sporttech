@@ -4,6 +4,11 @@ import { useMemo, useState } from "react";
 
 type Stage = "proposal" | "approved" | "executing" | "verified" | "unknown";
 type Layer = "central" | "research" | "local" | "industry" | "association";
+type PublicInfo = {
+  news: string[];
+  announcements: string[];
+  openData: string[];
+};
 
 const stages: Record<Stage, string> = {
   proposal: "提案/爭取",
@@ -57,6 +62,11 @@ const flows = [
     layer: "central" as Layer,
     publicness: "政策總額明確，逐年逐案流向仍需對帳。",
     note: "政策總額，分散於跨部會與跨年度項目，不宜直接視為運動部單一預算。",
+    publicInfo: {
+      news: ["新聞與政策報導多以 2022-2026、46 億元跨部會投入為主，較少逐案列明年度支出。"],
+      announcements: ["中央層級以行政院、科技會報、國科會與運動部政策說明為主要線索。"],
+      openData: ["尚未見單一公開資料集可逐年對帳 46 億元流向；需拆到部會、年度與地方分案。"],
+    } satisfies PublicInfo,
   },
   {
     id: "precision-sport-science",
@@ -70,6 +80,11 @@ const flows = [
     layer: "research" as Layer,
     publicness: "歷史專案與成果可辨識，但分年支出仍需細表。",
     note: "重點在 AI 訓練、動作分析、疲勞監控、傷害預防與競技表現。",
+    publicInfo: {
+      news: ["公開討論包含精準運動科學研究、國科會補助與國家隊科技支援成果。"],
+      announcements: ["中央線索在科技部/國科會研究計畫、學校研究公告與國家運動科學中心成果。"],
+      openData: ["可查研究計畫名稱、主持人、補助金額與成果摘要，但完整運動別分年支出仍需逐案整理。"],
+    } satisfies PublicInfo,
   },
   {
     id: "field-proof",
@@ -83,6 +98,11 @@ const flows = [
     layer: "local" as Layer,
     publicness: "案件數可辨識，逐案決標、驗收、維運需另查。",
     note: "公開資料顯示累計約 30 案；各案核定、決標、驗收、維運狀態不一致。",
+    publicInfo: {
+      news: ["地方案例常以智慧走跑、科技防溺、智慧場館或運動科技體驗活動形式出現在地方新聞。"],
+      announcements: ["地方政府體育局、教育局公告、議會預算與政府採購決標是主要追蹤路徑。"],
+      openData: ["已知有縣市與案件數線索，但每案核定、決標、驗收、維運、使用人次尚未形成統一 open data。"],
+    } satisfies PublicInfo,
   },
   {
     id: "sports-fund",
@@ -96,6 +116,11 @@ const flows = [
     layer: "industry" as Layer,
     publicness: "年度科目可辨識，受補助名單與成果需逐案整理。",
     note: "偏向產品、服務、數位轉型、產學合作和商業模式驗證。",
+    publicInfo: {
+      news: ["較常出現在運動產業創新、數位轉型、新創補助與產學合作報導。"],
+      announcements: ["線索集中在運動發展基金年度預算、補助要點、受補助名單或成果發表。"],
+      openData: ["年度科目可辨識，但受補助團隊、補助額、成果與後續營收需逐案公開對帳。"],
+    } satisfies PublicInfo,
   },
   {
     id: "application-budget",
@@ -109,6 +134,11 @@ const flows = [
     layer: "central" as Layer,
     publicness: "科目案例清楚，但非所有運動科技經費總額。",
     note: "用於地方科技場域、跨域人才與應用推廣；只是特定年度可辨識科目。",
+    publicInfo: {
+      news: ["多以運動科技應用、地方場域、人才培育、體驗競賽等活動型新聞出現。"],
+      announcements: ["主要查運動部/前體育署年度預算、單位預算與相關委辦、補助公告。"],
+      openData: ["科目案例可辨識，但不是完整運動科技總額；需和資訊服務費、場館設備、委辦費分開查。"],
+    } satisfies PublicInfo,
   },
   {
     id: "baseball-made",
@@ -122,6 +152,11 @@ const flows = [
     layer: "research" as Layer,
     publicness: "目前宜列提案/爭取，不宜寫成已全面執行。",
     note: "目前較適合列為提案/預算爭取，不宜描述為已全面執行。",
+    publicInfo: {
+      news: ["目前公開資訊多指向天母棒球場經驗、棒球科技場域與國產技術驗證構想。"],
+      announcements: ["應追蹤 115 年度國科會科技預算、運動部提案與後續採購或補助公告。"],
+      openData: ["尚屬提案/爭取與模型規劃階段；未見完整核定金額、得標廠商與擴散縣市清單。"],
+    } satisfies PublicInfo,
   },
   {
     id: "aspn",
@@ -135,6 +170,11 @@ const flows = [
     layer: "industry" as Layer,
     publicness: "活動與成果可見，完整成本拆分仍待公開。",
     note: "可見活動與成果，但完整委辦金額、新創補助與行政成本仍需對帳。",
+    publicInfo: {
+      news: ["公開資訊以 ASPN 國際運動科技創新加速器徵案、入選團隊、國際展會與 Demo Day 為主。"],
+      announcements: ["可追陽明交通大學 IAPS、運動部產業科技計畫、委辦或徵案公告。"],
+      openData: ["活動成果可見，但委辦金額、新創補助、展會費用與場域驗證成本仍需拆帳。"],
+    } satisfies PublicInfo,
   },
   {
     id: "association-use",
@@ -148,6 +188,11 @@ const flows = [
     layer: "association" as Layer,
     publicness: "需逐案釐清協會是受補助者、合作方或應用場域。",
     note: "協會多為合作場域、選手資料與應用端，不一定是科技預算直接受補助者。",
+    publicInfo: {
+      news: ["協會端多出現在特定運動科技導入、國家隊訓練、選手數據分析或賽事情蒐報導。"],
+      announcements: ["需比對單項協會、國訓中心、國家運動科學中心與研究團隊合作公告。"],
+      openData: ["目前應標為應用端線索；需逐案確認協會是受補助者、合作方、資料提供者或場域使用者。"],
+    } satisfies PublicInfo,
   },
 ];
 
@@ -394,6 +439,35 @@ export default function Home() {
                     </ul>
                   </section>
                 </div>
+                <section className="public-info">
+                  <h3>公開資訊進度</h3>
+                  <div className="public-info-grid">
+                    <section>
+                      <h4>新聞/報導線索</h4>
+                      <ul>
+                        {active.publicInfo.news.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </section>
+                    <section>
+                      <h4>中央或地方府會公告</h4>
+                      <ul>
+                        {active.publicInfo.announcements.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </section>
+                    <section>
+                      <h4>open data / 對帳進度</h4>
+                      <ul>
+                        {active.publicInfo.openData.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </section>
+                  </div>
+                </section>
                 <div className="audit-summary secondary-summary">
                   <h3>補充判斷</h3>
                   <p>{active.note}</p>
