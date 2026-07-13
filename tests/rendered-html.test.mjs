@@ -23,15 +23,16 @@ async function render() {
   );
 }
 
-test("server-renders the sporttech budget map", async () => {
+test("server-renders the sporttech budget query assistant", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /2022-2026 運動科技預算流向地圖/);
-  assert.match(html, /運動科技預算流向地圖/);
-  assert.match(html, /協會通常不是科技預算的第一手承接者/);
+  assert.match(html, /2022-2026 運動X科技預算查詢小幫手/);
+  assert.match(html, /運動X科技預算查詢小幫手/);
+  assert.match(html, /先判斷預算身分，再看協會是否直接承接/);
+  assert.match(html, /想查一筆運動科技相關預算時/);
   assert.match(html, /14 縣市 \/ 30 案/);
   assert.match(html, /台灣運動 x 科技行動計畫/);
   assert.match(html, /精準運動科學研究專案/);
@@ -62,6 +63,7 @@ test("documents the local and git version boundary", async () => {
   assert.doesNotMatch(page, /<h2>本機版<\/h2>|<h2>Git 版控版<\/h2>|<h2>交付版<\/h2>/);
   assert.doesNotMatch(page, /<details|展開完整資料/);
   assert.match(layout, /lang="zh-Hant"/);
+  assert.match(layout, /運動X科技預算查詢小幫手/);
   assert.match(readme, /## 網站架構/);
   assert.match(readme, /## 本機版/);
   assert.match(readme, /## Git 版控版/);

@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "2022-2026 運動科技預算流向地圖",
+  title: "2022-2026 運動X科技預算查詢小幫手",
   description:
-    "一頁式互動網站，整理運動科技預算來源、執行程度、地方場域與協會應用端。",
+    "一頁式互動查詢工具，協助判讀運動科技預算來源、執行程度、地方場域與協會應用端角色。",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",

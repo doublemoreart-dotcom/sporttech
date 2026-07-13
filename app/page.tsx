@@ -23,22 +23,22 @@ const layerNames: Record<Layer, string> = {
 
 const metrics = [
   {
-    label: "policy total",
+    label: "政策總額",
     value: "46 億元",
     note: "跨部會、跨年度政策總額，不能直接視為運動部單一預算。",
   },
   {
-    label: "research track",
+    label: "科研線索",
     value: "2.4 億元級",
     note: "精準運動科學歷史科研專案，重點在國家隊與競技表現。",
   },
   {
-    label: "field proof",
+    label: "地方案例",
     value: "14 縣市 / 30 案",
     note: "地方場域實證需分別查核核定、決標、驗收與維運。",
   },
   {
-    label: "association role",
+    label: "協會角色",
     value: "應用端居多",
     note: "協會常提供選手、場域與賽事脈絡，不一定直接拿科技預算。",
   },
@@ -182,17 +182,17 @@ export default function Home() {
     <main className="site-shell">
       <section className="masthead">
         <div>
-          <p className="eyebrow">policy audit / 2022-2026 budget flow map</p>
-          <h1>運動科技預算流向地圖</h1>
+          <p className="eyebrow">budget query assistant / 2022-2026</p>
+          <h1>運動X科技預算查詢小幫手</h1>
           <p className="lede">
-            這張圖把 2022-2026 的跨部會運動科技政策、年度科目、基金、新創加速器與協會應用端拆開，
-            先看「錢從哪裡來」，再看「誰執行」，最後看「協會到底是不是預算主體」。
+            想查一筆運動科技相關預算時，先用這個頁面確認它比較像政策總額、年度科目、基金補助、地方場域，
+            還是協會端應用。點選項目後，可以快速查看來源、執行狀態、合作單位與下一步查核問題。
           </p>
         </div>
-        <div className="audit-panel" aria-label="查核摘要">
-          <span>查核主軸</span>
-          <strong>協會通常不是科技預算的第一手承接者。</strong>
-          <p>目前公開資料更像是「政府/國科會/基金到學研、地方、法人、新創，再到場域與協會應用」。</p>
+        <div className="audit-panel" aria-label="查詢提醒">
+          <span>查詢提醒</span>
+          <strong>先判斷預算身分，再看協會是否直接承接。</strong>
+          <p>目前公開資料更常見的是政府、國科會或基金先到學研、地方、法人與新創，再進入場域或協會應用。</p>
         </div>
       </section>
 
@@ -271,7 +271,7 @@ export default function Home() {
           </div>
         </aside>
 
-        <section className="lane-map" aria-label="資金流向泳道">
+        <section className="lane-map" aria-label="預算項目清單">
           {filtered.map((flow) => (
             <button
               className={active?.id === flow.id ? "lane active" : "lane"}
@@ -297,8 +297,8 @@ export default function Home() {
       </section>
 
       {active && drawerOpen && (
-        <div className="drawer-layer" role="dialog" aria-modal="true" aria-label={`${active.title} 詳細資料`}>
-          <button className="drawer-backdrop" aria-label="關閉詳細資料" onClick={() => setDrawerOpen(false)} />
+        <div className="drawer-layer" role="dialog" aria-modal="true" aria-label={`${active.title} 查詢結果`}>
+          <button className="drawer-backdrop" aria-label="關閉查詢結果" onClick={() => setDrawerOpen(false)} />
           <article className="drawer-panel">
             <div className="drawer-handle" aria-hidden="true" />
             <div className="drawer-topline">
@@ -331,7 +331,7 @@ export default function Home() {
                 <p>{active.publicness}</p>
               </div>
               <div className="drawer-detail-grid">
-                <div className="flow-diagram" aria-label="預算流向">
+                <div className="flow-diagram" aria-label="預算路徑">
                   <span>中央/基金</span>
                   <span>執行單位</span>
                   <span>場域/協會</span>
