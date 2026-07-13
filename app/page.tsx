@@ -347,14 +347,10 @@ export default function Home() {
       </section>
 
       <section className="release-strip" aria-label="版本資訊">
-        <div>
-          <span>版號</span>
-          <strong>v0.2.0</strong>
-        </div>
-        <div>
-          <span>更新日期</span>
-          <strong>2026-07-13</strong>
-        </div>
+        <p>
+          <span>版號 v0.2.0</span>
+          <span>更新日期 2026-07-13</span>
+        </p>
       </section>
     </main>
   );
