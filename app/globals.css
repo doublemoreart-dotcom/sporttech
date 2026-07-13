@@ -199,27 +199,103 @@ h1 {
   margin-bottom: 10px;
 }
 
-.chip-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 16px;
+.filter-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 18px;
 }
 
-.chip {
+.select-menu {
+  position: relative;
+}
+
+.select-menu summary {
+  align-items: center;
   background: transparent;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: 8px;
   color: var(--foreground);
-  min-height: 34px;
-  padding: 6px 11px;
+  cursor: pointer;
+  display: grid;
+  gap: 5px;
+  list-style: none;
+  min-height: 58px;
+  padding: 9px 38px 9px 12px;
+  position: relative;
 }
 
-.chip:hover,
-.chip.active {
-  background: var(--ink);
+.select-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.select-menu summary::after {
+  color: var(--muted);
+  content: "⌄";
+  font-size: 1.25rem;
+  font-weight: 800;
+  position: absolute;
+  right: 13px;
+  top: calc(50% - 0.7em);
+}
+
+.select-menu[open] summary {
   border-color: var(--ink);
-  color: var(--panel);
+  box-shadow: 4px 4px 0 var(--shadow);
+}
+
+.select-menu[open] summary::after {
+  content: "⌃";
+}
+
+.select-menu summary span {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.select-menu summary strong {
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.select-options {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 6px 6px 0 var(--shadow);
+  display: grid;
+  gap: 4px;
+  left: 0;
+  margin-top: 6px;
+  min-width: 100%;
+  padding: 8px;
+  position: absolute;
+  top: 100%;
+  z-index: 12;
+}
+
+.select-options label {
+  align-items: center;
+  border-radius: 6px;
+  cursor: pointer;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 16px minmax(0, 1fr);
+  line-height: 1.35;
+  padding: 8px;
+}
+
+.select-options label:hover {
+  background: #efe6d7;
+}
+
+.select-options input {
+  accent-color: var(--ink);
+  height: 16px;
+  margin: 0;
+  width: 16px;
 }
 
 .legend {
@@ -649,6 +725,10 @@ li {
 
   .metrics,
   .flow-diagram {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-grid {
     grid-template-columns: 1fr;
   }
 

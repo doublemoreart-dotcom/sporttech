@@ -56,12 +56,15 @@ test("documents the local and git version boundary", async () => {
   assert.match(page, /更新日期/);
   assert.match(page, /drawerOpen/);
   assert.match(page, /setDrawerOpen\(true\)/);
+  assert.match(page, /selectedLayers/);
+  assert.match(page, /selectedStages/);
+  assert.match(page, /selectionSummary/);
   assert.match(page, /關閉/);
   assert.match(page, /查核摘要/);
   assert.match(page, /補充判斷/);
   assert.match(page, /下一步問法/);
   assert.doesNotMatch(page, /<h2>本機版<\/h2>|<h2>Git 版控版<\/h2>|<h2>交付版<\/h2>/);
-  assert.doesNotMatch(page, /<details|展開完整資料/);
+  assert.doesNotMatch(page, /detail-disclosure|展開完整資料/);
   assert.match(layout, /lang="zh-Hant"/);
   assert.match(layout, /運動X科技預算查詢小幫手/);
   assert.match(readme, /## 網站架構/);
@@ -87,4 +90,18 @@ test("uses a bottom drawer for detail reading", async () => {
   assert.match(css, /\.drawer-scroll\s*\{[\s\S]*overflow: auto/);
   assert.match(css, /@keyframes drawer-rise/);
   assert.doesNotMatch(css, /detail-disclosure/);
+});
+
+test("uses dropdown multiselect filters", async () => {
+  const [page, css] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(page, /<details className="select-menu">/);
+  assert.match(page, /type="checkbox"/);
+  assert.match(css, /\.filter-grid/);
+  assert.match(css, /\.select-options/);
+  assert.doesNotMatch(page, /chip-row|className=\{selectedLayer|className=\{selectedStage/);
+  assert.doesNotMatch(css, /\.chip\b|\.chip-row/);
 });

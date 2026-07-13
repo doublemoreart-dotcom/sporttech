@@ -159,20 +159,32 @@ const stageOrder: Stage[] = [
   "unknown",
 ];
 
+function selectionSummary<T extends string>(
+  selected: T[],
+  labels: Record<T, string>,
+  allLabel = "全部",
+) {
+  if (selected.length === 0) return allLabel;
+  if (selected.length === 1) return labels[selected[0]];
+  return `已選 ${selected.length} 項`;
+}
+
 export default function Home() {
-  const [selectedLayer, setSelectedLayer] = useState<Layer | "all">("all");
-  const [selectedStage, setSelectedStage] = useState<Stage | "all">("all");
+  const [selectedLayers, setSelectedLayers] = useState<Layer[]>([]);
+  const [selectedStages, setSelectedStages] = useState<Stage[]>([]);
   const [activeFlow, setActiveFlow] = useState(flows[0].id);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const filtered = useMemo(
     () =>
       flows.filter((flow) => {
-        const layerMatch = selectedLayer === "all" || flow.layer === selectedLayer;
-        const stageMatch = selectedStage === "all" || flow.stage === selectedStage;
+        const layerMatch =
+          selectedLayers.length === 0 || selectedLayers.includes(flow.layer);
+        const stageMatch =
+          selectedStages.length === 0 || selectedStages.includes(flow.stage);
         return layerMatch && stageMatch;
       }),
-    [selectedLayer, selectedStage],
+    [selectedLayers, selectedStages],
   );
 
   const active =
@@ -209,54 +221,80 @@ export default function Home() {
       <section className="workbench">
         <aside className="panel">
           <div className="panel-inner">
-            <span className="control-label">預算層級</span>
-            <div className="chip-row">
-              <button
-                className={selectedLayer === "all" ? "chip active" : "chip"}
-                onClick={() => {
-                  setSelectedLayer("all");
-                  setDrawerOpen(false);
-                }}
-              >
-                全部
-              </button>
-              {(Object.keys(layerNames) as Layer[]).map((layer) => (
-                <button
-                  className={selectedLayer === layer ? "chip active" : "chip"}
-                  key={layer}
-                  onClick={() => {
-                    setSelectedLayer(layer);
-                    setDrawerOpen(false);
-                  }}
-                >
-                  {layerNames[layer]}
-                </button>
-              ))}
-            </div>
+            <div className="filter-grid" aria-label="查詢篩選">
+              <details className="select-menu">
+                <summary>
+                  <span>預算層級</span>
+                  <strong>{selectionSummary(selectedLayers, layerNames)}</strong>
+                </summary>
+                <div className="select-options">
+                  <label>
+                    <input
+                      checked={selectedLayers.length === 0}
+                      onChange={() => {
+                        setSelectedLayers([]);
+                        setDrawerOpen(false);
+                      }}
+                      type="checkbox"
+                    />
+                    <span>全部</span>
+                  </label>
+                  {(Object.keys(layerNames) as Layer[]).map((layer) => (
+                    <label key={layer}>
+                      <input
+                        checked={selectedLayers.includes(layer)}
+                        onChange={() => {
+                          setSelectedLayers((current) =>
+                            current.includes(layer)
+                              ? current.filter((item) => item !== layer)
+                              : [...current, layer],
+                          );
+                          setDrawerOpen(false);
+                        }}
+                        type="checkbox"
+                      />
+                      <span>{layerNames[layer]}</span>
+                    </label>
+                  ))}
+                </div>
+              </details>
 
-            <span className="control-label">執行程度</span>
-            <div className="chip-row">
-              <button
-                className={selectedStage === "all" ? "chip active" : "chip"}
-                onClick={() => {
-                  setSelectedStage("all");
-                  setDrawerOpen(false);
-                }}
-              >
-                全部
-              </button>
-              {stageOrder.map((stage) => (
-                <button
-                  className={selectedStage === stage ? "chip active" : "chip"}
-                  key={stage}
-                  onClick={() => {
-                    setSelectedStage(stage);
-                    setDrawerOpen(false);
-                  }}
-                >
-                  {stages[stage]}
-                </button>
-              ))}
+              <details className="select-menu">
+                <summary>
+                  <span>執行程度</span>
+                  <strong>{selectionSummary(selectedStages, stages)}</strong>
+                </summary>
+                <div className="select-options">
+                  <label>
+                    <input
+                      checked={selectedStages.length === 0}
+                      onChange={() => {
+                        setSelectedStages([]);
+                        setDrawerOpen(false);
+                      }}
+                      type="checkbox"
+                    />
+                    <span>全部</span>
+                  </label>
+                  {stageOrder.map((stage) => (
+                    <label key={stage}>
+                      <input
+                        checked={selectedStages.includes(stage)}
+                        onChange={() => {
+                          setSelectedStages((current) =>
+                            current.includes(stage)
+                              ? current.filter((item) => item !== stage)
+                              : [...current, stage],
+                          );
+                          setDrawerOpen(false);
+                        }}
+                        type="checkbox"
+                      />
+                      <span>{stages[stage]}</span>
+                    </label>
+                  ))}
+                </div>
+              </details>
             </div>
 
             <span className="control-label">圖例</span>
