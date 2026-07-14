@@ -16,8 +16,8 @@ work/sporttech-budget-map/
 
 ```text
 app/budget-data.ts  預算項目、來源目錄、指標、分類與縣市資料
-app/page.tsx        篩選邏輯、預算清單、抽屜詳情
-app/globals.css     視覺樣式與響應式版面
+app/page.tsx        preloading、篩選邏輯、預算清單、抽屜詳情
+app/globals.css     視覺樣式、preloading 與響應式版面
 public/             正式版會引用的圖片與靜態素材
 tests/              build 後 HTML 與版面規則驗證
 README.md           專案概覽

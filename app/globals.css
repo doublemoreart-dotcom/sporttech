@@ -56,6 +56,100 @@ p {
   margin-top: 0;
 }
 
+.preloader {
+  align-items: center;
+  background:
+    linear-gradient(90deg, rgba(21, 25, 27, 0.035) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(21, 25, 27, 0.025) 1px, transparent 1px),
+    rgba(244, 239, 229, 0.96);
+  background-size: 36px 36px;
+  display: grid;
+  inset: 0;
+  justify-items: center;
+  padding: 24px;
+  position: fixed;
+  z-index: 20;
+}
+
+.preloader-card {
+  background: var(--panel);
+  border: 1px solid var(--ink);
+  border-radius: 8px;
+  box-shadow: 8px 8px 0 var(--shadow);
+  display: grid;
+  gap: 16px;
+  max-width: 620px;
+  padding: clamp(22px, 5vw, 40px);
+  width: min(100%, 620px);
+}
+
+.preloader-kicker {
+  color: var(--teal);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.preloader h2 {
+  color: var(--ink);
+  font-size: clamp(2rem, 7vw, 4.1rem);
+  line-height: 0.98;
+  margin: 0;
+}
+
+.preloader-flow {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.preloader-flow span {
+  background: #eee6d7;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink);
+  font-weight: 800;
+  padding: 9px 12px;
+  text-align: center;
+}
+
+.preloader-bar {
+  background: #e7decc;
+  border-radius: 999px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.preloader-bar span {
+  animation: preload-progress 1.35s ease-out forwards;
+  background: linear-gradient(90deg, var(--teal), var(--gold));
+  display: block;
+  height: 100%;
+  width: 0;
+}
+
+.preloader p {
+  color: var(--muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.preloader button {
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  color: var(--panel);
+  font-weight: 800;
+  justify-self: start;
+  padding: 10px 16px;
+}
+
+.loading-shell {
+  opacity: 0;
+}
+
 .site-shell {
   width: min(1240px, calc(100% - 32px));
   margin: 0 auto;
@@ -777,6 +871,16 @@ li {
   }
 }
 
+@keyframes preload-progress {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
 .release-strip {
   border-top: 4px double var(--ink);
   color: var(--ink);
@@ -835,6 +939,7 @@ li {
   }
 
   .metrics,
+  .preloader-flow,
   .flow-diagram {
     grid-template-columns: 1fr;
   }

@@ -29,6 +29,7 @@ export default function Home() {
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
   const [activeFlow, setActiveFlow] = useState(flows[0].id);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [isPreloading, setIsPreloading] = useState(true);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const lastTriggerRef = useRef<HTMLButtonElement>(null);
 
@@ -56,6 +57,11 @@ export default function Home() {
   }
 
   useEffect(() => {
+    const preloadTimer = window.setTimeout(() => setIsPreloading(false), 1400);
+    return () => window.clearTimeout(preloadTimer);
+  }, []);
+
+  useEffect(() => {
     if (!drawerOpen) return;
 
     closeButtonRef.current?.focus();
@@ -73,7 +79,34 @@ export default function Home() {
   }, [drawerOpen]);
 
   return (
-    <main className="site-shell">
+    <>
+      {isPreloading && (
+        <section
+          aria-label="運動X科技預算查詢小幫手載入中"
+          aria-live="polite"
+          className="preloader"
+          role="status"
+        >
+          <div className="preloader-card">
+            <span className="preloader-kicker">budget query assistant</span>
+            <h2>整理運動X科技預算線索</h2>
+            <div className="preloader-flow" aria-hidden="true">
+              <span>公開資料</span>
+              <span>預算身分</span>
+              <span>查核路徑</span>
+            </div>
+            <div className="preloader-bar" aria-hidden="true">
+              <span />
+            </div>
+            <p>正在標記政策總額、年度科目、地方場域與協會應用端。</p>
+            <button type="button" onClick={() => setIsPreloading(false)}>
+              略過導入
+            </button>
+          </div>
+        </section>
+      )}
+
+      <main className={isPreloading ? "site-shell loading-shell" : "site-shell"}>
       <section className="masthead">
         <figure className="hero-visual">
           {/* eslint-disable-next-line @next/next/no-img-element -- Vinext image optimization fails to fetch local assets in dev preview. */}
@@ -396,10 +429,11 @@ export default function Home() {
 
       <section className="release-strip" aria-label="版本資訊">
         <p>
-          <span>版號 v0.2.0</span>
-          <span>更新日期 2026-07-13</span>
+          <span>版號 v0.2.1</span>
+          <span>更新日期 2026-07-14</span>
         </p>
       </section>
-    </main>
+      </main>
+    </>
   );
 }

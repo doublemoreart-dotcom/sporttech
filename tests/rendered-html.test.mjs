@@ -39,9 +39,11 @@ test("server-renders the sporttech budget query assistant", async () => {
   assert.match(html, /台灣運動 x 科技行動計畫/);
   assert.match(html, /精準運動科學研究專案/);
   assert.match(html, /版號/);
-  assert.match(html, /v0\.2\.0/);
+  assert.match(html, /v0\.2\.1/);
   assert.match(html, /更新日期/);
-  assert.match(html, /2026-07-13/);
+  assert.match(html, /2026-07-14/);
+  assert.match(html, /整理運動X科技預算線索/);
+  assert.match(html, /略過導入/);
   assert.doesNotMatch(html, /本機版|Git 版控版|交付版/);
   assert.doesNotMatch(html, /Your site is taking shape|Codex is working|react-loading-skeleton/i);
 });
@@ -55,8 +57,15 @@ test("documents the local and git version boundary", async () => {
   ]);
 
   assert.match(page, /版號/);
-  assert.match(page, /v0\.2\.0/);
+  assert.match(page, /v0\.2\.1/);
   assert.match(page, /更新日期/);
+  assert.match(page, /isPreloading/);
+  assert.match(page, /setIsPreloading/);
+  assert.match(page, /setTimeout\(\(\) => setIsPreloading\(false\), 1400\)/);
+  assert.match(page, /role="status"/);
+  assert.match(page, /aria-live="polite"/);
+  assert.match(page, /整理運動X科技預算線索/);
+  assert.match(page, /略過導入/);
   assert.match(page, /className="hero-visual"/);
   assert.match(page, /\/sporttech-budget-hero\.jpg/);
   assert.doesNotMatch(page, /next\/image/);
@@ -105,6 +114,10 @@ test("keeps the workbench and lane cards vertically sequenced", async () => {
 
   assert.match(css, /\.hero-visual\s*\{[\s\S]*grid-column: 1 \/ -1/);
   assert.match(css, /\.hero-visual img\s*\{[\s\S]*aspect-ratio: 16 \/ 6/);
+  assert.match(css, /\.preloader\s*\{[\s\S]*position: fixed/);
+  assert.match(css, /\.preloader-card\s*\{[\s\S]*max-width: 620px/);
+  assert.match(css, /\.preloader-bar span\s*\{[\s\S]*animation: preload-progress 1\.35s ease-out forwards/);
+  assert.match(css, /@keyframes preload-progress/);
   assert.match(css, /\.workbench\s*\{[\s\S]*grid-template-columns: minmax\(0, 1fr\)/);
   assert.match(css, /grid-template-areas:\s*"dot year"\s*"\. title"\s*"\. amount"/);
 });

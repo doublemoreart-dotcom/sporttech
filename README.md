@@ -8,8 +8,8 @@
 app/
   layout.tsx      全站 metadata、語系與字體設定
   budget-data.ts  預算項目、來源目錄、指標、分類與縣市資料
-  page.tsx        一頁式互動查詢工具，含篩選、預算項目清單與抽屜詳情
-  globals.css     全站視覺樣式與響應式版面
+  page.tsx        一頁式互動查詢工具，含 preloading、篩選、預算項目清單與抽屜詳情
+  globals.css     全站視覺樣式、preloading 與響應式版面
 public/           favicon 與公開靜態素材
 tests/            build 後 HTML 驗證
 .openai/          Sites hosting 設定
