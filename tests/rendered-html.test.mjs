@@ -144,6 +144,10 @@ test("keeps the workbench and lane cards vertically sequenced", async () => {
   assert.match(css, /\.metric:hover,\n\.metric:focus-visible\s*\{[\s\S]*transform: translate\(-2px, -2px\)/);
   assert.match(css, /\.metric::after\s*\{[\s\S]*content: "查看說明"/);
   assert.match(css, /\.metric-drawer-panel\s*\{[\s\S]*right: 0/);
+  assert.match(css, /\.metric-drawer-scroll\s*\{[\s\S]*padding: 18px 20px 24px/);
+  assert.match(css, /\.metric-drawer-label\s*\{[\s\S]*border-radius: 8px/);
+  assert.match(css, /\.metric-drawer-scroll h2\s*\{[\s\S]*font-size: clamp\(1\.85rem, 3\.1vw, 2\.55rem\)/);
+  assert.match(css, /\.metric-drawer-scroll section\s*\{[\s\S]*border-left: 5px solid var\(--red\)/);
   assert.match(css, /@keyframes metric-drawer-slide/);
   assert.match(css, /\.preloader\s*\{[\s\S]*position: fixed/);
   assert.match(css, /\.preloader-card\s*\{[\s\S]*max-width: 620px/);

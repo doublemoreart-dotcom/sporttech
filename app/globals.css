@@ -931,47 +931,68 @@ li {
   width: min(460px, 42vw);
 }
 
+.metric-drawer-panel .drawer-topline {
+  padding: 15px 18px 12px;
+}
+
+.metric-drawer-panel .detail-header {
+  font-size: 0.72rem;
+  gap: 8px;
+}
+
 .metric-drawer-scroll {
-  display: grid;
-  gap: 16px;
   height: calc(100vh - 71px);
   overflow: auto;
-  padding: 24px;
+  padding: 18px 20px 24px;
 }
 
 .metric-drawer-label {
   background: #eee6d7;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: 8px;
   color: var(--ink);
+  display: inline-flex;
   font-family: var(--font-geist-mono), monospace;
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   font-weight: 900;
-  justify-self: start;
-  padding: 7px 11px;
+  line-height: 1;
+  margin-bottom: 14px;
+  padding: 7px 10px;
 }
 
 .metric-drawer-scroll h2 {
   color: var(--ink);
-  font-size: clamp(2rem, 5vw, 3.4rem);
-  line-height: 0.98;
-  margin: 0;
+  font-size: clamp(1.85rem, 3.1vw, 2.55rem);
+  line-height: 1.08;
+  margin: 0 0 14px;
 }
 
 .metric-drawer-scroll h3 {
   color: var(--ink);
+  font-size: 1.05rem;
   margin-bottom: 8px;
 }
 
 .metric-drawer-scroll p,
 .metric-drawer-scroll li {
   color: #354145;
-  line-height: 1.75;
+  line-height: 1.65;
+}
+
+.metric-drawer-scroll p {
+  margin: 0 0 18px;
+}
+
+.metric-drawer-scroll section {
+  background: #f0e6d6;
+  border-left: 5px solid var(--red);
+  margin-top: 4px;
+  padding: 13px 15px;
 }
 
 .metric-drawer-scroll ul {
   display: grid;
-  gap: 8px;
+  gap: 6px;
   margin: 0;
   padding-left: 20px;
 }
