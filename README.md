@@ -24,7 +24,7 @@ worker/           vinext/hosting runtime 入口
 
 ## 本機版
 
-本機版負責開發、預覽與驗證。可以保留安裝依賴、快取、build 產物和暫存檔。
+本機版負責開發、預覽與驗證。可以保留安裝依賴、快取、build 產物和暫存檔。詳細維護規則請見 [`VERSIONING.md`](./VERSIONING.md)。
 
 ```bash
 npm run dev
@@ -59,8 +59,9 @@ Git 版只追蹤可重建網站的來源與設定：
 - `postcss.config.mjs`
 - `eslint.config.mjs`
 - `README.md`
+- `VERSIONING.md`
 
-建議 commit 節奏：
+目前工作流採「正式 repo 為 source of truth，`outputs/` 為本機交付快照」。建議 commit 節奏：
 
 1. `scaffold site structure`
 2. `build budget query assistant page`
@@ -70,6 +71,14 @@ Git 版只追蹤可重建網站的來源與設定：
 ## 交付版
 
 外層資料夾的 `outputs/` 用於存放給使用者看的交付檔，例如靜態說明、截圖或匯出版。它不屬於網站原始碼 repo。
+
+目前常用交付入口：
+
+```text
+outputs/index.html
+outputs/sporttech-budget-static-v2.html
+outputs/assets/
+```
 
 本專案原始碼位置：
 
