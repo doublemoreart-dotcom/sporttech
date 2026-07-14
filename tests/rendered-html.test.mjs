@@ -89,6 +89,13 @@ test("documents the local and git version boundary", async () => {
   assert.match(page, /selectedLayers/);
   assert.match(page, /selectedStages/);
   assert.match(page, /selectedLocations/);
+  assert.match(page, /itemView/);
+  assert.match(page, /setItemView/);
+  assert.match(page, /切換分類/);
+  assert.match(page, /列表/);
+  assert.match(page, /卡片/);
+  assert.match(page, /card-view/);
+  assert.match(page, /list-view/);
   assert.match(page, /activeMetric/);
   assert.match(page, /setActiveMetric/);
   assert.match(page, /className="metric"/);
@@ -149,6 +156,10 @@ test("keeps the workbench and lane cards vertically sequenced", async () => {
   assert.match(css, /\.metric-drawer-scroll h2\s*\{[\s\S]*font-size: clamp\(1\.85rem, 3\.1vw, 2\.55rem\)/);
   assert.match(css, /\.metric-drawer-scroll section\s*\{[\s\S]*border-left: 5px solid var\(--red\)/);
   assert.match(css, /@keyframes metric-drawer-slide/);
+  assert.match(css, /\.view-toggle\s*\{[\s\S]*border-radius: 999px/);
+  assert.match(css, /\.view-toggle button\[aria-pressed="true"\]\s*\{[\s\S]*background: var\(--ink\)/);
+  assert.match(css, /\.lane-map\.card-view\s*\{[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
+  assert.match(css, /\.card-view \.lane\s*\{[\s\S]*min-height: 210px/);
   assert.match(css, /\.preloader\s*\{[\s\S]*position: fixed/);
   assert.match(css, /\.preloader-card\s*\{[\s\S]*max-width: 620px/);
   assert.match(css, /\.preloader-bar span\s*\{[\s\S]*animation: preload-progress 1\.35s ease-out forwards/);

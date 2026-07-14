@@ -482,9 +482,60 @@ h1 {
   white-space: nowrap;
 }
 
+.results-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.results-toolbar {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.results-toolbar .control-label {
+  margin: 0;
+}
+
+.view-toggle {
+  align-items: center;
+  background: rgba(251, 248, 239, 0.78);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+}
+
+.view-toggle button {
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 800;
+  min-height: 34px;
+  padding: 6px 13px;
+}
+
+.view-toggle button[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--panel);
+}
+
+.view-toggle button:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
 .lane-map {
   display: grid;
   gap: 12px;
+}
+
+.lane-map.card-view {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .lane {
@@ -507,6 +558,11 @@ h1 {
     box-shadow 160ms ease,
     transform 160ms ease;
   width: 100%;
+}
+
+.card-view .lane {
+  align-content: start;
+  min-height: 210px;
 }
 
 .lane:hover,
@@ -1084,6 +1140,10 @@ li {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .lane-map.card-view {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
 }
 
 @media (max-width: 700px) {
@@ -1106,6 +1166,15 @@ li {
   }
 
   .filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .results-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .lane-map.card-view {
     grid-template-columns: 1fr;
   }
 

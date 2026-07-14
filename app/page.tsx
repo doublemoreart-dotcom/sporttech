@@ -30,6 +30,7 @@ export default function Home() {
   const [activeFlow, setActiveFlow] = useState(flows[0].id);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [activeMetric, setActiveMetric] = useState<(typeof metrics)[number] | null>(null);
+  const [itemView, setItemView] = useState<"list" | "card">("list");
   const [isPreloading, setIsPreloading] = useState(true);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const metricCloseButtonRef = useRef<HTMLButtonElement>(null);
@@ -307,29 +308,50 @@ export default function Home() {
           </div>
         </aside>
 
-        <section className="lane-map" aria-label="預算項目清單">
-          {filtered.map((flow) => (
-            <button
-              className={active?.id === flow.id ? "lane active" : "lane"}
-              key={flow.id}
-              onClick={(event) => {
-                lastTriggerRef.current = event.currentTarget;
-                setActiveFlow(flow.id);
-                setDrawerOpen(true);
-              }}
-            >
-              <span className={`stage-dot ${flow.stage}`} />
-              <span className="timeline-year">{flow.year}</span>
-              <span>
-                <strong>{flow.title}</strong>
-                <small>{layerNames[flow.layer]} / {stages[flow.stage]}</small>
-              </span>
-              <span className="amount">{flow.amount}</span>
-            </button>
-          ))}
-          {filtered.length === 0 && (
-            <div className="empty-state">目前沒有符合這組條件的公開可辨識項目。</div>
-          )}
+        <section className="results-panel" aria-label="預算項目">
+          <div className="results-toolbar">
+            <span className="control-label">切換分類</span>
+            <div className="view-toggle" role="group" aria-label="預算項目顯示方式">
+              <button
+                aria-pressed={itemView === "list"}
+                onClick={() => setItemView("list")}
+                type="button"
+              >
+                列表
+              </button>
+              <button
+                aria-pressed={itemView === "card"}
+                onClick={() => setItemView("card")}
+                type="button"
+              >
+                卡片
+              </button>
+            </div>
+          </div>
+          <div className={`lane-map ${itemView === "card" ? "card-view" : "list-view"}`} aria-label="預算項目清單">
+            {filtered.map((flow) => (
+              <button
+                className={active?.id === flow.id ? "lane active" : "lane"}
+                key={flow.id}
+                onClick={(event) => {
+                  lastTriggerRef.current = event.currentTarget;
+                  setActiveFlow(flow.id);
+                  setDrawerOpen(true);
+                }}
+              >
+                <span className={`stage-dot ${flow.stage}`} />
+                <span className="timeline-year">{flow.year}</span>
+                <span>
+                  <strong>{flow.title}</strong>
+                  <small>{layerNames[flow.layer]} / {stages[flow.stage]}</small>
+                </span>
+                <span className="amount">{flow.amount}</span>
+              </button>
+            ))}
+            {filtered.length === 0 && (
+              <div className="empty-state">目前沒有符合這組條件的公開可辨識項目。</div>
+            )}
+          </div>
         </section>
       </section>
 
