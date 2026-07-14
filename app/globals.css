@@ -881,48 +881,16 @@ li {
   }
 }
 
-.release-strip {
-  border-top: 4px double var(--ink);
-  color: var(--ink);
-  margin-top: 14px;
-  padding-top: 10px;
-  text-align: right;
-}
-
-.release-strip p {
-  align-items: center;
-  color: var(--muted);
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 0.74rem;
-  font-weight: 800;
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 6px 12px;
-  justify-content: flex-end;
-  letter-spacing: 0;
-  margin: 0;
-  text-transform: uppercase;
-}
-
-.release-strip span {
-  color: var(--ink);
-}
-
-.release-strip span + span::before {
-  color: var(--muted);
-  content: "·";
-  margin-right: 12px;
-}
-
 .site-footer {
-  border-top: 1px solid var(--line);
+  border-top: 4px double var(--ink);
   color: var(--muted);
   display: grid;
-  gap: 8px;
+  gap: 18px;
   font-size: 0.88rem;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.34fr);
   line-height: 1.7;
-  margin-top: 18px;
-  padding-top: 16px;
+  margin-top: 14px;
+  padding-top: 18px;
 }
 
 .site-footer strong {
@@ -930,17 +898,35 @@ li {
   font-size: 0.95rem;
 }
 
-.site-footer p {
+.footer-copy {
+  display: grid;
+  gap: 8px;
+}
+
+.footer-copy p {
   margin: 0;
   max-width: 960px;
 }
 
-.site-footer small {
-  color: var(--muted);
+.footer-meta {
+  align-content: start;
+  color: var(--ink);
+  display: grid;
   font-family: var(--font-geist-mono), monospace;
-  font-size: 0.72rem;
+  font-size: 0.74rem;
+  font-weight: 800;
+  gap: 8px;
+  justify-items: end;
   letter-spacing: 0;
+  text-align: right;
   text-transform: uppercase;
+}
+
+.footer-meta small {
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.55;
+  max-width: 320px;
 }
 
 @media (max-width: 1040px) {
@@ -989,12 +975,13 @@ li {
     grid-template-columns: 1fr;
   }
 
-  .release-strip {
-    text-align: left;
+  .site-footer {
+    grid-template-columns: 1fr;
   }
 
-  .release-strip p {
-    justify-content: flex-start;
+  .footer-meta {
+    justify-items: start;
+    text-align: left;
   }
 
   .drawer-panel {

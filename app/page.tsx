@@ -427,22 +427,22 @@ export default function Home() {
         </div>
       )}
 
-      <section className="release-strip" aria-label="版本資訊">
-        <p>
+      <footer className="site-footer" aria-label="公開資料與版權聲明">
+        <div className="footer-copy">
+          <strong>公開資料與版權聲明</strong>
+          <p>
+            本頁整理政府公開資訊、open data、新聞報導、中央與地方府會公告，以及可公開查詢之採購與研究計畫線索，
+            供公共討論、新聞查核、政策研究與公民監督使用。
+          </p>
+          <p>
+            資料僅作為查詢輔助與脈絡整理，不代表主管機關之正式預算對帳、決算審定或完整授權清單；引用時請回到原始公開來源確認最新版本、授權條款與更新日期。
+          </p>
+        </div>
+        <div className="footer-meta" aria-label="版本與授權用途">
           <span>版號 v0.2.1</span>
           <span>更新日期 2026-07-14</span>
-        </p>
-      </section>
-      <footer className="site-footer" aria-label="公開資料與版權聲明">
-        <strong>公開資料與版權聲明</strong>
-        <p>
-          本頁整理政府公開資訊、open data、新聞報導、中央與地方府會公告，以及可公開查詢之採購與研究計畫線索，
-          供公共討論、新聞查核、政策研究與公民監督使用。
-        </p>
-        <p>
-          資料僅作為查詢輔助與脈絡整理，不代表主管機關之正式預算對帳、決算審定或完整授權清單；引用時請回到原始公開來源確認最新版本、授權條款與更新日期。
-        </p>
-        <small>Copyright 2026. Open data for public interest research and non-commercial civic use.</small>
+          <small>Copyright 2026. Open data for public interest research and non-commercial civic use.</small>
+        </div>
       </footer>
       </main>
     </>
