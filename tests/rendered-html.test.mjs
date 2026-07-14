@@ -39,9 +39,16 @@ test("server-renders the sporttech budget query assistant", async () => {
   assert.match(html, /台灣運動 x 科技行動計畫/);
   assert.match(html, /精準運動科學研究專案/);
   assert.match(html, /版號/);
-  assert.match(html, /v0\.2\.1/);
+  assert.match(html, /v0\.2\.2/);
   assert.match(html, /更新日期/);
   assert.match(html, /2026-07-14/);
+  assert.match(html, /建議查詢流程/);
+  assert.match(html, /先選預算身分/);
+  assert.match(html, /再看執行程度/);
+  assert.match(html, /最後打開詳情/);
+  assert.match(html, /目前查詢/);
+  assert.match(html, /查詢結果/);
+  assert.match(html, /切換分類/);
   assert.match(html, /整理運動X科技預算線索/);
   assert.match(html, /略過導入/);
   assert.match(html, /公開資料與版權聲明/);
@@ -60,7 +67,7 @@ test("documents the local and git version boundary", async () => {
   ]);
 
   assert.match(page, /版號/);
-  assert.match(page, /v0\.2\.1/);
+  assert.match(page, /v0\.2\.2/);
   assert.match(page, /更新日期/);
   assert.match(page, /isPreloading/);
   assert.match(page, /setIsPreloading/);
@@ -89,6 +96,14 @@ test("documents the local and git version boundary", async () => {
   assert.match(page, /selectedLayers/);
   assert.match(page, /selectedStages/);
   assert.match(page, /selectedLocations/);
+  assert.match(page, /hasActiveFilters/);
+  assert.match(page, /function resetFilters/);
+  assert.match(page, /建議查詢流程/);
+  assert.match(page, /先選預算身分/);
+  assert.match(page, /目前查詢/);
+  assert.match(page, /清除篩選/);
+  assert.match(page, /查詢結果/);
+  assert.match(page, /重設查詢條件/);
   assert.match(page, /itemView/);
   assert.match(page, /setItemView/);
   assert.match(page, /切換分類/);
@@ -155,6 +170,11 @@ test("keeps the workbench and lane cards vertically sequenced", async () => {
   assert.match(css, /\.metric-drawer-label\s*\{[\s\S]*border-radius: 8px/);
   assert.match(css, /\.metric-drawer-scroll h2\s*\{[\s\S]*font-size: clamp\(1\.85rem, 3\.1vw, 2\.55rem\)/);
   assert.match(css, /\.metric-drawer-scroll section\s*\{[\s\S]*border-left: 5px solid var\(--red\)/);
+  assert.match(css, /\.query-flow\s*\{[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
+  assert.match(css, /\.query-flow div\s*\{[\s\S]*grid-template-columns: 32px minmax\(0, 1fr\)/);
+  assert.match(css, /\.panel-status\s*\{[\s\S]*border-bottom: 1px solid var\(--line\)/);
+  assert.match(css, /\.empty-state button\s*\{/);
+  assert.match(css, /\.view-switcher\s*\{[\s\S]*display: flex/);
   assert.match(css, /@keyframes metric-drawer-slide/);
   assert.match(css, /\.view-toggle\s*\{[\s\S]*border-radius: 999px/);
   assert.match(css, /\.view-toggle button\[aria-pressed="true"\]\s*\{[\s\S]*background: var\(--ink\)/);
@@ -182,6 +202,8 @@ test("uses a bottom drawer for detail reading", async () => {
   assert.match(css, /\.source-links\s*\{/);
   assert.match(css, /\.select-options\s*\{[\s\S]*max-height: min\(360px, 60vh\)/);
   assert.match(css, /@media \(max-width: 1040px\)\s*\{[\s\S]*\.metrics\s*\{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(css, /@media \(max-width: 1040px\)\s*\{[\s\S]*\.query-flow\s*\{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(css, /@media \(max-width: 700px\)\s*\{[\s\S]*\.query-flow,[\s\S]*grid-template-columns: 1fr/);
   assert.match(css, /@keyframes drawer-rise/);
   assert.doesNotMatch(css, /detail-disclosure/);
 });

@@ -54,6 +54,17 @@ export default function Home() {
 
   const active =
     filtered.find((flow) => flow.id === activeFlow) ?? filtered[0] ?? null;
+  const hasActiveFilters =
+    selectedLayers.length > 0 ||
+    selectedStages.length > 0 ||
+    selectedLocations.length > 0;
+
+  function resetFilters() {
+    setSelectedLayers([]);
+    setSelectedStages([]);
+    setSelectedLocations([]);
+    setDrawerOpen(false);
+  }
 
   function closeDrawer() {
     setDrawerOpen(false);
@@ -179,9 +190,38 @@ export default function Home() {
         ))}
       </section>
 
+      <section className="query-flow" aria-label="建議查詢流程">
+        <div>
+          <span>1</span>
+          <strong>先選預算身分</strong>
+          <p>從中央、科研、地方、產業或協會應用端縮小範圍。</p>
+        </div>
+        <div>
+          <span>2</span>
+          <strong>再看執行程度</strong>
+          <p>區分提案、執行中、已有成果與仍待公開對帳的項目。</p>
+        </div>
+        <div>
+          <span>3</span>
+          <strong>最後打開詳情</strong>
+          <p>核對來源連結、公開資訊進度與下一步查核問題。</p>
+        </div>
+      </section>
+
       <section className="workbench">
         <aside className="panel">
           <div className="panel-inner">
+            <div className="panel-status">
+              <div>
+                <span className="control-label">目前查詢</span>
+                <strong>{filtered.length} / {flows.length} 項</strong>
+              </div>
+              {hasActiveFilters && (
+                <button onClick={resetFilters} type="button">
+                  清除篩選
+                </button>
+              )}
+            </div>
             <div className="filter-grid" aria-label="查詢篩選">
               <details className="select-menu">
                 <summary>
@@ -310,22 +350,28 @@ export default function Home() {
 
         <section className="results-panel" aria-label="預算項目">
           <div className="results-toolbar">
-            <span className="control-label">切換分類</span>
-            <div className="view-toggle" role="group" aria-label="預算項目顯示方式">
-              <button
-                aria-pressed={itemView === "list"}
-                onClick={() => setItemView("list")}
-                type="button"
-              >
-                列表
-              </button>
-              <button
-                aria-pressed={itemView === "card"}
-                onClick={() => setItemView("card")}
-                type="button"
-              >
-                卡片
-              </button>
+            <div>
+              <span className="control-label">查詢結果</span>
+              <strong>{filtered.length === 0 ? "沒有符合項目" : `顯示 ${filtered.length} 筆公開線索`}</strong>
+            </div>
+            <div className="view-switcher">
+              <span className="control-label">切換分類</span>
+              <div className="view-toggle" role="group" aria-label="預算項目顯示方式">
+                <button
+                  aria-pressed={itemView === "list"}
+                  onClick={() => setItemView("list")}
+                  type="button"
+                >
+                  列表
+                </button>
+                <button
+                  aria-pressed={itemView === "card"}
+                  onClick={() => setItemView("card")}
+                  type="button"
+                >
+                  卡片
+                </button>
+              </div>
             </div>
           </div>
           <div className={`lane-map ${itemView === "card" ? "card-view" : "list-view"}`} aria-label="預算項目清單">
@@ -349,7 +395,11 @@ export default function Home() {
               </button>
             ))}
             {filtered.length === 0 && (
-              <div className="empty-state">目前沒有符合這組條件的公開可辨識項目。</div>
+              <div className="empty-state">
+                <strong>目前沒有符合這組條件的公開可辨識項目。</strong>
+                <p>建議先回到全部項目，再逐一縮小預算層級、執行程度或縣市。</p>
+                <button onClick={resetFilters} type="button">重設查詢條件</button>
+              </div>
             )}
           </div>
         </section>
@@ -525,7 +575,7 @@ export default function Home() {
           </p>
         </div>
         <div className="footer-meta" aria-label="版本與授權用途">
-          <span>版號 v0.2.1</span>
+          <span>版號 v0.2.2</span>
           <span>更新日期 2026-07-14</span>
           <small>Copyright 2026. Open data for public interest research and non-commercial civic use.</small>
         </div>
