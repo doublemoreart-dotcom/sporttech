@@ -44,6 +44,8 @@ test("server-renders the sporttech budget query assistant", async () => {
   assert.match(html, /2026-07-14/);
   assert.match(html, /整理運動X科技預算線索/);
   assert.match(html, /略過導入/);
+  assert.match(html, /公開資料與版權聲明/);
+  assert.match(html, /Open data for public interest research/);
   assert.doesNotMatch(html, /本機版|Git 版控版|交付版/);
   assert.doesNotMatch(html, /Your site is taking shape|Codex is working|react-loading-skeleton/i);
 });
@@ -66,6 +68,12 @@ test("documents the local and git version boundary", async () => {
   assert.match(page, /aria-live="polite"/);
   assert.match(page, /整理運動X科技預算線索/);
   assert.match(page, /略過導入/);
+  assert.match(page, /className="site-footer"/);
+  assert.match(page, /公開資料與版權聲明/);
+  assert.match(page, /政府公開資訊、open data、新聞報導/);
+  assert.match(page, /公共討論、新聞查核、政策研究與公民監督/);
+  assert.match(page, /不代表主管機關之正式預算對帳/);
+  assert.match(page, /Open data for public interest research and non-commercial civic use/);
   assert.match(page, /className="hero-visual"/);
   assert.match(page, /\/sporttech-budget-hero\.jpg/);
   assert.doesNotMatch(page, /next\/image/);
@@ -118,6 +126,8 @@ test("keeps the workbench and lane cards vertically sequenced", async () => {
   assert.match(css, /\.preloader-card\s*\{[\s\S]*max-width: 620px/);
   assert.match(css, /\.preloader-bar span\s*\{[\s\S]*animation: preload-progress 1\.35s ease-out forwards/);
   assert.match(css, /@keyframes preload-progress/);
+  assert.match(css, /\.site-footer\s*\{[\s\S]*border-top: 1px solid var\(--line\)/);
+  assert.match(css, /\.site-footer small\s*\{[\s\S]*text-transform: uppercase/);
   assert.match(css, /\.workbench\s*\{[\s\S]*grid-template-columns: minmax\(0, 1fr\)/);
   assert.match(css, /grid-template-areas:\s*"dot year"\s*"\. title"\s*"\. amount"/);
 });

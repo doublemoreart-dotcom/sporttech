@@ -914,6 +914,35 @@ li {
   margin-right: 12px;
 }
 
+.site-footer {
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  display: grid;
+  gap: 8px;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  margin-top: 18px;
+  padding-top: 16px;
+}
+
+.site-footer strong {
+  color: var(--ink);
+  font-size: 0.95rem;
+}
+
+.site-footer p {
+  margin: 0;
+  max-width: 960px;
+}
+
+.site-footer small {
+  color: var(--muted);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
 @media (max-width: 1040px) {
   .masthead {
     grid-template-columns: 1fr;
