@@ -259,8 +259,27 @@ h1 {
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 8px;
+  cursor: pointer;
   min-height: 92px;
   padding: 14px;
+  text-align: left;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.metric:hover,
+.metric:focus-visible {
+  border-color: var(--ink);
+  box-shadow: 6px 6px 0 var(--shadow);
+  outline: none;
+  transform: translate(-2px, -2px);
+}
+
+.metric:active {
+  box-shadow: 3px 3px 0 var(--shadow);
+  transform: translate(0, 0);
 }
 
 .metric span {
@@ -283,6 +302,29 @@ h1 {
   display: block;
   line-height: 1.45;
   margin-top: 8px;
+}
+
+.metric::after {
+  color: var(--teal);
+  content: "查看說明";
+  display: block;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  margin-top: 10px;
+  opacity: 0;
+  text-transform: uppercase;
+  transform: translateY(4px);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.metric:hover::after,
+.metric:focus-visible::after {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .workbench {
@@ -861,6 +903,79 @@ li {
   padding-top: 18px;
 }
 
+.metric-drawer-layer {
+  inset: 0;
+  position: fixed;
+  z-index: 16;
+}
+
+.metric-drawer-backdrop {
+  background: rgba(21, 25, 27, 0.26);
+  border: 0;
+  inset: 0;
+  position: absolute;
+  width: 100%;
+}
+
+.metric-drawer-panel {
+  animation: metric-drawer-slide 220ms ease-out;
+  background: var(--panel);
+  border-left: 1px solid var(--line);
+  box-shadow: -18px 0 46px rgba(21, 25, 27, 0.22);
+  height: 100%;
+  max-width: calc(100% - 28px);
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: min(460px, 42vw);
+}
+
+.metric-drawer-scroll {
+  display: grid;
+  gap: 16px;
+  height: calc(100vh - 71px);
+  overflow: auto;
+  padding: 24px;
+}
+
+.metric-drawer-label {
+  background: #eee6d7;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.85rem;
+  font-weight: 900;
+  justify-self: start;
+  padding: 7px 11px;
+}
+
+.metric-drawer-scroll h2 {
+  color: var(--ink);
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  line-height: 0.98;
+  margin: 0;
+}
+
+.metric-drawer-scroll h3 {
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.metric-drawer-scroll p,
+.metric-drawer-scroll li {
+  color: #354145;
+  line-height: 1.75;
+}
+
+.metric-drawer-scroll ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 20px;
+}
+
 @keyframes drawer-rise {
   from {
     transform: translate(-50%, 100%);
@@ -868,6 +983,16 @@ li {
 
   to {
     transform: translate(-50%, 0);
+  }
+}
+
+@keyframes metric-drawer-slide {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
   }
 }
 
@@ -987,6 +1112,10 @@ li {
   .drawer-panel {
     height: 70vh;
     width: 100%;
+  }
+
+  .metric-drawer-panel {
+    width: min(100%, 390px);
   }
 
   .drawer-scroll {

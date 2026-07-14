@@ -29,9 +29,12 @@ export default function Home() {
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
   const [activeFlow, setActiveFlow] = useState(flows[0].id);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [activeMetric, setActiveMetric] = useState<(typeof metrics)[number] | null>(null);
   const [isPreloading, setIsPreloading] = useState(true);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const metricCloseButtonRef = useRef<HTMLButtonElement>(null);
   const lastTriggerRef = useRef<HTMLButtonElement>(null);
+  const lastMetricTriggerRef = useRef<HTMLButtonElement>(null);
 
   const filtered = useMemo(
     () =>
@@ -56,6 +59,11 @@ export default function Home() {
     window.requestAnimationFrame(() => lastTriggerRef.current?.focus());
   }
 
+  function closeMetricDrawer() {
+    setActiveMetric(null);
+    window.requestAnimationFrame(() => lastMetricTriggerRef.current?.focus());
+  }
+
   useEffect(() => {
     const preloadTimer = window.setTimeout(() => setIsPreloading(false), 1400);
     return () => window.clearTimeout(preloadTimer);
@@ -77,6 +85,22 @@ export default function Home() {
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [drawerOpen]);
+
+  useEffect(() => {
+    if (!activeMetric) return;
+
+    metricCloseButtonRef.current?.focus();
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeMetricDrawer();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [activeMetric]);
 
   return (
     <>
@@ -136,11 +160,21 @@ export default function Home() {
 
       <section className="metrics" aria-label="總覽數字">
         {metrics.map((metric) => (
-          <div className="metric" key={metric.label}>
+          <button
+            aria-label={`查看${metric.label}說明`}
+            className="metric"
+            key={metric.label}
+            onClick={(event) => {
+              lastMetricTriggerRef.current = event.currentTarget;
+              setActiveMetric(metric);
+              setDrawerOpen(false);
+            }}
+            type="button"
+          >
             <span>{metric.label}</span>
             <strong>{metric.value}</strong>
             <small>{metric.note}</small>
-          </div>
+          </button>
         ))}
       </section>
 
@@ -424,6 +458,36 @@ export default function Home() {
               </div>
             </div>
           </article>
+        </div>
+      )}
+
+      {activeMetric && (
+        <div className="metric-drawer-layer" role="dialog" aria-modal="true" aria-label={`${activeMetric.label}說明`}>
+          <button className="metric-drawer-backdrop" aria-label="關閉總覽說明" onClick={closeMetricDrawer} />
+          <aside className="metric-drawer-panel">
+            <div className="drawer-topline">
+              <div className="detail-header">
+                <span>總覽指標</span>
+                <span>{activeMetric.label}</span>
+              </div>
+              <button className="close-button" onClick={closeMetricDrawer} ref={metricCloseButtonRef}>
+                關閉
+              </button>
+            </div>
+            <div className="metric-drawer-scroll">
+              <span className="metric-drawer-label">{activeMetric.value}</span>
+              <h2>{activeMetric.detailTitle}</h2>
+              <p>{activeMetric.detail}</p>
+              <section>
+                <h3>查核重點</h3>
+                <ul>
+                  {activeMetric.checks.map((check) => (
+                    <li key={check}>{check}</li>
+                  ))}
+                </ul>
+              </section>
+            </div>
+          </aside>
         </div>
       )}
 

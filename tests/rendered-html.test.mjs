@@ -89,10 +89,19 @@ test("documents the local and git version boundary", async () => {
   assert.match(page, /selectedLayers/);
   assert.match(page, /selectedStages/);
   assert.match(page, /selectedLocations/);
+  assert.match(page, /activeMetric/);
+  assert.match(page, /setActiveMetric/);
+  assert.match(page, /className="metric"/);
+  assert.match(page, /metric-drawer-layer/);
+  assert.match(page, /metric-drawer-panel/);
+  assert.match(page, /metricCloseButtonRef/);
   assert.match(page, /縣市/);
   assert.match(page, /對應縣市/);
   assert.match(data, /台北市/);
   assert.match(data, /待逐案整理/);
+  assert.match(data, /detailTitle: "政策總額怎麼讀"/);
+  assert.match(data, /checks: \[/);
+  assert.match(data, /查行政院或科技會報核定計畫/);
   assert.match(page, /selectionSummary/);
   assert.match(page, /關閉/);
   assert.match(page, /查核摘要/);
@@ -132,6 +141,10 @@ test("keeps the workbench and lane cards vertically sequenced", async () => {
 
   assert.match(css, /\.hero-visual\s*\{[\s\S]*grid-column: 1 \/ -1/);
   assert.match(css, /\.hero-visual img\s*\{[\s\S]*aspect-ratio: 16 \/ 6/);
+  assert.match(css, /\.metric:hover,\n\.metric:focus-visible\s*\{[\s\S]*transform: translate\(-2px, -2px\)/);
+  assert.match(css, /\.metric::after\s*\{[\s\S]*content: "查看說明"/);
+  assert.match(css, /\.metric-drawer-panel\s*\{[\s\S]*right: 0/);
+  assert.match(css, /@keyframes metric-drawer-slide/);
   assert.match(css, /\.preloader\s*\{[\s\S]*position: fixed/);
   assert.match(css, /\.preloader-card\s*\{[\s\S]*max-width: 620px/);
   assert.match(css, /\.preloader-bar span\s*\{[\s\S]*animation: preload-progress 1\.35s ease-out forwards/);
