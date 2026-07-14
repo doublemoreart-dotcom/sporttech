@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useMemo, useState } from "react";
 
 type Stage = "proposal" | "approved" | "executing" | "verified" | "unknown";
@@ -310,6 +311,16 @@ export default function Home() {
   return (
     <main className="site-shell">
       <section className="masthead">
+        <figure className="hero-visual">
+          <Image
+            alt="運動場域、資料節點與預算流向的主視覺"
+            height={864}
+            priority
+            sizes="(max-width: 1240px) 100vw, 1240px"
+            src="/sporttech-budget-hero.png"
+            width={1536}
+          />
+        </figure>
         <div>
           <p className="eyebrow">budget query assistant / 2022-2026</p>
           <h1>運動X科技預算查詢小幫手</h1>

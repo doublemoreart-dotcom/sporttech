@@ -71,6 +71,24 @@ p {
   padding: 20px 0 24px;
 }
 
+.hero-visual {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  grid-column: 1 / -1;
+  margin: 0;
+  overflow: hidden;
+}
+
+.hero-visual img {
+  aspect-ratio: 16 / 6;
+  display: block;
+  height: auto;
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+}
+
 .eyebrow,
 .control-label,
 .detail-header,

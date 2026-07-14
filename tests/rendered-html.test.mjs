@@ -31,6 +31,8 @@ test("server-renders the sporttech budget query assistant", async () => {
   const html = await response.text();
   assert.match(html, /2022-2026 運動X科技預算查詢小幫手/);
   assert.match(html, /運動X科技預算查詢小幫手/);
+  assert.match(html, /sporttech-budget-hero\.png/);
+  assert.match(html, /運動場域、資料節點與預算流向的主視覺/);
   assert.match(html, /先判斷預算身分，再看協會是否直接承接/);
   assert.match(html, /想查一筆運動科技相關預算時/);
   assert.match(html, /14 縣市 \/ 30 案/);
@@ -54,6 +56,8 @@ test("documents the local and git version boundary", async () => {
   assert.match(page, /版號/);
   assert.match(page, /v0\.2\.0/);
   assert.match(page, /更新日期/);
+  assert.match(page, /className="hero-visual"/);
+  assert.match(page, /\/sporttech-budget-hero\.png/);
   assert.match(page, /drawerOpen/);
   assert.match(page, /setDrawerOpen\(true\)/);
   assert.match(page, /selectedLayers/);
@@ -94,6 +98,8 @@ test("documents the local and git version boundary", async () => {
 test("keeps the workbench and lane cards vertically sequenced", async () => {
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
+  assert.match(css, /\.hero-visual\s*\{[\s\S]*grid-column: 1 \/ -1/);
+  assert.match(css, /\.hero-visual img\s*\{[\s\S]*aspect-ratio: 16 \/ 6/);
   assert.match(css, /\.workbench\s*\{[\s\S]*grid-template-columns: minmax\(0, 1fr\)/);
   assert.match(css, /grid-template-areas:\s*"dot year"\s*"\. title"\s*"\. amount"/);
 });
