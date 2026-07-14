@@ -31,7 +31,7 @@ test("server-renders the sporttech budget query assistant", async () => {
   const html = await response.text();
   assert.match(html, /2022-2026 運動X科技預算查詢小幫手/);
   assert.match(html, /運動X科技預算查詢小幫手/);
-  assert.match(html, /sporttech-budget-hero\.png/);
+  assert.match(html, /sporttech-budget-hero\.jpg/);
   assert.match(html, /運動場域、資料節點與預算流向的主視覺/);
   assert.match(html, /先判斷預算身分，再看協會是否直接承接/);
   assert.match(html, /想查一筆運動科技相關預算時/);
@@ -47,8 +47,9 @@ test("server-renders the sporttech budget query assistant", async () => {
 });
 
 test("documents the local and git version boundary", async () => {
-  const [page, layout, readme] = await Promise.all([
+  const [page, data, layout, readme] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/budget-data.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../README.md", import.meta.url), "utf8"),
   ]);
@@ -57,16 +58,20 @@ test("documents the local and git version boundary", async () => {
   assert.match(page, /v0\.2\.0/);
   assert.match(page, /更新日期/);
   assert.match(page, /className="hero-visual"/);
-  assert.match(page, /\/sporttech-budget-hero\.png/);
+  assert.match(page, /\/sporttech-budget-hero\.jpg/);
+  assert.doesNotMatch(page, /next\/image/);
   assert.match(page, /drawerOpen/);
   assert.match(page, /setDrawerOpen\(true\)/);
+  assert.match(page, /closeButtonRef/);
+  assert.match(page, /lastTriggerRef/);
+  assert.match(page, /event\.key === "Escape"/);
   assert.match(page, /selectedLayers/);
   assert.match(page, /selectedStages/);
   assert.match(page, /selectedLocations/);
   assert.match(page, /縣市/);
   assert.match(page, /對應縣市/);
-  assert.match(page, /台北市/);
-  assert.match(page, /待逐案整理/);
+  assert.match(data, /台北市/);
+  assert.match(data, /待逐案整理/);
   assert.match(page, /selectionSummary/);
   assert.match(page, /關閉/);
   assert.match(page, /查核摘要/);
@@ -74,12 +79,12 @@ test("documents the local and git version boundary", async () => {
   assert.match(page, /新聞\/報導線索/);
   assert.match(page, /中央或地方府會公告/);
   assert.match(page, /open data \/ 對帳進度/);
-  assert.match(page, /publicInfo/);
+  assert.match(data, /publicInfo/);
   assert.match(page, /相關數據與連結來源/);
-  assert.match(page, /sourceCatalog/);
-  assert.match(page, /政府科技計畫資訊網/);
-  assert.match(page, /政府研究資訊系統 GRB/);
-  assert.match(page, /政府資料開放平臺/);
+  assert.match(data, /sourceCatalog/);
+  assert.match(data, /政府科技計畫資訊網/);
+  assert.match(data, /政府研究資訊系統 GRB/);
+  assert.match(data, /政府資料開放平臺/);
   assert.match(page, /補充判斷/);
   assert.match(page, /下一步問法/);
   assert.doesNotMatch(page, /<h2>本機版<\/h2>|<h2>Git 版控版<\/h2>|<h2>交付版<\/h2>/);
@@ -111,6 +116,8 @@ test("uses a bottom drawer for detail reading", async () => {
   assert.match(css, /\.drawer-scroll\s*\{[\s\S]*overflow: auto/);
   assert.match(css, /\.public-info-grid\s*\{[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
   assert.match(css, /\.source-links\s*\{/);
+  assert.match(css, /\.select-options\s*\{[\s\S]*max-height: min\(360px, 60vh\)/);
+  assert.match(css, /@media \(max-width: 1040px\)\s*\{[\s\S]*\.metrics\s*\{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
   assert.match(css, /@keyframes drawer-rise/);
   assert.doesNotMatch(css, /detail-disclosure/);
 });
