@@ -51,11 +51,12 @@ test("server-renders the sporttech budget query assistant", async () => {
 });
 
 test("documents the local and git version boundary", async () => {
-  const [page, data, layout, readme] = await Promise.all([
+  const [page, data, layout, readme, favicon] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/budget-data.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../README.md", import.meta.url), "utf8"),
+    readFile(new URL("../public/favicon.svg", import.meta.url), "utf8"),
   ]);
 
   assert.match(page, /版號/);
@@ -111,6 +112,12 @@ test("documents the local and git version boundary", async () => {
   assert.doesNotMatch(page, /detail-disclosure|展開完整資料/);
   assert.match(layout, /lang="zh-Hant"/);
   assert.match(layout, /運動X科技預算查詢小幫手/);
+  assert.match(layout, /icon: "\/favicon\.svg"/);
+  assert.match(layout, /shortcut: "\/favicon\.svg"/);
+  assert.match(favicon, /viewBox="0 0 64 64"/);
+  assert.match(favicon, /#F4EFE5/);
+  assert.match(favicon, /#2E7068/);
+  assert.match(favicon, /#A16C19/);
   assert.match(readme, /## 網站架構/);
   assert.match(readme, /## 本機版/);
   assert.match(readme, /## Git 版控版/);
