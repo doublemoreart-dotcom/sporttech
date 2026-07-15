@@ -10,6 +10,15 @@
 work/sporttech-budget-map/
 ```
 
+正式對外準線是：
+
+```text
+https://dinopeng.com/sporttech/
+https://github.com/doublemoreart-dotcom/sporttech
+```
+
+未來所有查核、部署與使用者分享，均以這組 Public URL 與 GitHub repo 為準。其他路徑僅作為本機快照、舊版輸出或審稿資料。
+
 任何會影響網站功能、資料結構、互動邏輯、樣式、測試或部署的修改，都應先改這個 repo。
 
 主要檔案：
@@ -37,6 +46,26 @@ outputs/assets/
 這些檔案用於快速預覽、截圖、分享、審稿或離線打開，不是主要開發來源。
 
 若正式版有功能或內容更新，才同步更新 `outputs/`。不要只改 `outputs/` 後忘記回填正式 repo。
+
+### 舊資料清理判斷
+
+可保留：
+
+- `outputs/index.html`
+- `outputs/sporttech-budget-static-v2.html`
+- `outputs/github-pages/sporttech/index.html`
+- `outputs/assets/`
+
+以上仍由 `npm run sync` 產生或維護，可作為本機預覽與部署快照。
+
+可刪除或封存：
+
+- `outputs/sporttech-budget-static-prototype.html`
+- 一次性審查筆記
+- 舊截圖
+- 不再被 README、VERSIONING、script 或部署流程引用的早期試作檔
+
+刪除前先確認它不是唯一留存的設計紀錄；若只是避免混淆，優先移到封存資料夾或加上 `legacy-` 命名。
 
 ## Git 應追蹤
 
@@ -75,26 +104,33 @@ Git 版控應保留可重建網站的來源與設定：
 ## 更新流程
 
 1. 在 `work/sporttech-budget-map/` 修改正式版。
-2. 執行驗證：
+2. 執行本機更新流程：
 
    ```bash
-   npm run check
+   npm run update:local
    ```
 
-3. 若有同步維護靜態交付檔，先確認 `outputs/index.html` 是最新主檔，再執行：
-
-   ```bash
-   npm run sync
-   ```
-
-   這會同步：
+   這會依序執行：
 
    ```text
-   outputs/sporttech-budget-static-v2.html
-   outputs/github-pages/sporttech/index.html
+   npm run check
+   npm run sync
+   git status --short
    ```
 
-   並自動將 GitHub Pages 版本的主視覺改用較小的 `sporttech-budget-hero-small.jpg`。
+3. 若需要發布到 GitHub Pages，執行：
+
+   ```bash
+   npm run update:deploy
+   ```
+
+   這會在檢查與同步通過後執行：
+
+   ```text
+   npm run deploy:pages
+   ```
+
+   部署流程會更新 GitHub Pages，但不會自動 commit，也不會 force push。
 
 4. 檢查 Git 狀態：
 
@@ -103,11 +139,7 @@ Git 版控應保留可重建網站的來源與設定：
    ```
 
 5. 只 commit 正式 repo 內應追蹤的檔案。
-6. 需要部署時，使用：
-
-   ```bash
-   npm run deploy:pages
-   ```
+6. 對外確認以 `https://dinopeng.com/sporttech/` 為準；若該網址與 GitHub Pages 內容不同步，先確認 DNS、Pages 來源或快取。
 
 ## 命名建議
 

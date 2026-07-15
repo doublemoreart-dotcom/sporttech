@@ -2,6 +2,15 @@
 
 一頁式互動查詢工具，用於協助使用者判讀台灣運動科技相關預算的來源、執行程度、地方場域、學研/產業執行單位，以及協會在預算流中的角色。
 
+## 正式準線
+
+未來查核、部署與維護請以以下兩個位置為準：
+
+- Public URL: `https://dinopeng.com/sporttech/`
+- GitHub repo: `https://github.com/doublemoreart-dotcom/sporttech`
+
+其他本機 `outputs/` HTML、早期 prototype、截圖與審查筆記都視為交付快照或舊資料，不作為正式來源。需要更新網站時，先修改本 repo，再同步與部署。
+
 ## 網站架構
 
 ```text
@@ -83,25 +92,31 @@ outputs/github-pages/sporttech/index.html
 outputs/assets/
 ```
 
+舊資料判斷：
+
+- 保留：`outputs/index.html`、`outputs/sporttech-budget-static-v2.html`、`outputs/github-pages/sporttech/index.html`，因為同步與部署流程仍會產生或使用它們。
+- 可刪或封存：`outputs/sporttech-budget-static-prototype.html`、一次性 review notes、舊截圖與早期試作檔。
+- 不要直接改：任何 `outputs/` 檔案都不應成為主要修改來源。
+
 同步本機交付版與 GitHub Pages 靜態檔：
 
 ```bash
 npm run sync
 ```
 
-建議更新節奏：
+建議更新流程：
 
 ```bash
-npm run check
-npm run sync
-git status --short
+npm run update:local
 ```
 
-需要部署到 GitHub Pages 時：
+這會依序執行檢查、同步本機靜態快照，最後列出 Git 狀態。需要發布時使用：
 
 ```bash
-npm run deploy:pages
+npm run update:deploy
 ```
+
+`update:deploy` 會在檢查與同步通過後部署 GitHub Pages；它不會自動 commit，也不會 force push。
 
 本專案原始碼位置：
 
