@@ -78,11 +78,24 @@ Git 版控應保留可重建網站的來源與設定：
 2. 執行驗證：
 
    ```bash
-   npm test
-   npm run lint
+   npm run check
    ```
 
-3. 需要本機交付時，同步輸出到 `outputs/index.html` 與相關 assets。
+3. 若有同步維護靜態交付檔，先確認 `outputs/index.html` 是最新主檔，再執行：
+
+   ```bash
+   npm run sync
+   ```
+
+   這會同步：
+
+   ```text
+   outputs/sporttech-budget-static-v2.html
+   outputs/github-pages/sporttech/index.html
+   ```
+
+   並自動將 GitHub Pages 版本的主視覺改用較小的 `sporttech-budget-hero-small.jpg`。
+
 4. 檢查 Git 狀態：
 
    ```bash
@@ -90,6 +103,11 @@ Git 版控應保留可重建網站的來源與設定：
    ```
 
 5. 只 commit 正式 repo 內應追蹤的檔案。
+6. 需要部署時，使用：
+
+   ```bash
+   npm run deploy:pages
+   ```
 
 ## 命名建議
 

@@ -31,6 +31,7 @@ worker/           vinext/hosting runtime 入口
 npm run dev
 npm run build
 npm test
+npm run lint
 ```
 
 本機可存在但不進 Git 的內容：
@@ -78,7 +79,28 @@ Git 版只追蹤可重建網站的來源與設定：
 ```text
 outputs/index.html
 outputs/sporttech-budget-static-v2.html
+outputs/github-pages/sporttech/index.html
 outputs/assets/
+```
+
+同步本機交付版與 GitHub Pages 靜態檔：
+
+```bash
+npm run sync
+```
+
+建議更新節奏：
+
+```bash
+npm run check
+npm run sync
+git status --short
+```
+
+需要部署到 GitHub Pages 時：
+
+```bash
+npm run deploy:pages
 ```
 
 本專案原始碼位置：
