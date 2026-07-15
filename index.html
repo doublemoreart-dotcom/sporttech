@@ -142,9 +142,57 @@
         padding: 24px 0 42px;
       }
 
+      .site-header {
+        align-items: center;
+        border-bottom: 4px double var(--ink);
+        display: flex;
+        gap: 16px;
+        justify-content: space-between;
+        padding: 0 0 14px;
+      }
+
+      .site-logo {
+        color: var(--ink);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 0;
+        text-decoration: none;
+        text-transform: uppercase;
+      }
+
+      .site-header nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: flex-end;
+      }
+
+      .site-header a:not(.site-logo) {
+        background: rgba(251, 248, 239, 0.74);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--ink);
+        font-size: 13px;
+        font-weight: 800;
+        padding: 8px 12px;
+        text-decoration: none;
+        transition:
+          border-color 160ms ease,
+          box-shadow 160ms ease,
+          transform 160ms ease;
+      }
+
+      .site-header a:not(.site-logo):hover,
+      .site-header a:not(.site-logo):focus-visible {
+        border-color: var(--ink);
+        box-shadow: 3px 3px 0 var(--shadow);
+        outline: none;
+        transform: translate(-1px, -1px);
+      }
+
       .masthead {
         border-bottom: 4px double var(--ink);
-        border-top: 4px solid var(--ink);
         display: grid;
         gap: 18px;
         grid-template-columns: minmax(0, 1fr) 310px;
@@ -227,11 +275,39 @@
         margin: 0;
       }
 
+      .overview-section {
+        scroll-margin-top: 18px;
+      }
+
+      .section-heading {
+        display: grid;
+        gap: 6px;
+        margin: 20px 0 12px;
+        max-width: 780px;
+      }
+
+      .section-heading .kicker {
+        margin: 0;
+      }
+
+      .section-heading h2 {
+        color: var(--ink);
+        font-size: clamp(26px, 4vw, 43px);
+        line-height: 1.04;
+        margin: 0;
+      }
+
+      .section-heading p {
+        color: var(--muted);
+        line-height: 1.65;
+        margin: 0;
+      }
+
       .metrics {
         display: grid;
         gap: 10px;
         grid-template-columns: repeat(4, 1fr);
-        margin: 18px 0 22px;
+        margin: 0 0 22px;
       }
 
       .metric {
@@ -1274,6 +1350,15 @@
           width: min(100% - 22px, 1240px);
         }
 
+        .site-header {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .site-header nav {
+          justify-content: flex-start;
+        }
+
         .metrics,
         .query-flow,
         .preloader-flow,
@@ -1377,7 +1462,14 @@
       </div>
     </section>
 
-    <main class="shell">
+    <main class="shell" id="top">
+      <header class="site-header" aria-label="頁面導覽">
+        <a class="site-logo" href="#top" aria-label="回到頁首">SportTech Budget</a>
+        <nav aria-label="主要區塊">
+          <a href="#overview">總覽</a>
+          <a href="#query">查詢</a>
+        </nav>
+      </header>
       <section class="masthead">
         <figure class="hero-visual">
           <img src="assets/sporttech-budget-hero-small.jpg" alt="運動場域、資料節點與預算流向的主視覺" />
@@ -1397,48 +1489,56 @@
         </aside>
       </section>
 
-      <section class="metrics" aria-label="總覽數字">
-        <button class="metric" data-metric="policy" type="button" aria-label="查看政策總額說明">
-          <span>政策總額</span>
-          <strong>46 億元</strong>
-          <small>跨部會、跨年度政策總額，不能直接視為運動部單一預算。</small>
-        </button>
-        <button class="metric" data-metric="research" type="button" aria-label="查看科研線索說明">
-          <span>科研線索</span>
-          <strong>2.4 億元級</strong>
-          <small>精準運動科學歷史科研專案，重點在國家隊與競技表現。</small>
-        </button>
-        <button class="metric" data-metric="local" type="button" aria-label="查看地方案例說明">
-          <span>地方案例</span>
-          <strong>14 縣市 / 30 案</strong>
-          <small>地方場域實證需分別查核核定、決標、驗收與維運。</small>
-        </button>
-        <button class="metric" data-metric="association" type="button" aria-label="查看協會角色說明">
-          <span>協會角色</span>
-          <strong>應用端居多</strong>
-          <small>協會常提供選手、場域與賽事脈絡，不一定直接拿科技預算。</small>
-        </button>
+      <section class="overview-section" id="overview" aria-labelledby="overview-title">
+        <div class="section-heading">
+          <p class="kicker">overview</p>
+          <h2 id="overview-title">先看總覽，再進入查詢</h2>
+          <p>用四個指標快速抓預算規模、科研線索、地方場域與協會角色，再照三步驟縮小查核範圍。</p>
+        </div>
+
+        <div class="metrics" aria-label="總覽數字">
+          <button class="metric" data-metric="policy" type="button" aria-label="查看政策總額說明">
+            <span>政策總額</span>
+            <strong>46 億元</strong>
+            <small>跨部會、跨年度政策總額，不能直接視為運動部單一預算。</small>
+          </button>
+          <button class="metric" data-metric="research" type="button" aria-label="查看科研線索說明">
+            <span>科研線索</span>
+            <strong>2.4 億元級</strong>
+            <small>精準運動科學歷史科研專案，重點在國家隊與競技表現。</small>
+          </button>
+          <button class="metric" data-metric="local" type="button" aria-label="查看地方案例說明">
+            <span>地方案例</span>
+            <strong>14 縣市 / 30 案</strong>
+            <small>地方場域實證需分別查核核定、決標、驗收與維運。</small>
+          </button>
+          <button class="metric" data-metric="association" type="button" aria-label="查看協會角色說明">
+            <span>協會角色</span>
+            <strong>應用端居多</strong>
+            <small>協會常提供選手、場域與賽事脈絡，不一定直接拿科技預算。</small>
+          </button>
+        </div>
+
+        <div class="query-flow" aria-label="建議查詢流程">
+          <div>
+            <span>1</span>
+            <strong>先選預算身分</strong>
+            <p>從中央、科研、地方、產業或協會應用端縮小範圍。</p>
+          </div>
+          <div>
+            <span>2</span>
+            <strong>再看執行程度</strong>
+            <p>區分提案、執行中、已有成果與仍待公開對帳的項目。</p>
+          </div>
+          <div>
+            <span>3</span>
+            <strong>最後打開詳情</strong>
+            <p>核對來源連結、公開資訊進度與下一步查核問題。</p>
+          </div>
+        </div>
       </section>
 
-      <section class="query-flow" aria-label="建議查詢流程">
-        <div>
-          <span>1</span>
-          <strong>先選預算身分</strong>
-          <p>從中央、科研、地方、產業或協會應用端縮小範圍。</p>
-        </div>
-        <div>
-          <span>2</span>
-          <strong>再看執行程度</strong>
-          <p>區分提案、執行中、已有成果與仍待公開對帳的項目。</p>
-        </div>
-        <div>
-          <span>3</span>
-          <strong>最後打開詳情</strong>
-          <p>核對來源連結、公開資訊進度與下一步查核問題。</p>
-        </div>
-      </section>
-
-      <section class="workbench">
+      <section class="workbench" id="query">
         <aside class="panel">
           <div class="panel-inner">
             <div class="panel-status">
