@@ -13,11 +13,14 @@ json_escape() {
 create_blob() {
   local local_path="$1"
   local payload
-  local content
 
   payload="$(mktemp)"
-  content="$(openssl base64 -A -in "${local_path}")"
-  printf '{"content":%s,"encoding":"base64"}' "$(json_escape "${content}")" >"${payload}"
+  node -e '
+const fs = require("node:fs");
+const [localPath, payloadPath] = process.argv.slice(1);
+const content = fs.readFileSync(localPath).toString("base64");
+fs.writeFileSync(payloadPath, JSON.stringify({ content, encoding: "base64" }));
+' "${local_path}" "${payload}"
   gh api "repos/${repo}/git/blobs" --method POST --input "${payload}" --jq '.sha'
   rm -f "${payload}"
 }
