@@ -49,6 +49,11 @@ test("server-renders the sporttech budget query assistant", async () => {
   assert.match(html, /目前查詢/);
   assert.match(html, /查詢結果/);
   assert.match(html, /切換分類/);
+  assert.match(html, /href="#sources">資料來源/);
+  assert.match(html, /id="sources"/);
+  assert.match(html, /source registry/);
+  assert.match(html, /行政院全球資訊網/);
+  assert.match(html, /政府資料開放平臺/);
   assert.match(html, /整理運動X科技預算線索/);
   assert.match(html, /略過導入/);
   assert.match(html, /公開資料與版權聲明/);
@@ -77,6 +82,9 @@ test("documents the local and git version boundary", async () => {
   assert.match(page, /整理運動X科技預算線索/);
   assert.match(page, /略過導入/);
   assert.match(page, /className="site-footer"/);
+  assert.match(page, /id="sources"/);
+  assert.match(page, /className="source-registry"/);
+  assert.match(page, /Object\.entries\(sourceCatalog\)/);
   assert.match(page, /className="footer-copy"/);
   assert.match(page, /className="footer-meta"/);
   assert.match(page, /公開資料與版權聲明/);
@@ -186,6 +194,9 @@ test("keeps the workbench and lane cards vertically sequenced", async () => {
   assert.match(css, /@keyframes preload-progress/);
   assert.match(css, /\.site-footer\s*\{[\s\S]*border-top: 4px double var\(--ink\)/);
   assert.match(css, /\.site-footer\s*\{[\s\S]*grid-template-columns: minmax\(0, 1fr\) minmax\(220px, 0\.34fr\)/);
+  assert.match(css, /\.sources-section\s*\{[\s\S]*scroll-margin-top: 84px/);
+  assert.match(css, /\.source-registry\s*\{[\s\S]*grid-template-columns: repeat\(4, minmax\(0, 1fr\)\)/);
+  assert.match(css, /\.source-card:hover,[\s\S]*\.source-card:focus-visible\s*\{[\s\S]*box-shadow: 5px 5px 0 var\(--shadow\)/);
   assert.match(css, /\.footer-meta\s*\{[\s\S]*text-align: right/);
   assert.match(css, /\.footer-meta small\s*\{[\s\S]*max-width: 320px/);
   assert.doesNotMatch(css, /release-strip/);
@@ -203,7 +214,9 @@ test("uses a bottom drawer for detail reading", async () => {
   assert.match(css, /\.select-options\s*\{[\s\S]*max-height: min\(360px, 60vh\)/);
   assert.match(css, /@media \(max-width: 1040px\)\s*\{[\s\S]*\.metrics\s*\{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
   assert.match(css, /@media \(max-width: 1040px\)\s*\{[\s\S]*\.query-flow\s*\{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(css, /@media \(max-width: 1040px\)\s*\{[\s\S]*\.source-registry\s*\{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
   assert.match(css, /@media \(max-width: 700px\)\s*\{[\s\S]*\.query-flow,[\s\S]*grid-template-columns: 1fr/);
+  assert.match(css, /@media \(max-width: 700px\)\s*\{[\s\S]*\.source-registry\s*\{[\s\S]*grid-template-columns: 1fr/);
   assert.match(css, /@keyframes drawer-rise/);
   assert.doesNotMatch(css, /detail-disclosure/);
 });

@@ -150,6 +150,7 @@ export default function Home() {
         <nav aria-label="主要區塊">
           <a href="#overview">總覽說明</a>
           <a href="#query">查詢預算</a>
+          <a href="#sources">資料來源</a>
         </nav>
       </header>
       <section className="masthead">
@@ -573,6 +574,25 @@ export default function Home() {
           </aside>
         </div>
       )}
+
+      <section className="sources-section" id="sources" aria-labelledby="sources-title">
+        <div className="section-heading">
+          <p className="eyebrow">source registry</p>
+          <h2 id="sources-title">資料來源</h2>
+          <p>
+            本頁以公開可查的中央政策、科研計畫、預決算、政府採購與 open data 入口作為索引；每筆預算詳情仍需回到原始來源確認最新版本與授權條款。
+          </p>
+        </div>
+        <div className="source-registry" aria-label="資料來源清單">
+          {Object.entries(sourceCatalog).map(([sourceKey, source]) => (
+            <a className="source-card" href={source.url} key={sourceKey} rel="noreferrer" target="_blank">
+              <span>{source.label}</span>
+              <p>{source.note}</p>
+              <small>{source.url.replace("https://", "")}</small>
+            </a>
+          ))}
+        </div>
+      </section>
 
       <footer className="site-footer" aria-label="公開資料與版權聲明">
         <div className="footer-copy">
