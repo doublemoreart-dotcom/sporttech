@@ -1071,6 +1071,66 @@
         line-height: 1.55;
       }
 
+      .sources-section {
+        border-top: 2px solid var(--ink);
+        display: grid;
+        gap: 18px;
+        scroll-margin-top: 84px;
+      }
+
+      .source-registry {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .source-card {
+        background: rgba(251, 248, 239, 0.76);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        color: var(--text);
+        display: grid;
+        gap: 10px;
+        min-height: 154px;
+        padding: 16px;
+        text-decoration: none;
+        transition:
+          border-color 160ms ease,
+          box-shadow 160ms ease,
+          transform 160ms ease;
+      }
+
+      .source-card:hover,
+      .source-card:focus-visible {
+        border-color: var(--ink);
+        box-shadow: 5px 5px 0 var(--shadow);
+        outline: none;
+        transform: translate(-2px, -2px);
+      }
+
+      .source-card span {
+        color: var(--ink);
+        font-size: 16px;
+        font-weight: 900;
+        line-height: 1.35;
+      }
+
+      .source-card p {
+        color: var(--muted);
+        line-height: 1.65;
+        margin: 0;
+      }
+
+      .source-card small {
+        align-self: end;
+        color: #8a6b2c;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 12px;
+        font-weight: 800;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+      }
+
       .drawer-layer {
         display: none;
         inset: 0;
@@ -1376,6 +1436,10 @@
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
+        .source-registry {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
       }
 
       @media (max-width: 700px) {
@@ -1446,6 +1510,10 @@
           grid-template-columns: 1fr;
         }
 
+        .source-registry {
+          grid-template-columns: 1fr;
+        }
+
         .footer-meta {
           justify-items: start;
           text-align: left;
@@ -1501,6 +1569,7 @@
         <nav aria-label="主要區塊">
           <a href="#overview">總覽說明</a>
           <a href="#query">查詢預算</a>
+          <a href="#sources">資料來源</a>
         </nav>
       </header>
       <section class="masthead">
@@ -1644,6 +1713,58 @@
           <div class="drawer-scroll" id="detail"></div>
         </article>
       </div>
+
+      <section class="sources-section" id="sources" aria-labelledby="sources-title">
+        <div class="section-heading">
+          <p class="kicker">source registry</p>
+          <h2 id="sources-title">資料來源</h2>
+          <p>
+            本頁以公開可查的中央政策、科研計畫、預決算、政府採購與 open data 入口作為索引；每筆預算詳情仍需回到原始來源確認最新版本與授權條款。
+          </p>
+        </div>
+        <div class="source-registry" aria-label="資料來源清單">
+          <a class="source-card" href="https://www.ey.gov.tw/" target="_blank" rel="noreferrer">
+            <span>行政院全球資訊網</span>
+            <p>政策新聞、院會與跨部會計畫線索。</p>
+            <small>www.ey.gov.tw/</small>
+          </a>
+          <a class="source-card" href="https://www.nstc.gov.tw/" target="_blank" rel="noreferrer">
+            <span>國科會全球資訊網</span>
+            <p>科技計畫、研究補助、新聞資料與查詢入口。</p>
+            <small>www.nstc.gov.tw/</small>
+          </a>
+          <a class="source-card" href="https://gstp.stpi.narl.org.tw/" target="_blank" rel="noreferrer">
+            <span>政府科技計畫資訊網</span>
+            <p>跨部會科技計畫與年度科技預算查詢入口。</p>
+            <small>gstp.stpi.narl.org.tw/</small>
+          </a>
+          <a class="source-card" href="https://www.grb.gov.tw/" target="_blank" rel="noreferrer">
+            <span>政府研究資訊系統 GRB</span>
+            <p>研究計畫名稱、主持人、關鍵字與成果摘要查詢。</p>
+            <small>www.grb.gov.tw/</small>
+          </a>
+          <a class="source-card" href="https://www.sa.gov.tw/" target="_blank" rel="noreferrer">
+            <span>運動部全民運動署</span>
+            <p>運動科技、場域、補助與政策公告入口。</p>
+            <small>www.sa.gov.tw/</small>
+          </a>
+          <a class="source-card" href="https://www.dgbas.gov.tw/" target="_blank" rel="noreferrer">
+            <span>行政院主計總處</span>
+            <p>中央政府預算、決算與補捐助資訊入口。</p>
+            <small>www.dgbas.gov.tw/</small>
+          </a>
+          <a class="source-card" href="https://www.pcc.gov.tw/" target="_blank" rel="noreferrer">
+            <span>公共工程委員會</span>
+            <p>政府採購、決標與委辦案追蹤入口。</p>
+            <small>www.pcc.gov.tw/</small>
+          </a>
+          <a class="source-card" href="https://data.gov.tw/" target="_blank" rel="noreferrer">
+            <span>政府資料開放平臺</span>
+            <p>open data 資料集與 API 查詢入口。</p>
+            <small>data.gov.tw/</small>
+          </a>
+        </div>
+      </section>
 
       <footer class="site-footer" aria-label="公開資料與版權聲明">
         <div class="footer-copy">
