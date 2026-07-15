@@ -225,21 +225,28 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="workbench" id="query">
-        <aside className="panel">
-          <div className="panel-inner">
-            <div className="panel-status">
-              <div>
-                <span className="control-label">目前查詢</span>
-                <strong>{filtered.length} / {flows.length} 項</strong>
+      <section className="query-section" id="query" aria-labelledby="query-title">
+        <div className="section-heading">
+          <p className="eyebrow">query workbench</p>
+          <h2 id="query-title">查詢預算線索</h2>
+          <p>先用預算層級、執行程度與縣市縮小範圍，再切換列表或卡片檢視，點開項目查看來源與公開資訊進度。</p>
+        </div>
+
+        <div className="workbench">
+          <aside className="panel">
+            <div className="panel-inner">
+              <div className="panel-status">
+                <div>
+                  <span className="control-label">目前查詢</span>
+                  <strong>{filtered.length} / {flows.length} 項</strong>
+                </div>
+                {hasActiveFilters && (
+                  <button onClick={resetFilters} type="button">
+                    清除篩選
+                  </button>
+                )}
               </div>
-              {hasActiveFilters && (
-                <button onClick={resetFilters} type="button">
-                  清除篩選
-                </button>
-              )}
-            </div>
-            <div className="filter-grid" aria-label="查詢篩選">
+              <div className="filter-grid" aria-label="查詢篩選">
               <details className="select-menu">
                 <summary>
                   <span>預算層級</span>
@@ -353,73 +360,74 @@ export default function Home() {
               </details>
             </div>
 
-            <span className="control-label">圖例</span>
-            <div className="legend">
-              {stageOrder.map((stage) => (
-                <div className="legend-row" key={stage}>
-                  <span className={`stage-dot ${stage}`} />
-                  <span>{stages[stage]}</span>
-                </div>
-              ))}
+              <span className="control-label">圖例</span>
+              <div className="legend">
+                {stageOrder.map((stage) => (
+                  <div className="legend-row" key={stage}>
+                    <span className={`stage-dot ${stage}`} />
+                    <span>{stages[stage]}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        </aside>
+          </aside>
 
-        <section className="results-panel" aria-label="預算項目">
-          <div className="results-toolbar">
-            <div>
-              <span className="control-label">查詢結果</span>
-              <strong>{filtered.length === 0 ? "沒有符合項目" : `顯示 ${filtered.length} 筆公開線索`}</strong>
-            </div>
-            <div className="view-switcher">
-              <span className="control-label">切換分類</span>
-              <div className="view-toggle" role="group" aria-label="預算項目顯示方式">
-                <button
-                  aria-pressed={itemView === "list"}
-                  onClick={() => setItemView("list")}
-                  type="button"
-                >
-                  列表
-                </button>
-                <button
-                  aria-pressed={itemView === "card"}
-                  onClick={() => setItemView("card")}
-                  type="button"
-                >
-                  卡片
-                </button>
+          <section className="results-panel" aria-label="預算項目">
+            <div className="results-toolbar">
+              <div>
+                <span className="control-label">查詢結果</span>
+                <strong>{filtered.length === 0 ? "沒有符合項目" : `顯示 ${filtered.length} 筆公開線索`}</strong>
+              </div>
+              <div className="view-switcher">
+                <span className="control-label">切換分類</span>
+                <div className="view-toggle" role="group" aria-label="預算項目顯示方式">
+                  <button
+                    aria-pressed={itemView === "list"}
+                    onClick={() => setItemView("list")}
+                    type="button"
+                  >
+                    列表
+                  </button>
+                  <button
+                    aria-pressed={itemView === "card"}
+                    onClick={() => setItemView("card")}
+                    type="button"
+                  >
+                    卡片
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-          <div className={`lane-map ${itemView === "card" ? "card-view" : "list-view"}`} aria-label="預算項目清單">
-            {filtered.map((flow) => (
-              <button
-                className={active?.id === flow.id ? "lane active" : "lane"}
-                key={flow.id}
-                onClick={(event) => {
-                  lastTriggerRef.current = event.currentTarget;
-                  setActiveFlow(flow.id);
-                  setDrawerOpen(true);
-                }}
-              >
-                <span className={`stage-dot ${flow.stage}`} />
-                <span className="timeline-year">{flow.year}</span>
-                <span>
-                  <strong>{flow.title}</strong>
-                  <small>{layerNames[flow.layer]} / {stages[flow.stage]}</small>
-                </span>
-                <span className="amount">{flow.amount}</span>
-              </button>
-            ))}
-            {filtered.length === 0 && (
-              <div className="empty-state">
-                <strong>目前沒有符合這組條件的公開可辨識項目。</strong>
-                <p>建議先回到全部項目，再逐一縮小預算層級、執行程度或縣市。</p>
-                <button onClick={resetFilters} type="button">重設查詢條件</button>
-              </div>
-            )}
-          </div>
-        </section>
+            <div className={`lane-map ${itemView === "card" ? "card-view" : "list-view"}`} aria-label="預算項目清單">
+              {filtered.map((flow) => (
+                <button
+                  className={active?.id === flow.id ? "lane active" : "lane"}
+                  key={flow.id}
+                  onClick={(event) => {
+                    lastTriggerRef.current = event.currentTarget;
+                    setActiveFlow(flow.id);
+                    setDrawerOpen(true);
+                  }}
+                >
+                  <span className={`stage-dot ${flow.stage}`} />
+                  <span className="timeline-year">{flow.year}</span>
+                  <span>
+                    <strong>{flow.title}</strong>
+                    <small>{layerNames[flow.layer]} / {stages[flow.stage]}</small>
+                  </span>
+                  <span className="amount">{flow.amount}</span>
+                </button>
+              ))}
+              {filtered.length === 0 && (
+                <div className="empty-state">
+                  <strong>目前沒有符合這組條件的公開可辨識項目。</strong>
+                  <p>建議先回到全部項目，再逐一縮小預算層級、執行程度或縣市。</p>
+                  <button onClick={resetFilters} type="button">重設查詢條件</button>
+                </div>
+              )}
+            </div>
+          </section>
+        </div>
       </section>
 
       {active && drawerOpen && (
