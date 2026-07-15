@@ -39,6 +39,8 @@ grep -q 'sporttech-budget-hero-small.jpg' "${pages_html}"
 grep -q 'href="assets/' "${local_html}"
 grep -q 'href="assets/' "${pages_html}"
 
+node "${repo_root}/scripts/verify-static-output.mjs"
+
 echo "Synced static outputs:"
 echo "  ${local_html}"
 echo "  ${pages_html}"

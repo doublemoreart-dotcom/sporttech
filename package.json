@@ -13,6 +13,7 @@
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "check": "npm run lint && npm test",
     "sync": "bash scripts/sync-static-pages.sh",
+    "verify:static": "node scripts/verify-static-output.mjs",
     "deploy:pages": "bash scripts/deploy-gh-pages.sh",
     "update:local": "bash scripts/update-flow.sh",
     "update:deploy": "bash scripts/update-flow.sh --deploy"

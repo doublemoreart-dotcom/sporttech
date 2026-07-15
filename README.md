@@ -110,13 +110,25 @@ npm run sync
 npm run update:local
 ```
 
-這會依序執行檢查、同步本機靜態快照，最後列出 Git 狀態。需要發布時使用：
+這會依序執行 lint、build、測試、同步本機靜態快照，並驗證靜態版是否保留互動所需的標記、相對素材路徑、響應式主視覺與 fallback script，最後列出 Git 狀態。
+
+不要把 `npm run check`、`npm run sync` 或手動複製輸出檔並行執行；先讓檢查完成，再同步靜態輸出，才能避免舊 build、舊素材或半套 HTML 被推到 GitHub Pages。
+
+可單獨檢查靜態輸出：
+
+```bash
+npm run verify:static
+```
+
+需要發布到 GitHub Pages 時使用：
 
 ```bash
 npm run update:deploy
 ```
 
 `update:deploy` 會在檢查與同步通過後部署 GitHub Pages；它不會自動 commit，也不會 force push。
+
+目前 `https://dinopeng.com/sporttech/` 由主站 repo 供應。若只更新本 repo 的工作流程文件或測試腳本，不一定需要同步主站；若畫面、互動或靜態輸出有變動，才需要把 `outputs/github-pages/sporttech/` 同步到主站的 `/sporttech/` 目錄後再推送主站。
 
 本專案原始碼位置：
 
