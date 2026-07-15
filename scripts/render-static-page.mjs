@@ -1,4 +1,4 @@
-import { cp, mkdir, copyFile, readdir, readFile, writeFile } from "node:fs/promises";
+import { cp, mkdir, copyFile, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -50,12 +50,12 @@ setTimeout(() => {
 
 html = html.replace("</body>", `${staticFallbackScript}</body>`);
 
+await rm(assetsRoot, { recursive: true, force: true });
 await mkdir(assetsRoot, { recursive: true });
 await cp(clientAssetsRoot, assetsRoot, { recursive: true });
 await Promise.all([
   copyFile(resolve(repoRoot, "public/favicon.svg"), resolve(assetsRoot, "favicon.svg")),
   copyFile(resolve(repoRoot, "public/sporttech-budget-hero.jpg"), resolve(assetsRoot, "sporttech-budget-hero.jpg")),
-  copyFile(resolve(repoRoot, "public/sporttech-budget-hero.png"), resolve(assetsRoot, "sporttech-budget-hero.png")),
   copyFile(resolve(repoRoot, "public/sporttech-budget-hero-small.jpg"), resolve(assetsRoot, "sporttech-budget-hero-small.jpg")),
 ]);
 
