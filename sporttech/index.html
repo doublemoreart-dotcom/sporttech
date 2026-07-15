@@ -505,8 +505,8 @@
       .filter-grid {
         display: grid;
         gap: 12px;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        margin-bottom: 18px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        margin-bottom: 16px;
       }
 
       .select-menu {
@@ -596,15 +596,6 @@
         background: #efe6d7;
       }
 
-      .select-options .stage-option {
-        grid-template-columns: 16px 12px minmax(0, 1fr);
-      }
-
-      .select-options .stage-option .dot {
-        height: 11px;
-        width: 11px;
-      }
-
       .select-options label:hover {
         background: #efe6d7;
       }
@@ -616,19 +607,50 @@
         width: 16px;
       }
 
-      .legend {
+      .stage-tags {
         align-items: center;
         display: flex;
         flex-wrap: wrap;
-        gap: 8px 16px;
+        gap: 8px;
       }
 
-      .legend-row {
+      .stage-tag {
         align-items: center;
+        background: rgba(251, 248, 239, 0.72);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--text);
+        cursor: pointer;
         display: inline-flex;
         gap: 7px;
+        font-weight: 800;
         line-height: 1.45;
+        min-height: 34px;
+        padding: 7px 11px;
+        transition:
+          background 160ms ease,
+          border-color 160ms ease,
+          box-shadow 160ms ease,
+          transform 160ms ease;
         white-space: nowrap;
+      }
+
+      .stage-tag:hover,
+      .stage-tag:focus-visible {
+        border-color: var(--ink);
+        box-shadow: 3px 3px 0 var(--shadow);
+        outline: none;
+        transform: translate(-1px, -1px);
+      }
+
+      .stage-tag.active {
+        background: #efe6d7;
+        border-color: var(--ink);
+      }
+
+      .stage-tag .dot {
+        height: 11px;
+        width: 11px;
       }
 
       .dot {
@@ -1568,11 +1590,10 @@
             </div>
             <div class="filter-grid" aria-label="查詢篩選">
               <details class="select-menu" id="layerMenu"></details>
-              <details class="select-menu" id="stageMenu"></details>
               <details class="select-menu" id="cityMenu"></details>
             </div>
-            <span class="label">圖例</span>
-            <div class="legend" id="legend"></div>
+            <span class="label">執行程度</span>
+            <div class="stage-tags" id="stageTags" aria-label="執行程度篩選"></div>
           </div>
           </aside>
 
@@ -1929,7 +1950,7 @@
         return `已選 ${selected.length} 項`;
       }
 
-      function renderSelectMenu(id, title, values, selected, onToggle, onClear, showStageColors = false) {
+      function renderSelectMenu(id, title, values, selected, onToggle, onClear) {
         const root = document.getElementById(id);
         root.innerHTML = `
           <summary><span>${title}</span><strong>${selectionSummary(selected, values)}</strong></summary>
@@ -1941,9 +1962,8 @@
             ${Object.entries(values)
               .map(
                 ([key, label]) => `
-                  <label class="${showStageColors ? "stage-option" : ""}">
+                  <label>
                     <input type="checkbox" ${selected.includes(key) ? "checked" : ""} data-value="${key}" />
-                    ${showStageColors ? `<span class="dot ${key}"></span>` : ""}
                     <span>${label}</span>
                   </label>
                 `,
@@ -1985,11 +2005,37 @@
         render();
       }
 
-      function renderLegend() {
-        const root = document.getElementById("legend");
-        root.innerHTML = Object.entries(stages)
-          .map(([key, label]) => `<div class="legend-row"><span class="dot ${key}"></span><span>${label}</span></div>`)
-          .join("");
+      function renderStageTags() {
+        const root = document.getElementById("stageTags");
+        root.innerHTML = `
+          <button class="stage-tag ${selectedStages.length ? "" : "active"}" type="button" aria-pressed="${selectedStages.length ? "false" : "true"}" data-clear="true">全部</button>
+          ${Object.entries(stages)
+            .map(
+              ([key, label]) => `
+                <button class="stage-tag ${selectedStages.includes(key) ? "active" : ""}" type="button" aria-pressed="${selectedStages.includes(key) ? "true" : "false"}" data-value="${key}">
+                  <span class="dot ${key}"></span>
+                  <span>${label}</span>
+                </button>
+              `,
+            )
+            .join("")}
+        `;
+
+        root.querySelectorAll("button").forEach((button) => {
+          button.addEventListener("click", () => {
+            if (button.dataset.clear) {
+              selectedStages = [];
+            } else if (button.dataset.value) {
+              selectedStages = selectedStages.includes(button.dataset.value)
+                ? selectedStages.filter((item) => item !== button.dataset.value)
+                : [...selectedStages, button.dataset.value];
+            }
+            drawerOpen = false;
+            const next = filteredFlows()[0];
+            if (next) activeId = next.id;
+            render();
+          });
+        });
       }
 
       function renderLanes(items) {
@@ -2210,30 +2256,6 @@
         );
 
         renderSelectMenu(
-          "stageMenu",
-          "執行程度",
-          stages,
-          selectedStages,
-          (value) => {
-            selectedStages = selectedStages.includes(value)
-              ? selectedStages.filter((item) => item !== value)
-              : [...selectedStages, value];
-            drawerOpen = false;
-            const next = filteredFlows()[0];
-            if (next) activeId = next.id;
-            render();
-          },
-          () => {
-            selectedStages = [];
-            drawerOpen = false;
-            const next = filteredFlows()[0];
-            if (next) activeId = next.id;
-            render();
-          },
-          true,
-        );
-
-        renderSelectMenu(
           "cityMenu",
           "縣市",
           cities,
@@ -2259,7 +2281,7 @@
         const items = filteredFlows();
         if (!items.some((flow) => flow.id === activeId) && items[0]) activeId = items[0].id;
         if (!items.length) drawerOpen = false;
-        renderLegend();
+        renderStageTags();
         renderLanes(items);
         renderDetail(flows.find((flow) => flow.id === activeId) || null);
         document.getElementById("resultCount").textContent = `${items.length} / ${flows.length} 項`;
