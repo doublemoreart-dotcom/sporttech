@@ -155,15 +155,17 @@ export default function Home() {
       </header>
       <section className="masthead">
         <figure className="hero-visual">
-          {/* eslint-disable-next-line @next/next/no-img-element -- Vinext image optimization fails to fetch local assets in dev preview. */}
-          <img
-            alt="運動場域、資料節點與預算流向的主視覺"
-            decoding="async"
-            height={864}
-            loading="eager"
-            src="/sporttech-budget-hero.jpg"
-            width={1536}
-          />
+          <picture>
+            <source media="(max-width: 640px)" srcSet="/sporttech-budget-hero-small.jpg" />
+            <img
+              alt="運動場域、資料節點與預算流向的主視覺"
+              decoding="async"
+              height={887}
+              loading="eager"
+              src="/sporttech-budget-hero.jpg"
+              width={1774}
+            />
+          </picture>
         </figure>
         <div>
           <p className="eyebrow">budget query assistant / 2022-2026</p>
@@ -606,8 +608,8 @@ export default function Home() {
           </p>
         </div>
         <div className="footer-meta" aria-label="版本與授權用途">
-          <span>版號 v0.2.2</span>
-          <span>更新日期 2026-07-14</span>
+          <span>版號 v0.2.3</span>
+          <span>更新日期 2026-07-15</span>
           <small>Copyright 2026. Open data for public interest research and non-commercial civic use.</small>
         </div>
       </footer>

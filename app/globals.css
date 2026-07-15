@@ -222,6 +222,10 @@ p {
   overflow: hidden;
 }
 
+.hero-visual picture {
+  display: block;
+}
+
 .hero-visual img {
   aspect-ratio: 16 / 6;
   display: block;

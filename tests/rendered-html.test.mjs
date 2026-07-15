@@ -31,7 +31,10 @@ test("server-renders the sporttech budget query assistant", async () => {
   const html = await response.text();
   assert.match(html, /2022-2026 運動X科技預算查詢小幫手/);
   assert.match(html, /運動X科技預算查詢小幫手/);
+  assert.match(html, /<picture>/);
   assert.match(html, /sporttech-budget-hero\.jpg/);
+  assert.match(html, /sporttech-budget-hero-small\.jpg/);
+  assert.match(html, /srcSet="\/sporttech-budget-hero-small\.jpg"/);
   assert.match(html, /運動場域、資料節點與預算流向的主視覺/);
   assert.match(html, /先判斷預算身分，再看協會是否直接承接/);
   assert.match(html, /想查一筆運動科技相關預算時/);
@@ -39,9 +42,9 @@ test("server-renders the sporttech budget query assistant", async () => {
   assert.match(html, /台灣運動 x 科技行動計畫/);
   assert.match(html, /精準運動科學研究專案/);
   assert.match(html, /版號/);
-  assert.match(html, /v0\.2\.2/);
+  assert.match(html, /v0\.2\.3/);
   assert.match(html, /更新日期/);
-  assert.match(html, /2026-07-14/);
+  assert.match(html, /2026-07-15/);
   assert.match(html, /建議查詢流程/);
   assert.match(html, /先選預算身分/);
   assert.match(html, /再看執行程度/);
@@ -72,7 +75,7 @@ test("documents the local and git version boundary", async () => {
   ]);
 
   assert.match(page, /版號/);
-  assert.match(page, /v0\.2\.2/);
+  assert.match(page, /v0\.2\.3/);
   assert.match(page, /更新日期/);
   assert.match(page, /isPreloading/);
   assert.match(page, /setIsPreloading/);
@@ -94,7 +97,10 @@ test("documents the local and git version boundary", async () => {
   assert.match(page, /Open data for public interest research and non-commercial civic use/);
   assert.doesNotMatch(page, /release-strip/);
   assert.match(page, /className="hero-visual"/);
+  assert.match(page, /<picture>/);
   assert.match(page, /\/sporttech-budget-hero\.jpg/);
+  assert.match(page, /\/sporttech-budget-hero-small\.jpg/);
+  assert.match(page, /srcSet="\/sporttech-budget-hero-small\.jpg"/);
   assert.doesNotMatch(page, /next\/image/);
   assert.match(page, /drawerOpen/);
   assert.match(page, /setDrawerOpen\(true\)/);
@@ -170,6 +176,7 @@ test("keeps the workbench and lane cards vertically sequenced", async () => {
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
   assert.match(css, /\.hero-visual\s*\{[\s\S]*grid-column: 1 \/ -1/);
+  assert.match(css, /\.hero-visual picture\s*\{[\s\S]*display: block/);
   assert.match(css, /\.hero-visual img\s*\{[\s\S]*aspect-ratio: 16 \/ 6/);
   assert.match(css, /\.metric:hover,\n\.metric:focus-visible\s*\{[\s\S]*transform: translate\(-2px, -2px\)/);
   assert.match(css, /\.metric::after\s*\{[\s\S]*content: "查看說明"/);

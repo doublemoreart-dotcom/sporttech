@@ -36,7 +36,8 @@ base_tree_sha="$(gh api "repos/${repo}/git/commits/${parent_sha}" --jq '.tree.sh
 
 index_sha="$(create_blob "${root}/sporttech/index.html")"
 favicon_sha="$(create_blob "${root}/sporttech/assets/favicon.svg")"
-hero_sha="$(create_blob "${root}/sporttech/assets/sporttech-budget-hero-small.jpg")"
+hero_sha="$(create_blob "${root}/sporttech/assets/sporttech-budget-hero.jpg")"
+hero_small_sha="$(create_blob "${root}/sporttech/assets/sporttech-budget-hero-small.jpg")"
 
 tree_payload="$(mktemp)"
 cat >"${tree_payload}" <<JSON
@@ -45,10 +46,12 @@ cat >"${tree_payload}" <<JSON
   "tree": [
     {"path": "index.html", "mode": "100644", "type": "blob", "sha": "${index_sha}"},
     {"path": "assets/favicon.svg", "mode": "100644", "type": "blob", "sha": "${favicon_sha}"},
-    {"path": "assets/sporttech-budget-hero-small.jpg", "mode": "100644", "type": "blob", "sha": "${hero_sha}"},
+    {"path": "assets/sporttech-budget-hero.jpg", "mode": "100644", "type": "blob", "sha": "${hero_sha}"},
+    {"path": "assets/sporttech-budget-hero-small.jpg", "mode": "100644", "type": "blob", "sha": "${hero_small_sha}"},
     {"path": "sporttech/index.html", "mode": "100644", "type": "blob", "sha": "${index_sha}"},
     {"path": "sporttech/assets/favicon.svg", "mode": "100644", "type": "blob", "sha": "${favicon_sha}"},
-    {"path": "sporttech/assets/sporttech-budget-hero-small.jpg", "mode": "100644", "type": "blob", "sha": "${hero_sha}"}
+    {"path": "sporttech/assets/sporttech-budget-hero.jpg", "mode": "100644", "type": "blob", "sha": "${hero_sha}"},
+    {"path": "sporttech/assets/sporttech-budget-hero-small.jpg", "mode": "100644", "type": "blob", "sha": "${hero_small_sha}"}
   ]
 }
 JSON
