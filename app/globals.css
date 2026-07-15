@@ -156,9 +156,57 @@ p {
   padding: 24px 0 42px;
 }
 
+.site-header {
+  align-items: center;
+  border-bottom: 4px double var(--ink);
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 0 0 14px;
+}
+
+.site-logo {
+  color: var(--ink);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.site-header nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.site-header a:not(.site-logo) {
+  background: rgba(251, 248, 239, 0.74);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink);
+  font-size: 0.82rem;
+  font-weight: 800;
+  padding: 8px 12px;
+  text-decoration: none;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.site-header a:not(.site-logo):hover,
+.site-header a:not(.site-logo):focus-visible {
+  border-color: var(--ink);
+  box-shadow: 3px 3px 0 var(--shadow);
+  outline: none;
+  transform: translate(-1px, -1px);
+}
+
 .masthead {
   border-bottom: 4px double var(--ink);
-  border-top: 4px solid var(--ink);
   display: grid;
   gap: 18px;
   grid-template-columns: minmax(0, 1fr) 310px;
@@ -248,11 +296,39 @@ h1 {
   margin: 0;
 }
 
+.overview-section {
+  scroll-margin-top: 18px;
+}
+
+.section-heading {
+  display: grid;
+  gap: 6px;
+  margin: 20px 0 12px;
+  max-width: 780px;
+}
+
+.section-heading .eyebrow {
+  margin: 0;
+}
+
+.section-heading h2 {
+  color: var(--ink);
+  font-size: clamp(1.65rem, 4vw, 2.7rem);
+  line-height: 1.04;
+  margin: 0;
+}
+
+.section-heading p {
+  color: var(--muted);
+  line-height: 1.65;
+  margin: 0;
+}
+
 .metrics {
   display: grid;
   gap: 10px;
   grid-template-columns: repeat(4, 1fr);
-  margin: 18px 0 22px;
+  margin: 0 0 22px;
 }
 
 .metric {
@@ -1268,6 +1344,15 @@ li {
 @media (max-width: 700px) {
   .site-shell {
     width: min(100% - 22px, 1240px);
+  }
+
+  .site-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .site-header nav {
+    justify-content: flex-start;
   }
 
   h1 {

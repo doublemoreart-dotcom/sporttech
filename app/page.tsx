@@ -142,7 +142,16 @@ export default function Home() {
         </section>
       )}
 
-      <main className={isPreloading ? "site-shell loading-shell" : "site-shell"}>
+      <main className={isPreloading ? "site-shell loading-shell" : "site-shell"} id="top">
+      <header className="site-header" aria-label="頁面導覽">
+        <a className="site-logo" href="#top" aria-label="回到頁首">
+          SportTech Budget
+        </a>
+        <nav aria-label="主要區塊">
+          <a href="#overview">總覽</a>
+          <a href="#query">查詢</a>
+        </nav>
+      </header>
       <section className="masthead">
         <figure className="hero-visual">
           {/* eslint-disable-next-line @next/next/no-img-element -- Vinext image optimization fails to fetch local assets in dev preview. */}
@@ -170,45 +179,53 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="metrics" aria-label="總覽數字">
-        {metrics.map((metric) => (
-          <button
-            aria-label={`查看${metric.label}說明`}
-            className="metric"
-            key={metric.label}
-            onClick={(event) => {
-              lastMetricTriggerRef.current = event.currentTarget;
-              setActiveMetric(metric);
-              setDrawerOpen(false);
-            }}
-            type="button"
-          >
-            <span>{metric.label}</span>
-            <strong>{metric.value}</strong>
-            <small>{metric.note}</small>
-          </button>
-        ))}
+      <section className="overview-section" id="overview" aria-labelledby="overview-title">
+        <div className="section-heading">
+          <p className="eyebrow">overview</p>
+          <h2 id="overview-title">先看總覽，再進入查詢</h2>
+          <p>用四個指標快速抓預算規模、科研線索、地方場域與協會角色，再照三步驟縮小查核範圍。</p>
+        </div>
+
+        <div className="metrics" aria-label="總覽數字">
+          {metrics.map((metric) => (
+            <button
+              aria-label={`查看${metric.label}說明`}
+              className="metric"
+              key={metric.label}
+              onClick={(event) => {
+                lastMetricTriggerRef.current = event.currentTarget;
+                setActiveMetric(metric);
+                setDrawerOpen(false);
+              }}
+              type="button"
+            >
+              <span>{metric.label}</span>
+              <strong>{metric.value}</strong>
+              <small>{metric.note}</small>
+            </button>
+          ))}
+        </div>
+
+        <div className="query-flow" aria-label="建議查詢流程">
+          <div>
+            <span>1</span>
+            <strong>先選預算身分</strong>
+            <p>從中央、科研、地方、產業或協會應用端縮小範圍。</p>
+          </div>
+          <div>
+            <span>2</span>
+            <strong>再看執行程度</strong>
+            <p>區分提案、執行中、已有成果與仍待公開對帳的項目。</p>
+          </div>
+          <div>
+            <span>3</span>
+            <strong>最後打開詳情</strong>
+            <p>核對來源連結、公開資訊進度與下一步查核問題。</p>
+          </div>
+        </div>
       </section>
 
-      <section className="query-flow" aria-label="建議查詢流程">
-        <div>
-          <span>1</span>
-          <strong>先選預算身分</strong>
-          <p>從中央、科研、地方、產業或協會應用端縮小範圍。</p>
-        </div>
-        <div>
-          <span>2</span>
-          <strong>再看執行程度</strong>
-          <p>區分提案、執行中、已有成果與仍待公開對帳的項目。</p>
-        </div>
-        <div>
-          <span>3</span>
-          <strong>最後打開詳情</strong>
-          <p>核對來源連結、公開資訊進度與下一步查核問題。</p>
-        </div>
-      </section>
-
-      <section className="workbench">
+      <section className="workbench" id="query">
         <aside className="panel">
           <div className="panel-inner">
             <div className="panel-status">
