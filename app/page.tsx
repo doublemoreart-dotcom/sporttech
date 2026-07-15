@@ -145,7 +145,7 @@ export default function Home() {
       <main className={isPreloading ? "site-shell loading-shell" : "site-shell"} id="top">
       <header className="site-header" aria-label="頁面導覽">
         <a className="site-logo" href="#top" aria-label="回到頁首">
-          SportTech Budget
+          運動X科技預算查詢小幫手
         </a>
         <nav aria-label="主要區塊">
           <a href="#overview">總覽說明</a>
