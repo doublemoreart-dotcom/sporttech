@@ -526,8 +526,8 @@ h1 {
 .filter-grid {
   display: grid;
   gap: 12px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-bottom: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 16px;
 }
 
 .select-menu {
@@ -617,15 +617,6 @@ h1 {
   background: #efe6d7;
 }
 
-.select-options .stage-option {
-  grid-template-columns: 16px 12px minmax(0, 1fr);
-}
-
-.select-options .stage-option .stage-dot {
-  height: 11px;
-  width: 11px;
-}
-
 .select-options label:hover {
   background: #efe6d7;
 }
@@ -637,19 +628,50 @@ h1 {
   width: 16px;
 }
 
-.legend {
+.stage-tags {
   align-items: center;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 16px;
+  gap: 8px;
 }
 
-.legend-row {
+.stage-tag {
   align-items: center;
+  background: rgba(251, 248, 239, 0.72);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--foreground);
+  cursor: pointer;
   display: inline-flex;
   gap: 7px;
+  font-weight: 800;
   line-height: 1.45;
+  min-height: 34px;
+  padding: 7px 11px;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
   white-space: nowrap;
+}
+
+.stage-tag:hover,
+.stage-tag:focus-visible {
+  border-color: var(--ink);
+  box-shadow: 3px 3px 0 var(--shadow);
+  outline: none;
+  transform: translate(-1px, -1px);
+}
+
+.stage-tag.active {
+  background: #efe6d7;
+  border-color: var(--ink);
+}
+
+.stage-tag .stage-dot {
+  height: 11px;
+  width: 11px;
 }
 
 .results-panel {

@@ -208,19 +208,25 @@ test("uses a bottom drawer for detail reading", async () => {
   assert.doesNotMatch(css, /detail-disclosure/);
 });
 
-test("uses dropdown multiselect filters", async () => {
+test("uses dropdown filters and stage tag filters", async () => {
   const [page, css] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
 
   assert.match(page, /<details className="select-menu">/);
-  assert.match(page, /className="stage-option"/);
   assert.match(page, /type="checkbox"/);
-  assert.match(css, /\.filter-grid\s*\{[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
+  assert.match(page, /className=\{selectedStages\.length === 0 \? "stage-tag active" : "stage-tag"\}/);
+  assert.match(page, /className=\{selectedStages\.includes\(stage\) \? "stage-tag active" : "stage-tag"\}/);
+  assert.match(page, /aria-pressed=\{selectedStages\.includes\(stage\)\}/);
+  assert.match(page, /<span className=\{`stage-dot \$\{stage\}`\} \/>/);
+  assert.match(css, /\.filter-grid\s*\{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
   assert.match(css, /\.select-options/);
-  assert.match(css, /\.stage-option/);
+  assert.match(css, /\.stage-tags\s*\{/);
+  assert.match(css, /\.stage-tag\s*\{/);
+  assert.match(css, /\.stage-tag\.active\s*\{/);
+  assert.doesNotMatch(css, /\.stage-option/);
   assert.doesNotMatch(css, /position: sticky/);
-  assert.doesNotMatch(page, /chip-row|className=\{selectedLayer|className=\{selectedStage/);
+  assert.doesNotMatch(page, /chip-row|className=\{selectedLayer/);
   assert.doesNotMatch(css, /\.chip\b|\.chip-row/);
 });

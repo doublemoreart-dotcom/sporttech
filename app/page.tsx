@@ -286,44 +286,6 @@ export default function Home() {
 
               <details className="select-menu">
                 <summary>
-                  <span>執行程度</span>
-                  <strong>{selectionSummary(selectedStages, stages)}</strong>
-                </summary>
-                <div className="select-options">
-                  <label>
-                    <input
-                      checked={selectedStages.length === 0}
-                      onChange={() => {
-                        setSelectedStages([]);
-                        setDrawerOpen(false);
-                      }}
-                      type="checkbox"
-                    />
-                    <span>全部</span>
-                  </label>
-                  {stageOrder.map((stage) => (
-                    <label className="stage-option" key={stage}>
-                      <input
-                        checked={selectedStages.includes(stage)}
-                        onChange={() => {
-                          setSelectedStages((current) =>
-                            current.includes(stage)
-                              ? current.filter((item) => item !== stage)
-                              : [...current, stage],
-                          );
-                          setDrawerOpen(false);
-                        }}
-                        type="checkbox"
-                      />
-                      <span className={`stage-dot ${stage}`} />
-                      <span>{stages[stage]}</span>
-                    </label>
-                  ))}
-                </div>
-              </details>
-
-              <details className="select-menu">
-                <summary>
                   <span>縣市</span>
                   <strong>{selectionSummary(selectedLocations, locationNames)}</strong>
                 </summary>
@@ -360,13 +322,37 @@ export default function Home() {
               </details>
             </div>
 
-              <span className="control-label">圖例</span>
-              <div className="legend">
+              <span className="control-label">執行程度</span>
+              <div className="stage-tags" aria-label="執行程度篩選">
+                <button
+                  aria-pressed={selectedStages.length === 0}
+                  className={selectedStages.length === 0 ? "stage-tag active" : "stage-tag"}
+                  onClick={() => {
+                    setSelectedStages([]);
+                    setDrawerOpen(false);
+                  }}
+                  type="button"
+                >
+                  全部
+                </button>
                 {stageOrder.map((stage) => (
-                  <div className="legend-row" key={stage}>
+                  <button
+                    aria-pressed={selectedStages.includes(stage)}
+                    className={selectedStages.includes(stage) ? "stage-tag active" : "stage-tag"}
+                    key={stage}
+                    onClick={() => {
+                      setSelectedStages((current) =>
+                        current.includes(stage)
+                          ? current.filter((item) => item !== stage)
+                          : [...current, stage],
+                      );
+                      setDrawerOpen(false);
+                    }}
+                    type="button"
+                  >
                     <span className={`stage-dot ${stage}`} />
                     <span>{stages[stage]}</span>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
