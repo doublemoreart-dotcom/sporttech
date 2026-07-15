@@ -34,27 +34,35 @@ fi
 parent_sha="$(gh api "repos/${repo}/git/ref/heads/${branch}" --jq '.object.sha')"
 base_tree_sha="$(gh api "repos/${repo}/git/commits/${parent_sha}" --jq '.tree.sha')"
 
-index_sha="$(create_blob "${root}/sporttech/index.html")"
-favicon_sha="$(create_blob "${root}/sporttech/assets/favicon.svg")"
-hero_sha="$(create_blob "${root}/sporttech/assets/sporttech-budget-hero.jpg")"
-hero_small_sha="$(create_blob "${root}/sporttech/assets/sporttech-budget-hero-small.jpg")"
+tree_entries="$(mktemp)"
+first_entry=true
+
+while IFS= read -r -d '' file; do
+  rel_path="${file#${root}/sporttech/}"
+  file_sha="$(create_blob "${file}")"
+
+  for target_path in "${rel_path}" "sporttech/${rel_path}"; do
+    if [[ "${first_entry}" == true ]]; then
+      first_entry=false
+    else
+      printf ',\n' >>"${tree_entries}"
+    fi
+    printf '    {"path": %s, "mode": "100644", "type": "blob", "sha": %s}' \
+      "$(json_escape "${target_path}")" \
+      "$(json_escape "${file_sha}")" >>"${tree_entries}"
+  done
+done < <(find "${root}/sporttech" -type f -print0 | sort -z)
 
 tree_payload="$(mktemp)"
 cat >"${tree_payload}" <<JSON
 {
   "base_tree": "${base_tree_sha}",
   "tree": [
-    {"path": "index.html", "mode": "100644", "type": "blob", "sha": "${index_sha}"},
-    {"path": "assets/favicon.svg", "mode": "100644", "type": "blob", "sha": "${favicon_sha}"},
-    {"path": "assets/sporttech-budget-hero.jpg", "mode": "100644", "type": "blob", "sha": "${hero_sha}"},
-    {"path": "assets/sporttech-budget-hero-small.jpg", "mode": "100644", "type": "blob", "sha": "${hero_small_sha}"},
-    {"path": "sporttech/index.html", "mode": "100644", "type": "blob", "sha": "${index_sha}"},
-    {"path": "sporttech/assets/favicon.svg", "mode": "100644", "type": "blob", "sha": "${favicon_sha}"},
-    {"path": "sporttech/assets/sporttech-budget-hero.jpg", "mode": "100644", "type": "blob", "sha": "${hero_sha}"},
-    {"path": "sporttech/assets/sporttech-budget-hero-small.jpg", "mode": "100644", "type": "blob", "sha": "${hero_small_sha}"}
+$(cat "${tree_entries}")
   ]
 }
 JSON
+rm -f "${tree_entries}"
 tree_sha="$(gh api "repos/${repo}/git/trees" --method POST --input "${tree_payload}" --jq '.sha')"
 rm -f "${tree_payload}"
 
