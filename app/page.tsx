@@ -148,8 +148,8 @@ export default function Home() {
           SportTech Budget
         </a>
         <nav aria-label="主要區塊">
-          <a href="#overview">總覽</a>
-          <a href="#query">查詢</a>
+          <a href="#overview">總覽說明</a>
+          <a href="#query">查詢預算</a>
         </nav>
       </header>
       <section className="masthead">
@@ -182,7 +182,7 @@ export default function Home() {
       <section className="overview-section" id="overview" aria-labelledby="overview-title">
         <div className="section-heading">
           <p className="eyebrow">overview</p>
-          <h2 id="overview-title">先看總覽，再進入查詢</h2>
+          <h2 id="overview-title">總覽說明</h2>
           <p>用四個指標快速抓預算規模、科研線索、地方場域與協會角色，再照三步驟縮小查核範圍。</p>
         </div>
 
@@ -228,7 +228,7 @@ export default function Home() {
       <section className="query-section" id="query" aria-labelledby="query-title">
         <div className="section-heading">
           <p className="eyebrow">query workbench</p>
-          <h2 id="query-title">查詢預算線索</h2>
+          <h2 id="query-title">查詢預算</h2>
           <p>先用預算層級、執行程度與縣市縮小範圍，再切換列表或卡片檢視，點開項目查看來源與公開資訊進度。</p>
         </div>
 
