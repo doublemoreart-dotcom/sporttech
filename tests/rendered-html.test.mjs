@@ -66,12 +66,13 @@ test("server-renders the sporttech budget query assistant", async () => {
 });
 
 test("documents the local and git version boundary", async () => {
-  const [page, data, layout, readme, favicon] = await Promise.all([
+  const [page, data, layout, readme, favicon, renderer] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/budget-data.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../README.md", import.meta.url), "utf8"),
     readFile(new URL("../public/favicon.svg", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/render-static-page.mjs", import.meta.url), "utf8"),
   ]);
 
   assert.match(page, /版號/);
@@ -139,6 +140,14 @@ test("documents the local and git version boundary", async () => {
   assert.match(data, /checks: \[/);
   assert.match(data, /查行政院或科技會報核定計畫/);
   assert.match(page, /selectionSummary/);
+  assert.match(page, /data-filter-layer/);
+  assert.match(page, /data-filter-location/);
+  assert.match(page, /data-stage-filter/);
+  assert.match(page, /data-flow-id/);
+  assert.match(renderer, /wireStaticInteractions/);
+  assert.match(renderer, /static-drawer-layer/);
+  assert.match(renderer, /<script id="_R_">/);
+  assert.match(renderer, /html\.replace\(/);
   assert.match(page, /關閉/);
   assert.match(page, /查核摘要/);
   assert.match(page, /公開資訊進度/);

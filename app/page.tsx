@@ -37,6 +37,10 @@ export default function Home() {
   const lastTriggerRef = useRef<HTMLButtonElement>(null);
   const lastMetricTriggerRef = useRef<HTMLButtonElement>(null);
 
+  useEffect(() => {
+    (window as Window & { __sporttechHydrated?: boolean }).__sporttechHydrated = true;
+  }, []);
+
   const filtered = useMemo(
     () =>
       flows.filter((flow) => {
@@ -256,7 +260,7 @@ export default function Home() {
                   <strong>{selectionSummary(selectedLayers, layerNames)}</strong>
                 </summary>
                 <div className="select-options">
-                  <label>
+                  <label data-filter-layer="all">
                     <input
                       checked={selectedLayers.length === 0}
                       onChange={() => {
@@ -268,7 +272,7 @@ export default function Home() {
                     <span>全部</span>
                   </label>
                   {(Object.keys(layerNames) as Layer[]).map((layer) => (
-                    <label key={layer}>
+                    <label data-filter-layer={layer} key={layer}>
                       <input
                         checked={selectedLayers.includes(layer)}
                         onChange={() => {
@@ -293,7 +297,7 @@ export default function Home() {
                   <strong>{selectionSummary(selectedLocations, locationNames)}</strong>
                 </summary>
                 <div className="select-options">
-                  <label>
+                  <label data-filter-location="all">
                     <input
                       checked={selectedLocations.length === 0}
                       onChange={() => {
@@ -305,7 +309,7 @@ export default function Home() {
                     <span>全部</span>
                   </label>
                   {Object.keys(locationNames).map((location) => (
-                    <label key={location}>
+                    <label data-filter-location={location} key={location}>
                       <input
                         checked={selectedLocations.includes(location)}
                         onChange={() => {
@@ -327,10 +331,11 @@ export default function Home() {
 
               <span className="control-label">執行程度</span>
               <div className="stage-tags" aria-label="執行程度篩選">
-                <button
-                  aria-pressed={selectedStages.length === 0}
-                  className={selectedStages.length === 0 ? "stage-tag active" : "stage-tag"}
-                  onClick={() => {
+              <button
+                aria-pressed={selectedStages.length === 0}
+                data-stage-filter="all"
+                className={selectedStages.length === 0 ? "stage-tag active" : "stage-tag"}
+                onClick={() => {
                     setSelectedStages([]);
                     setDrawerOpen(false);
                   }}
@@ -341,6 +346,7 @@ export default function Home() {
                 {stageOrder.map((stage) => (
                   <button
                     aria-pressed={selectedStages.includes(stage)}
+                    data-stage-filter={stage}
                     className={selectedStages.includes(stage) ? "stage-tag active" : "stage-tag"}
                     key={stage}
                     onClick={() => {
@@ -391,6 +397,10 @@ export default function Home() {
               {filtered.map((flow) => (
                 <button
                   className={active?.id === flow.id ? "lane active" : "lane"}
+                  data-flow-id={flow.id}
+                  data-flow-layer={flow.layer}
+                  data-flow-locations={flow.locations.join("|")}
+                  data-flow-stage={flow.stage}
                   key={flow.id}
                   onClick={(event) => {
                     lastTriggerRef.current = event.currentTarget;
