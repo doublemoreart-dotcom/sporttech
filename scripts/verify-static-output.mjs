@@ -19,6 +19,10 @@ for (const target of targets) {
   assert.match(html, /data-filter-location="台北市"/, `${target}: missing location filter markers`);
   assert.match(html, /data-stage-filter="verified"/, `${target}: missing stage filter markers`);
   assert.match(html, /data-flow-id="application-budget"/, `${target}: missing flow markers`);
+  assert.match(html, /lane-map card-view/, `${target}: query results should default to card view`);
+  assert.match(html, /class="source-row"/, `${target}: sources should render as compact source rows`);
+  assert.match(html, /metric-check-flow/, `${target}: metric drawer flow styles/markup missing`);
+  assert.match(html, /metric-source-section/, `${target}: metric drawer source links missing`);
   assert.match(html, /wireStaticInteractions/, `${target}: missing static interaction bootstrap`);
   assert.match(html, /static-drawer-layer/, `${target}: missing static drawer behavior`);
   assert.match(html, /menu\.open = false/, `${target}: dropdown selections should collapse menus`);

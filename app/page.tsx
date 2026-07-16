@@ -30,7 +30,7 @@ export default function Home() {
   const [activeFlow, setActiveFlow] = useState(flows[0].id);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [activeMetric, setActiveMetric] = useState<(typeof metrics)[number] | null>(null);
-  const [itemView, setItemView] = useState<"list" | "card">("list");
+  const [itemView, setItemView] = useState<"list" | "card">("card");
   const [isPreloading, setIsPreloading] = useState(true);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const metricCloseButtonRef = useRef<HTMLButtonElement>(null);
@@ -574,12 +574,33 @@ export default function Home() {
               <span className="metric-drawer-label">{activeMetric.value}</span>
               <h2>{activeMetric.detailTitle}</h2>
               <p>{activeMetric.detail}</p>
+              <div className="metric-check-flow" aria-label={`${activeMetric.label}查核流程`}>
+                {activeMetric.flow.map((step) => (
+                  <span key={step}>{step}</span>
+                ))}
+              </div>
               <section>
                 <h3>查核重點</h3>
                 <ul>
                   {activeMetric.checks.map((check) => (
                     <li key={check}>{check}</li>
                   ))}
+                </ul>
+              </section>
+              <section className="metric-source-section">
+                <h3>相關連結</h3>
+                <ul>
+                  {activeMetric.sourceRefs.map((sourceKey) => {
+                    const source = sourceCatalog[sourceKey];
+                    return (
+                      <li key={sourceKey}>
+                        <a href={source.url} rel="noreferrer" target="_blank">
+                          {source.label}
+                        </a>
+                        <span>{source.note}</span>
+                      </li>
+                    );
+                  })}
                 </ul>
               </section>
             </div>
@@ -595,15 +616,17 @@ export default function Home() {
             本頁以公開可查的中央政策、科研計畫、預決算、政府採購與 open data 入口作為索引；每筆預算詳情仍需回到原始來源確認最新版本與授權條款。
           </p>
         </div>
-        <div className="source-registry" aria-label="資料來源清單">
+        <ul className="source-registry" aria-label="資料來源清單">
           {Object.entries(sourceCatalog).map(([sourceKey, source]) => (
-            <a className="source-card" href={source.url} key={sourceKey} rel="noreferrer" target="_blank">
-              <span>{source.label}</span>
+            <li className="source-row" key={sourceKey}>
+              <a href={source.url} rel="noreferrer" target="_blank">
+                <span>{source.label}</span>
+                <small>{source.url.replace("https://", "")}</small>
+              </a>
               <p>{source.note}</p>
-              <small>{source.url.replace("https://", "")}</small>
-            </a>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
 
       <footer className="site-footer" aria-label="公開資料與版權聲明">

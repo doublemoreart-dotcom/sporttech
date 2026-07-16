@@ -61,34 +61,52 @@ const staticFallbackScript = `<script>
       industry: "產業新創",
       association: "協會應用端",
     },
+    sources: {
+      ey: { label: "行政院全球資訊網", url: "https://www.ey.gov.tw/", note: "政策新聞、院會與跨部會計畫線索。" },
+      nstc: { label: "國科會全球資訊網", url: "https://www.nstc.gov.tw/", note: "科技計畫、研究補助、新聞資料與查詢入口。" },
+      gstp: { label: "政府科技計畫資訊網", url: "https://gstp.stpi.narl.org.tw/", note: "跨部會科技計畫與年度科技預算查詢入口。" },
+      grb: { label: "政府研究資訊系統 GRB", url: "https://www.grb.gov.tw/", note: "研究計畫名稱、主持人、關鍵字與成果摘要查詢。" },
+      sports: { label: "運動部全民運動署", url: "https://www.sa.gov.tw/", note: "運動科技、場域、補助與政策公告入口。" },
+      dgbas: { label: "行政院主計總處", url: "https://www.dgbas.gov.tw/", note: "中央政府預算、決算與補捐助資訊入口。" },
+      pcc: { label: "公共工程委員會", url: "https://www.pcc.gov.tw/", note: "政府採購、決標與委辦案追蹤入口。" },
+      data: { label: "政府資料開放平臺", url: "https://data.gov.tw/", note: "open data 資料集與 API 查詢入口。" },
+    },
     metrics: [
       {
         label: "政策總額",
         value: "46 億元",
         detailTitle: "政策總額怎麼讀",
         detail: "46 億元是 2022-2026 運動X科技跨部會政策總盤，重點是辨識它分散在哪些部會、年度科目與地方分案，而不是把它當成單一機關的一筆支出。",
-        checks: ["查行政院或科技會報核定計畫", "拆年度預算與科技預算科目", "比對地方核定、採購與驗收資料"],
+        flow: ["政策核定", "年度預算", "分案/採購", "驗收/成果"],
+        checks: ["先確認行政院或科技會報核定的是政策總額、計畫期程與主責部會。", "再拆年度中央政府總預算、科技預算與運動部/國科會科目，避免重複計算。", "最後比對地方核定、採購決標、驗收紀錄與成果報告，確認是否真的落地。"],
+        sourceRefs: ["ey", "gstp", "dgbas", "data"],
       },
       {
         label: "科研線索",
         value: "2.4 億元級",
         detailTitle: "科研線索怎麼追",
         detail: "科研預算常出現在國科會、GRB、學研計畫與國家隊支援成果中。它通常不會直接長成民眾看到的場館系統，而是先成為模型、感測、分析工具或訓練支援。",
-        checks: ["查 GRB 計畫名稱、主持人與成果摘要", "比對國科會新聞與補助公告", "確認成果是否進入國訓、協會或場域應用"],
+        flow: ["研究計畫", "學研團隊", "模型/設備", "國訓/場域"],
+        checks: ["用 GRB 查計畫名稱、主持人、補助機關、執行期間與成果摘要。", "比對國科會新聞、補助公告與學校研究成果，確認是否屬同一條計畫線。", "確認成果是否進入國訓中心、單項協會、地方場域或商品化應用。"],
+        sourceRefs: ["nstc", "grb", "gstp", "sports"],
       },
       {
         label: "地方案例",
         value: "14 縣市 / 30 案",
         detailTitle: "地方案例怎麼對帳",
         detail: "地方場域通常是中央補助、地方配合款與委外廠商共同形成。看到案數時，要繼續追核定金額、決標金額、驗收狀態、維運費與實際使用量。",
-        checks: ["查地方府會預算書與議會質詢", "查政府採購決標公告", "確認系統上線、維運與使用人次"],
+        flow: ["中央核定", "地方配合款", "採購/委辦", "維運使用"],
+        checks: ["先查地方府會預算書、議會質詢與中央補助核定，分開看中央款與地方款。", "再查政府採購決標公告、契約廠商與驗收資訊，確認金額是否已形成契約。", "最後看系統上線、維運年度、使用人次與開放資料，避免只停在示範案數。"],
+        sourceRefs: ["sports", "pcc", "dgbas", "data"],
       },
       {
         label: "協會角色",
         value: "應用端居多",
         detailTitle: "協會角色怎麼判斷",
         detail: "協會在運動科技中常是應用端、場域端或選手資料的合作窗口。要判斷是否直接承接預算，需看補助名單、委辦契約、採購得標與成果報告，而不是只看協會是否出現在活動或新聞中。",
-        checks: ["查協會是否列為受補助或得標單位", "區分合作露出與實際經費承接", "比對選手、賽事、場域資料提供角色"],
+        flow: ["補助名單", "委辦契約", "合作露出", "實際承接"],
+        checks: ["查協會是否列為受補助者、委辦承攬者或採購得標單位。", "區分新聞中的合作露出、提供選手資料、提供賽事場域與實際經費承接。", "比對成果報告、賽事資料與場域紀錄，確認科技導入後誰負責維運。"],
+        sourceRefs: ["sports", "pcc", "grb", "data"],
       },
     ],
     flows: [
@@ -269,6 +287,11 @@ const staticFallbackScript = `<script>
   }[char]));
   const list = (items) => items.map((item) => \`<li>\${escapeHtml(item)}</li>\`).join("");
   const pills = (items) => items.map((item) => \`<li>\${escapeHtml(item)}</li>\`).join("");
+  const sourceLinks = (keys) => keys.map((key) => {
+    const source = flowData.sources[key];
+    if (!source) return "";
+    return \`<li><a href="\${escapeHtml(source.url)}" rel="noreferrer" target="_blank">\${escapeHtml(source.label)}</a><span>\${escapeHtml(source.note)}</span></li>\`;
+  }).join("");
 
   function selectionSummary(set, dictionary) {
     if (set.size === 0) return "全部";
@@ -403,7 +426,9 @@ const staticFallbackScript = `<script>
           <span class="metric-drawer-label">\${escapeHtml(metric.value)}</span>
           <h2>\${escapeHtml(metric.detailTitle)}</h2>
           <p>\${escapeHtml(metric.detail)}</p>
+          <div class="metric-check-flow" aria-label="\${escapeHtml(metric.label)}查核流程">\${metric.flow.map((step) => \`<span>\${escapeHtml(step)}</span>\`).join("")}</div>
           <section><h3>查核重點</h3><ul>\${list(metric.checks)}</ul></section>
+          <section class="metric-source-section"><h3>相關連結</h3><ul>\${sourceLinks(metric.sourceRefs)}</ul></section>
         </div>
       </aside>\`;
     drawer.querySelector(".metric-drawer-backdrop").addEventListener("click", closeDrawers);
