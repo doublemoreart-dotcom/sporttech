@@ -67,13 +67,14 @@ test("server-renders the sporttech budget query assistant", async () => {
 });
 
 test("documents the local and git version boundary", async () => {
-  const [page, data, layout, readme, favicon, renderer] = await Promise.all([
+  const [page, data, layout, readme, favicon, renderer, updateFlow] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/budget-data.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../README.md", import.meta.url), "utf8"),
     readFile(new URL("../public/favicon.svg", import.meta.url), "utf8"),
     readFile(new URL("../scripts/render-static-page.mjs", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/update-flow.sh", import.meta.url), "utf8"),
   ]);
 
   assert.match(page, /版號/);
@@ -212,6 +213,24 @@ test("documents the local and git version boundary", async () => {
   assert.match(readme, /## 本機版/);
   assert.match(readme, /## Git 版控版/);
   assert.match(readme, /## 交付版/);
+  assert.match(readme, /## 更新流程/);
+  assert.match(readme, /本機優先更新/);
+  assert.match(readme, /收到明確「推 Git」或「部署」指令前，不進行 commit、push、登入或 token 建立/);
+  assert.match(readme, /### 1\. 本機審查/);
+  assert.match(readme, /npm run update:local/);
+  assert.match(readme, /### 2\. Git 推版/);
+  assert.match(readme, /git fetch origin/);
+  assert.match(readme, /git status -sb/);
+  assert.match(readme, /git push origin main/);
+  assert.match(readme, /不要 force push/);
+  assert.match(readme, /### 3\. GitHub Pages 發布/);
+  assert.match(readme, /npm run update:deploy/);
+  assert.match(updateFlow, /Local-first update policy/);
+  assert.match(updateFlow, /never commits, pushes, logs in, creates tokens, or deploys/);
+  assert.match(updateFlow, /local review first; Git push only after an explicit user request/);
+  assert.match(updateFlow, /skip deploy by design/);
+  assert.match(updateFlow, /git status -sb/);
+  assert.doesNotMatch(updateFlow, /git push|git commit|gh auth login|force push/);
   assert.doesNotMatch(page, /_sites-preview|SkeletonPreview|codex-preview/);
 
   await assert.rejects(access(new URL("../app/_sites-preview/SkeletonPreview.tsx", import.meta.url)));
@@ -336,4 +355,49 @@ test("uses multi-select tag filters", async () => {
   assert.match(css, /\.site-header\s*\{[\s\S]*position: sticky/);
   assert.doesNotMatch(page, /chip-row|className=\{selectedLayer ===/);
   assert.doesNotMatch(css, /\.chip\b|\.chip-row/);
+});
+
+test("keeps responsive layout and interaction affordances reviewable", async () => {
+  const [page, css, staticVerifier] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/verify-static-output.mjs", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(page, /aria-label="主要區塊"/);
+  assert.match(page, /href="#overview"/);
+  assert.match(page, /href="#query"/);
+  assert.match(page, /href="#sources"/);
+  assert.match(page, /aria-label="預算層級篩選"/);
+  assert.match(page, /aria-label="縣市篩選"/);
+  assert.match(page, /aria-label="執行程度篩選"/);
+  assert.match(page, /aria-pressed=\{itemView === "list"\}/);
+  assert.match(page, /aria-pressed=\{itemView === "card"\}/);
+  assert.match(page, /role="dialog"/);
+  assert.match(page, /aria-modal="true"/);
+  assert.match(page, /event\.key === "Escape"/);
+
+  assert.match(css, /\.site-shell\s*\{[\s\S]*width: min\(1240px, calc\(100% - 32px\)\)/);
+  assert.match(css, /\.site-header\s*\{[\s\S]*position: sticky/);
+  assert.match(css, /\.site-header nav\s*\{[\s\S]*flex-wrap: wrap/);
+  assert.match(css, /\.stage-tags\s*\{[\s\S]*flex-wrap: wrap/);
+  assert.match(css, /\.lane\s*\{[\s\S]*width: 100%/);
+  assert.match(css, /\.drawer-scroll\s*\{[\s\S]*overflow: auto/);
+  assert.match(css, /@media \(max-width: 1040px\)\s*\{[\s\S]*\.metrics\s*\{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(css, /@media \(max-width: 1040px\)\s*\{[\s\S]*\.lane-map\.card-view\s*\{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(css, /@media \(max-width: 700px\)\s*\{[\s\S]*\.metrics,[\s\S]*\.query-flow,[\s\S]*\.flow-diagram\s*\{[\s\S]*grid-template-columns: 1fr/);
+  assert.match(css, /@media \(max-width: 700px\)\s*\{[\s\S]*\.lane-map\.card-view\s*\{[\s\S]*grid-template-columns: 1fr/);
+  assert.match(css, /@media \(max-width: 700px\)\s*\{[\s\S]*\.drawer-panel\s*\{[\s\S]*width: 100%/);
+  assert.match(css, /@media \(max-width: 700px\)\s*\{[\s\S]*\.metric-check-flow span:not\(:last-child\)::after\s*\{[\s\S]*height: 28px/);
+  assert.match(staticVerifier, /data-filter-layer="central"/);
+  assert.match(staticVerifier, /data-filter-location="台北市"/);
+  assert.match(staticVerifier, /data-stage-filter="verified"/);
+  assert.match(staticVerifier, /lane-map card-view/);
+  assert.match(staticVerifier, /static-drawer-layer/);
+
+  assert.doesNotMatch(css, /width:\s*100vw/);
+  assert.doesNotMatch(css, /min-width:\s*[4-9]\d{2}px/);
+  assert.doesNotMatch(css, /overflow-x:\s*scroll/);
+  assert.doesNotMatch(css, /font-size:\s*calc\([^;]*vw/);
+  assert.doesNotMatch(page, /onClick=\{\(\) => window/);
 });

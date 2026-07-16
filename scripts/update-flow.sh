@@ -14,12 +14,17 @@ Usage:
   npm run update:local
   npm run update:deploy
 
+Local-first update policy:
+  - npm run update:local checks source, rebuilds local static snapshots, and stops.
+  - It never commits, pushes, logs in, creates tokens, or deploys.
+  - Only run npm run update:deploy after an explicit publish decision.
+
 Steps:
-  1. Run lint, build, and tests.
-  2. Sync local static snapshots.
+  1. Check source quality with lint, build, and tests.
+  2. Sync local static snapshots for browser review.
   3. Verify static output markers, assets, and fallback interactions.
-  4. Optionally deploy to GitHub Pages with --deploy.
-  5. Print git status and canonical URLs.
+  4. Deploy only when --deploy is passed.
+  5. Print the exact git status for review.
 HELP
       exit 0
       ;;
@@ -36,13 +41,14 @@ cd "${repo_root}"
 echo "SportTech canonical targets:"
 echo "  Public URL: https://dinopeng.com/sporttech/"
 echo "  Repo:       https://github.com/doublemoreart-dotcom/sporttech"
+echo "  Policy:     local review first; Git push only after an explicit user request"
 echo
 
-echo "Step 1/5: run checks"
+echo "Step 1/5: check source quality"
 npm run check
 echo
 
-echo "Step 2/5: sync local static snapshots"
+echo "Step 2/5: sync local static review files"
 npm run sync
 echo
 
@@ -54,12 +60,14 @@ if [[ "${deploy}" == true ]]; then
   echo "Step 4/5: deploy GitHub Pages"
   npm run deploy:pages
 else
-  echo "Step 4/5: skip deploy"
-  echo "  Run npm run update:deploy when the synced version is ready to publish."
+  echo "Step 4/5: skip deploy by design"
+  echo "  Review the local site first. Do not push Git until the user explicitly asks."
 fi
 echo
 
 echo "Step 5/5: review git status"
-git status --short
+git status -sb
 echo
-echo "Update flow complete."
+echo "Local update flow complete."
+echo "Next review target:"
+echo "  ../../outputs/sporttech-budget-static-v2.html"

@@ -104,13 +104,19 @@ outputs/assets/
 npm run sync
 ```
 
-建議更新流程：
+## 更新流程
+
+這個專案採本機優先更新。日常調整時只更新 source 與本機靜態快照；收到明確「推 Git」或「部署」指令前，不進行 commit、push、登入或 token 建立。
+
+### 1. 本機審查
+
+每次修改畫面、資料或互動後先跑：
 
 ```bash
 npm run update:local
 ```
 
-這會依序執行 lint、build、測試、同步本機靜態快照，並驗證靜態版是否保留互動所需的標記、相對素材路徑、響應式主視覺與 fallback script，最後列出 Git 狀態。
+這會依序執行 lint、build、測試、同步本機靜態快照，並驗證靜態版是否保留互動所需的標記、相對素材路徑、響應式主視覺與 fallback script，最後列出 `git status -sb`。
 
 不要把 `npm run check`、`npm run sync` 或手動複製輸出檔並行執行；先讓檢查完成，再同步靜態輸出，才能避免舊 build、舊素材或半套 HTML 被推到 GitHub Pages。
 
@@ -120,13 +126,36 @@ npm run update:local
 npm run verify:static
 ```
 
+本機審查入口：
+
+```text
+../../outputs/sporttech-budget-static-v2.html
+```
+
+### 2. Git 推版
+
+只有收到明確「推 Git」指令才進行：
+
+```bash
+git fetch origin
+git status -sb
+git log --oneline -5
+git add <changed files>
+git commit -m "<message>"
+git push origin main
+```
+
+推版前先確認遠端是否有新 commit；不要 force push。若只是在本機試排版或修改交付快照，先不要 commit。
+
+### 3. GitHub Pages 發布
+
 需要發布到 GitHub Pages 時使用：
 
 ```bash
 npm run update:deploy
 ```
 
-`update:deploy` 會在檢查與同步通過後部署 GitHub Pages；它不會自動 commit，也不會 force push。
+`update:deploy` 會在檢查與同步通過後部署 GitHub Pages；它不會自動 commit，也不會 force push。部署前仍要先確認本機畫面、互動與 RWD。
 
 目前 `https://dinopeng.com/sporttech/` 由主站 repo 供應。若只更新本 repo 的工作流程文件或測試腳本，不一定需要同步主站；若畫面、互動或靜態輸出有變動，才需要把 `outputs/github-pages/sporttech/` 同步到主站的 `/sporttech/` 目錄後再推送主站。
 
