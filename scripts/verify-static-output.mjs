@@ -21,13 +21,25 @@ for (const target of targets) {
   assert.match(html, /data-flow-id="application-budget"/, `${target}: missing flow markers`);
   assert.match(html, /lane-map card-view/, `${target}: query results should default to card view`);
   assert.match(html, /class="source-row"/, `${target}: sources should render as compact source rows`);
+  assert.match(html, /heading-icon/, `${target}: section heading icons missing`);
+  assert.match(html, /viewBox="0 0 24 24"/, `${target}: Lucide-style SVG icons missing`);
   assert.match(html, /metric-check-flow/, `${target}: metric drawer flow styles/markup missing`);
+  assert.match(html, /"flowRoles":\["行政院\/科技會報"/, `${target}: metric drawer flow role data missing`);
+  assert.match(html, /"flowIcons":\["badge-check","calendar-days","file-search","circle-check"\]/, `${target}: metric drawer Lucide icon data missing`);
+  assert.match(html, /lucideIcon\(metric\.flowIcons\[index\]\)/, `${target}: metric drawer Lucide icon template missing`);
+  assert.match(html, /metric\.flowRoles\[index\]/, `${target}: metric drawer flow role template missing`);
+  assert.match(html, /GRB 是政府研究計畫查詢系統/, `${target}: glossary note missing`);
+  assert.match(html, /metric-info-block/, `${target}: metric drawer info hierarchy missing`);
+  assert.match(html, /metric-source-section metric-info-block compact/, `${target}: compact metric source block missing`);
   assert.match(html, /metric-source-section/, `${target}: metric drawer source links missing`);
   assert.match(html, /wireStaticInteractions/, `${target}: missing static interaction bootstrap`);
   assert.match(html, /static-drawer-layer/, `${target}: missing static drawer behavior`);
-  assert.match(html, /menu\.open = false/, `${target}: dropdown selections should collapse menus`);
+  assert.match(html, /document\.querySelectorAll\("\[data-filter-layer\]"\)/, `${target}: layer tag filters missing`);
+  assert.match(html, /document\.querySelectorAll\("\[data-filter-location\]"\)/, `${target}: location tag filters missing`);
 
   assert.doesNotMatch(html, /<script id="_R_">/, `${target}: static output should not hydrate React`);
+  assert.doesNotMatch(html, /<details class="select-menu"/, `${target}: dropdown filters should not render`);
+  assert.doesNotMatch(html, /type="checkbox"/, `${target}: filter checkboxes should not render`);
   assert.doesNotMatch(html, /import\("assets\//, `${target}: dynamic imports must not use bare asset specifiers`);
   assert.doesNotMatch(html, /href="\/assets\//, `${target}: absolute asset href found`);
   assert.doesNotMatch(html, /src="\/assets\//, `${target}: absolute asset src found`);

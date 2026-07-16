@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import {
   flows,
   layerNames,
@@ -13,14 +14,185 @@ import {
   type Stage,
 } from "./budget-data";
 
-function selectionSummary<T extends string>(
-  selected: T[],
-  labels: Record<T, string>,
-  allLabel = "全部",
-) {
-  if (selected.length === 0) return allLabel;
-  if (selected.length === 1) return labels[selected[0]];
-  return `已選 ${selected.length} 項`;
+const lucidePaths: Record<string, ReactNode> = {
+  "badge-check": (
+    <>
+      <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.77 4 4 0 0 1 0 6.76 4 4 0 0 1-4.78 4.77 4 4 0 0 1-6.74 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
+      <path d="m9 12 2 2 4-4" />
+    </>
+  ),
+  "building-2": (
+    <>
+      <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" />
+      <path d="M6 12H4a2 2 0 0 0-2 2v8h20v-8a2 2 0 0 0-2-2h-2" />
+      <path d="M10 6h4" />
+      <path d="M10 10h4" />
+      <path d="M10 14h4" />
+    </>
+  ),
+  "calendar-days": (
+    <>
+      <path d="M8 2v4" />
+      <path d="M16 2v4" />
+      <rect width="18" height="18" x="3" y="4" rx="2" />
+      <path d="M3 10h18" />
+      <path d="M8 14h.01" />
+      <path d="M12 14h.01" />
+      <path d="M16 14h.01" />
+      <path d="M8 18h.01" />
+      <path d="M12 18h.01" />
+      <path d="M16 18h.01" />
+    </>
+  ),
+  "circle-check": (
+    <>
+      <circle cx="12" cy="12" r="10" />
+      <path d="m9 12 2 2 4-4" />
+    </>
+  ),
+  cpu: (
+    <>
+      <rect width="14" height="14" x="5" y="5" rx="2" />
+      <path d="M9 9h6v6H9z" />
+      <path d="M9 1v4" />
+      <path d="M15 1v4" />
+      <path d="M9 19v4" />
+      <path d="M15 19v4" />
+      <path d="M1 9h4" />
+      <path d="M1 15h4" />
+      <path d="M19 9h4" />
+      <path d="M19 15h4" />
+    </>
+  ),
+  database: (
+    <>
+      <ellipse cx="12" cy="5" rx="9" ry="3" />
+      <path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5" />
+      <path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3" />
+    </>
+  ),
+  dumbbell: (
+    <>
+      <path d="m6.5 6.5 11 11" />
+      <path d="m21 21-1-1" />
+      <path d="m3 3 1 1" />
+      <path d="m18 22 4-4" />
+      <path d="m2 6 4-4" />
+      <path d="m3 10 7-7" />
+      <path d="m14 21 7-7" />
+    </>
+  ),
+  "external-link": (
+    <>
+      <path d="M15 3h6v6" />
+      <path d="M10 14 21 3" />
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+    </>
+  ),
+  "file-search": (
+    <>
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" />
+      <path d="M14 2v6h6" />
+      <circle cx="11.5" cy="14.5" r="2.5" />
+      <path d="m13.3 16.3 1.7 1.7" />
+    </>
+  ),
+  "file-text": (
+    <>
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" />
+      <path d="M14 2v6h6" />
+      <path d="M16 13H8" />
+      <path d="M16 17H8" />
+      <path d="M10 9H8" />
+    </>
+  ),
+  handshake: (
+    <>
+      <path d="m11 17 2 2a2.8 2.8 0 0 0 4 0l4-4" />
+      <path d="m14 14 2.5 2.5a2.8 2.8 0 0 0 4 0" />
+      <path d="M3 7h3l4 4" />
+      <path d="M21 7h-3l-4 4" />
+      <path d="m7 15 4-4" />
+      <path d="m2 8 5 5" />
+      <path d="m22 8-5 5" />
+    </>
+  ),
+  landmark: (
+    <>
+      <path d="M3 22h18" />
+      <path d="M6 18v-7" />
+      <path d="M10 18v-7" />
+      <path d="M14 18v-7" />
+      <path d="M18 18v-7" />
+      <path d="m12 2 9 5H3Z" />
+    </>
+  ),
+  "layout-dashboard": (
+    <>
+      <rect width="7" height="9" x="3" y="3" rx="1" />
+      <rect width="7" height="5" x="14" y="3" rx="1" />
+      <rect width="7" height="9" x="14" y="12" rx="1" />
+      <rect width="7" height="5" x="3" y="16" rx="1" />
+    </>
+  ),
+  megaphone: (
+    <>
+      <path d="m3 11 18-5v12L3 14v-3Z" />
+      <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" />
+    </>
+  ),
+  school: (
+    <>
+      <path d="m4 6 8-4 8 4" />
+      <path d="m18 10 4 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8l4-2" />
+      <path d="M6 10v12" />
+      <path d="M18 10v12" />
+      <path d="M10 22v-6h4v6" />
+    </>
+  ),
+  search: (
+    <>
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.3-4.3" />
+    </>
+  ),
+  users: (
+    <>
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </>
+  ),
+  wrench: (
+    <>
+      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.1-3.1a6 6 0 0 1-7.8 7.8L6 21l-3-3 7-7a6 6 0 0 1 7.8-7.8Z" />
+    </>
+  ),
+};
+
+const budgetRoute = [
+  { icon: "landmark", label: "中央/基金", role: "政策、基金或年度科目" },
+  { icon: "building-2", label: "執行單位", role: "部會、學研、地方或法人" },
+  { icon: "handshake", label: "場域/協會", role: "場館、協會或合作夥伴" },
+  { icon: "users", label: "選手/民眾", role: "訓練、使用與成果回饋" },
+];
+
+function LucideIcon({ className, name }: { className?: string; name: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+    >
+      {lucidePaths[name] ?? lucidePaths["circle-check"]}
+    </svg>
+  );
 }
 
 export default function Home() {
@@ -122,23 +294,17 @@ export default function Home() {
     <>
       {isPreloading && (
         <section
-          aria-label="運動X科技預算查詢小幫手載入中"
+          aria-label="運動X科技預算小幫手載入中"
           aria-live="polite"
           className="preloader"
           role="status"
         >
           <div className="preloader-card">
             <span className="preloader-kicker">budget query assistant</span>
-            <h2>整理運動X科技預算線索</h2>
-            <div className="preloader-flow" aria-hidden="true">
-              <span>公開資料</span>
-              <span>預算身分</span>
-              <span>查核路徑</span>
-            </div>
+            <h2>整理預算線索</h2>
             <div className="preloader-bar" aria-hidden="true">
               <span />
             </div>
-            <p>正在標記政策總額、年度科目、地方場域與協會應用端。</p>
             <button type="button" onClick={() => setIsPreloading(false)}>
               略過導入
             </button>
@@ -149,7 +315,7 @@ export default function Home() {
       <main className={isPreloading ? "site-shell loading-shell" : "site-shell"} id="top">
       <header className="site-header" aria-label="頁面導覽">
         <a className="site-logo" href="#top" aria-label="回到頁首">
-          運動X科技預算查詢小幫手
+          運動X科技預算小幫手
         </a>
         <nav aria-label="主要區塊">
           <a href="#overview">總覽說明</a>
@@ -173,7 +339,7 @@ export default function Home() {
         </figure>
         <div>
           <p className="eyebrow">budget query assistant / 2022-2026</p>
-          <h1>運動X科技預算查詢小幫手</h1>
+          <h1>運動X科技預算小幫手</h1>
           <p className="lede">
             想查一筆運動科技相關預算時，先用這個頁面確認它比較像政策總額、年度科目、基金補助、地方場域，
             還是協會端應用。點選項目後，可以快速查看來源、執行狀態、合作單位與下一步查核問題。
@@ -189,8 +355,8 @@ export default function Home() {
       <section className="overview-section" id="overview" aria-labelledby="overview-title">
         <div className="section-heading">
           <p className="eyebrow">overview</p>
-          <h2 id="overview-title">總覽說明</h2>
-          <p>用四個指標快速抓預算規模、科研線索、地方場域與協會角色，再照三步驟縮小查核範圍。</p>
+          <h2 id="overview-title"><span className="heading-icon" aria-hidden="true"><LucideIcon name="layout-dashboard" /></span>總覽說明</h2>
+          <p>用四個指標快速抓預算規模、科研線索、地方場域與協會角色。</p>
         </div>
 
         <div className="metrics" aria-label="總覽數字">
@@ -207,10 +373,23 @@ export default function Home() {
               type="button"
             >
               <span>{metric.label}</span>
-              <strong>{metric.value}</strong>
+              <div className="metric-value-row">
+                <strong className={/\d/.test(metric.value) ? "metric-value numeric" : "metric-value"}>
+                  {metric.value}
+                </strong>
+              </div>
               <small>{metric.note}</small>
             </button>
           ))}
+        </div>
+
+      </section>
+
+      <section className="query-section" id="query" aria-labelledby="query-title">
+        <div className="section-heading">
+          <p className="eyebrow">query workbench</p>
+          <h2 id="query-title"><span className="heading-icon" aria-hidden="true"><LucideIcon name="search" /></span>查詢預算</h2>
+          <p>先用預算層級、執行程度與縣市縮小範圍，再切換列表或卡片檢視，點開項目查看來源與公開資訊進度。</p>
         </div>
 
         <div className="query-flow" aria-label="建議查詢流程">
@@ -230,14 +409,6 @@ export default function Home() {
             <p>核對來源連結、公開資訊進度與下一步查核問題。</p>
           </div>
         </div>
-      </section>
-
-      <section className="query-section" id="query" aria-labelledby="query-title">
-        <div className="section-heading">
-          <p className="eyebrow">query workbench</p>
-          <h2 id="query-title">查詢預算</h2>
-          <p>先用預算層級、執行程度與縣市縮小範圍，再切換列表或卡片檢視，點開項目查看來源與公開資訊進度。</p>
-        </div>
 
         <div className="workbench">
           <aside className="panel">
@@ -253,29 +424,29 @@ export default function Home() {
                   </button>
                 )}
               </div>
-              <div className="filter-grid" aria-label="查詢篩選">
-              <details className="select-menu">
-                <summary>
-                  <span>預算層級</span>
-                  <strong>{selectionSummary(selectedLayers, layerNames)}</strong>
-                </summary>
-                <div className="select-options">
-                  <label data-filter-layer="all">
-                    <input
-                      checked={selectedLayers.length === 0}
-                      onChange={() => {
+              <div className="filter-stack" aria-label="查詢篩選">
+                <section>
+                  <span className="control-label">預算層級</span>
+                  <div className="stage-tags" aria-label="預算層級篩選">
+                    <button
+                      aria-pressed={selectedLayers.length === 0}
+                      className={selectedLayers.length === 0 ? "stage-tag active" : "stage-tag"}
+                      data-filter-layer="all"
+                      onClick={() => {
                         setSelectedLayers([]);
                         setDrawerOpen(false);
                       }}
-                      type="checkbox"
-                    />
-                    <span>全部</span>
-                  </label>
-                  {(Object.keys(layerNames) as Layer[]).map((layer) => (
-                    <label data-filter-layer={layer} key={layer}>
-                      <input
-                        checked={selectedLayers.includes(layer)}
-                        onChange={() => {
+                      type="button"
+                    >
+                      全部
+                    </button>
+                    {(Object.keys(layerNames) as Layer[]).map((layer) => (
+                      <button
+                        aria-pressed={selectedLayers.includes(layer)}
+                        className={selectedLayers.includes(layer) ? "stage-tag active" : "stage-tag"}
+                        data-filter-layer={layer}
+                        key={layer}
+                        onClick={() => {
                           setSelectedLayers((current) =>
                             current.includes(layer)
                               ? current.filter((item) => item !== layer)
@@ -283,36 +454,36 @@ export default function Home() {
                           );
                           setDrawerOpen(false);
                         }}
-                        type="checkbox"
-                      />
-                      <span>{layerNames[layer]}</span>
-                    </label>
-                  ))}
-                </div>
-              </details>
+                        type="button"
+                      >
+                        {layerNames[layer]}
+                      </button>
+                    ))}
+                  </div>
+                </section>
 
-              <details className="select-menu">
-                <summary>
-                  <span>縣市</span>
-                  <strong>{selectionSummary(selectedLocations, locationNames)}</strong>
-                </summary>
-                <div className="select-options">
-                  <label data-filter-location="all">
-                    <input
-                      checked={selectedLocations.length === 0}
-                      onChange={() => {
+                <section>
+                  <span className="control-label">縣市</span>
+                  <div className="stage-tags" aria-label="縣市篩選">
+                    <button
+                      aria-pressed={selectedLocations.length === 0}
+                      className={selectedLocations.length === 0 ? "stage-tag active" : "stage-tag"}
+                      data-filter-location="all"
+                      onClick={() => {
                         setSelectedLocations([]);
                         setDrawerOpen(false);
                       }}
-                      type="checkbox"
-                    />
-                    <span>全部</span>
-                  </label>
-                  {Object.keys(locationNames).map((location) => (
-                    <label data-filter-location={location} key={location}>
-                      <input
-                        checked={selectedLocations.includes(location)}
-                        onChange={() => {
+                      type="button"
+                    >
+                      全部
+                    </button>
+                    {Object.keys(locationNames).map((location) => (
+                      <button
+                        aria-pressed={selectedLocations.includes(location)}
+                        className={selectedLocations.includes(location) ? "stage-tag active" : "stage-tag"}
+                        data-filter-location={location}
+                        key={location}
+                        onClick={() => {
                           setSelectedLocations((current) =>
                             current.includes(location)
                               ? current.filter((item) => item !== location)
@@ -320,49 +491,51 @@ export default function Home() {
                           );
                           setDrawerOpen(false);
                         }}
-                        type="checkbox"
-                      />
-                      <span>{location}</span>
-                    </label>
-                  ))}
-                </div>
-              </details>
-            </div>
+                        type="button"
+                      >
+                        {location}
+                      </button>
+                    ))}
+                  </div>
+                </section>
 
-              <span className="control-label">執行程度</span>
-              <div className="stage-tags" aria-label="執行程度篩選">
-              <button
-                aria-pressed={selectedStages.length === 0}
-                data-stage-filter="all"
-                className={selectedStages.length === 0 ? "stage-tag active" : "stage-tag"}
-                onClick={() => {
-                    setSelectedStages([]);
-                    setDrawerOpen(false);
-                  }}
-                  type="button"
-                >
-                  全部
-                </button>
-                {stageOrder.map((stage) => (
-                  <button
-                    aria-pressed={selectedStages.includes(stage)}
-                    data-stage-filter={stage}
-                    className={selectedStages.includes(stage) ? "stage-tag active" : "stage-tag"}
-                    key={stage}
-                    onClick={() => {
-                      setSelectedStages((current) =>
-                        current.includes(stage)
-                          ? current.filter((item) => item !== stage)
-                          : [...current, stage],
-                      );
-                      setDrawerOpen(false);
-                    }}
-                    type="button"
-                  >
-                    <span className={`stage-dot ${stage}`} />
-                    <span>{stages[stage]}</span>
-                  </button>
-                ))}
+                <section>
+                  <span className="control-label">執行程度</span>
+                  <div className="stage-tags" aria-label="執行程度篩選">
+                    <button
+                      aria-pressed={selectedStages.length === 0}
+                      data-stage-filter="all"
+                      className={selectedStages.length === 0 ? "stage-tag active" : "stage-tag"}
+                      onClick={() => {
+                        setSelectedStages([]);
+                        setDrawerOpen(false);
+                      }}
+                      type="button"
+                    >
+                      全部
+                    </button>
+                    {stageOrder.map((stage) => (
+                      <button
+                        aria-pressed={selectedStages.includes(stage)}
+                        data-stage-filter={stage}
+                        className={selectedStages.includes(stage) ? "stage-tag active" : "stage-tag"}
+                        key={stage}
+                        onClick={() => {
+                          setSelectedStages((current) =>
+                            current.includes(stage)
+                              ? current.filter((item) => item !== stage)
+                              : [...current, stage],
+                          );
+                          setDrawerOpen(false);
+                        }}
+                        type="button"
+                      >
+                        <span className={`stage-dot ${stage}`} />
+                        <span>{stages[stage]}</span>
+                      </button>
+                    ))}
+                  </div>
+                </section>
               </div>
             </div>
           </aside>
@@ -465,10 +638,13 @@ export default function Home() {
               </div>
               <div className="drawer-detail-grid">
                 <div className="flow-diagram" aria-label="預算路徑">
-                  <span>中央/基金</span>
-                  <span>執行單位</span>
-                  <span>場域/協會</span>
-                  <span>選手/民眾</span>
+                  {budgetRoute.map((step) => (
+                    <span key={step.label}>
+                      <b aria-hidden="true"><LucideIcon name={step.icon} /></b>
+                      <strong>{step.label}</strong>
+                      <small>{step.role}</small>
+                    </span>
+                  ))}
                 </div>
                 <div className="detail-groups">
                   <section>
@@ -558,9 +734,10 @@ export default function Home() {
       )}
 
       {activeMetric && (
-        <div className="metric-drawer-layer" role="dialog" aria-modal="true" aria-label={`${activeMetric.label}說明`}>
-          <button className="metric-drawer-backdrop" aria-label="關閉總覽說明" onClick={closeMetricDrawer} />
-          <aside className="metric-drawer-panel">
+        <div className="drawer-layer metric-drawer-layer" role="dialog" aria-modal="true" aria-label={`${activeMetric.label}說明`}>
+          <button className="drawer-backdrop metric-drawer-backdrop" aria-label="關閉總覽說明" onClick={closeMetricDrawer} />
+          <aside className="drawer-panel metric-drawer-panel">
+            <div className="drawer-handle" aria-hidden="true" />
             <div className="drawer-topline">
               <div className="detail-header">
                 <span>總覽指標</span>
@@ -570,16 +747,20 @@ export default function Home() {
                 關閉
               </button>
             </div>
-            <div className="metric-drawer-scroll">
+            <div className="drawer-scroll metric-drawer-scroll">
               <span className="metric-drawer-label">{activeMetric.value}</span>
               <h2>{activeMetric.detailTitle}</h2>
               <p>{activeMetric.detail}</p>
               <div className="metric-check-flow" aria-label={`${activeMetric.label}查核流程`}>
-                {activeMetric.flow.map((step) => (
-                  <span key={step}>{step}</span>
+                {activeMetric.flow.map((step, index) => (
+                  <span key={step}>
+                    <b aria-hidden="true"><LucideIcon name={activeMetric.flowIcons[index]} /></b>
+                    <strong>{step}</strong>
+                    <small>{activeMetric.flowRoles[index]}</small>
+                  </span>
                 ))}
               </div>
-              <section>
+              <section className="metric-info-block">
                 <h3>查核重點</h3>
                 <ul>
                   {activeMetric.checks.map((check) => (
@@ -587,7 +768,7 @@ export default function Home() {
                   ))}
                 </ul>
               </section>
-              <section className="metric-source-section">
+              <section className="metric-source-section metric-info-block compact">
                 <h3>相關連結</h3>
                 <ul>
                   {activeMetric.sourceRefs.map((sourceKey) => {
@@ -611,7 +792,7 @@ export default function Home() {
       <section className="sources-section" id="sources" aria-labelledby="sources-title">
         <div className="section-heading">
           <p className="eyebrow">source registry</p>
-          <h2 id="sources-title">資料來源</h2>
+          <h2 id="sources-title"><span className="heading-icon" aria-hidden="true"><LucideIcon name="database" /></span>資料來源</h2>
           <p>
             本頁以公開可查的中央政策、科研計畫、預決算、政府採購與 open data 入口作為索引；每筆預算詳情仍需回到原始來源確認最新版本與授權條款。
           </p>

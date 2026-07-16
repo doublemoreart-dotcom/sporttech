@@ -76,36 +76,45 @@ const staticFallbackScript = `<script>
         label: "政策總額",
         value: "46 億元",
         detailTitle: "政策總額怎麼讀",
-        detail: "46 億元是 2022-2026 運動X科技跨部會政策總盤，重點是辨識它分散在哪些部會、年度科目與地方分案，而不是把它當成單一機關的一筆支出。",
+        detail: "46 億元比較像一個政策總盤，不是一張已經花出去的帳單。閱讀時先問：這筆錢原本由誰核定？分到哪些部會？後來是否變成年度預算、地方補助或採購案？",
         flow: ["政策核定", "年度預算", "分案/採購", "驗收/成果"],
-        checks: ["先確認行政院或科技會報核定的是政策總額、計畫期程與主責部會。", "再拆年度中央政府總預算、科技預算與運動部/國科會科目，避免重複計算。", "最後比對地方核定、採購決標、驗收紀錄與成果報告，確認是否真的落地。"],
+        flowRoles: ["行政院/科技會報", "主計總處與各部會", "地方政府或委辦廠商", "場域、使用者與成果報告"],
+        flowIcons: ["badge-check", "calendar-days", "file-search", "circle-check"],
+        checks: ["先確認行政院或科技會報核定的是政策總額、計畫期程與主責部會。註：政策總額是方向與額度，不等於已花完。", "再拆年度中央政府總預算、科技預算與運動部/國科會科目。註：年度預算才比較接近每年可執行的錢。", "最後比對地方核定、採購決標、驗收紀錄與成果報告。註：驗收或成果報告才代表案件比較接近落地。"],
         sourceRefs: ["ey", "gstp", "dgbas", "data"],
       },
       {
         label: "科研線索",
         value: "2.4 億元級",
         detailTitle: "科研線索怎麼追",
-        detail: "科研預算常出現在國科會、GRB、學研計畫與國家隊支援成果中。它通常不會直接長成民眾看到的場館系統，而是先成為模型、感測、分析工具或訓練支援。",
+        detail: "科研預算通常先支持研究團隊，不會立刻變成民眾看到的場館系統。它可能先變成 AI 模型、感測器、分析工具，之後才進入國家隊訓練或地方場域。",
         flow: ["研究計畫", "學研團隊", "模型/設備", "國訓/場域"],
-        checks: ["用 GRB 查計畫名稱、主持人、補助機關、執行期間與成果摘要。", "比對國科會新聞、補助公告與學校研究成果，確認是否屬同一條計畫線。", "確認成果是否進入國訓中心、單項協會、地方場域或商品化應用。"],
+        flowRoles: ["國科會/GRB", "大學與研究中心", "AI、感測與分析工具", "國訓中心、協會或地方場館"],
+        flowIcons: ["search", "school", "cpu", "dumbbell"],
+        checks: ["用 GRB 查計畫名稱、主持人、補助機關、執行期間與成果摘要。註：GRB 是政府研究計畫查詢系統。", "比對國科會新聞、補助公告與學校研究成果，確認是不是同一條計畫線。", "確認成果是否進入國訓中心、單項協會、地方場域或商品化應用。註：有研究成果不代表已經普及使用。"],
         sourceRefs: ["nstc", "grb", "gstp", "sports"],
       },
       {
         label: "地方案例",
         value: "14 縣市 / 30 案",
         detailTitle: "地方案例怎麼對帳",
-        detail: "地方場域通常是中央補助、地方配合款與委外廠商共同形成。看到案數時，要繼續追核定金額、決標金額、驗收狀態、維運費與實際使用量。",
+        detail: "地方場域通常不是中央全額付款，而是中央補助、地方配合款和委外廠商一起完成。看到「14 縣市 / 30 案」時，要繼續追每一案是否已決標、驗收、維運和被民眾使用。",
         flow: ["中央核定", "地方配合款", "採購/委辦", "維運使用"],
-        checks: ["先查地方府會預算書、議會質詢與中央補助核定，分開看中央款與地方款。", "再查政府採購決標公告、契約廠商與驗收資訊，確認金額是否已形成契約。", "最後看系統上線、維運年度、使用人次與開放資料，避免只停在示範案數。"],
+        flowRoles: ["運動部/全民運動署", "縣市政府與議會", "得標廠商或受託單位", "場館營運者與民眾"],
+        flowIcons: ["landmark", "building-2", "wrench", "users"],
+        checks: ["先查地方府會預算書、議會質詢與中央補助核定，分開看中央款與地方款。註：配合款是地方自己也要出的錢。", "再查政府採購決標公告、契約廠商與驗收資訊，確認金額是否已形成契約。註：決標代表找到承作廠商。", "最後看系統上線、維運年度、使用人次與開放資料，避免只停在示範案數。"],
         sourceRefs: ["sports", "pcc", "dgbas", "data"],
       },
       {
         label: "協會角色",
-        value: "應用端居多",
+        value: "5 項運動",
+        note: "目前可辨識棒球、羽球、桌球、舉重、自由車等應用端線索。",
         detailTitle: "協會角色怎麼判斷",
-        detail: "協會在運動科技中常是應用端、場域端或選手資料的合作窗口。要判斷是否直接承接預算，需看補助名單、委辦契約、採購得標與成果報告，而不是只看協會是否出現在活動或新聞中。",
+        detail: "協會常出現在運動科技新聞裡，但不一定就是拿錢的單位。它可能只是提供選手、賽事、場地或專業意見。要判斷是否真的承接預算，要看補助名單、委辦契約、採購得標與成果報告。",
         flow: ["補助名單", "委辦契約", "合作露出", "實際承接"],
-        checks: ["查協會是否列為受補助者、委辦承攬者或採購得標單位。", "區分新聞中的合作露出、提供選手資料、提供賽事場域與實際經費承接。", "比對成果報告、賽事資料與場域紀錄，確認科技導入後誰負責維運。"],
+        flowRoles: ["運動部/補助公告", "採購或委辦契約", "協會、教練與選手", "受補助者或得標單位"],
+        flowIcons: ["file-text", "handshake", "megaphone", "badge-check"],
+        checks: ["查協會是否列為受補助者、委辦承攬者或採購得標單位。註：出現在新聞裡，不等於直接拿預算。", "區分合作露出、提供選手資料、提供賽事場域與實際經費承接。註：應用端是使用或協助測試的一方。", "比對成果報告、賽事資料與場域紀錄，確認科技導入後誰負責維運。"],
         sourceRefs: ["sports", "pcc", "grb", "data"],
       },
     ],
@@ -293,52 +302,25 @@ const staticFallbackScript = `<script>
     return \`<li><a href="\${escapeHtml(source.url)}" rel="noreferrer" target="_blank">\${escapeHtml(source.label)}</a><span>\${escapeHtml(source.note)}</span></li>\`;
   }).join("");
 
-  function selectionSummary(set, dictionary) {
-    if (set.size === 0) return "全部";
-    if (set.size === 1) {
-      const [value] = Array.from(set);
-      return dictionary?.[value] || value;
-    }
-    return \`已選 \${set.size} 項\`;
-  }
-
-  function setSummary(title, value) {
-    const details = Array.from(document.querySelectorAll(".select-menu"));
-    const target = details.find((item) => item.querySelector("summary span")?.textContent?.trim() === title);
-    const summary = target?.querySelector("summary strong");
-    if (summary) summary.textContent = value;
-  }
-
-  function syncCheckboxes() {
-    document.querySelectorAll(".select-menu").forEach((menu) => {
-      const title = menu.querySelector("summary span")?.textContent?.trim();
-      menu.querySelectorAll("label").forEach((label) => {
-        const input = label.querySelector("input");
-        const value = label.querySelector("span")?.textContent?.trim();
-        if (!input || !value) return;
-        if (value === "全部") {
-          input.checked = title === "預算層級" ? selected.layers.size === 0 : selected.locations.size === 0;
-          return;
-        }
-        if (title === "預算層級") {
-          const key = label.dataset.filterLayer || Object.entries(flowData.layers).find(([, label]) => label === value)?.[0];
-          input.checked = key ? selected.layers.has(key) : false;
-        }
-        if (title === "縣市") input.checked = selected.locations.has(label.dataset.filterLocation || value);
-      });
-    });
-  }
-
   function updateFilterUi() {
-    setSummary("預算層級", selectionSummary(selected.layers, flowData.layers));
-    setSummary("縣市", selectionSummary(selected.locations));
+    document.querySelectorAll("[data-filter-layer]").forEach((button) => {
+      const layer = button.dataset.filterLayer;
+      const isActive = layer === "all" ? selected.layers.size === 0 : selected.layers.has(layer);
+      button.classList.toggle("active", isActive);
+      button.setAttribute("aria-pressed", String(isActive));
+    });
+    document.querySelectorAll("[data-filter-location]").forEach((button) => {
+      const location = button.dataset.filterLocation;
+      const isActive = location === "all" ? selected.locations.size === 0 : selected.locations.has(location);
+      button.classList.toggle("active", isActive);
+      button.setAttribute("aria-pressed", String(isActive));
+    });
     document.querySelectorAll("[data-stage-filter]").forEach((button) => {
       const stage = button.dataset.stageFilter;
       const isActive = stage === "all" ? selected.stages.size === 0 : selected.stages.has(stage);
       button.classList.toggle("active", isActive);
       button.setAttribute("aria-pressed", String(isActive));
     });
-    syncCheckboxes();
   }
 
   function matches(flow) {
@@ -365,6 +347,38 @@ const staticFallbackScript = `<script>
     document.querySelectorAll(".static-drawer-layer").forEach((node) => node.remove());
   }
 
+  function lucideIcon(name) {
+    const icons = {
+      "badge-check": '<path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.77 4 4 0 0 1 0 6.76 4 4 0 0 1-4.78 4.77 4 4 0 0 1-6.74 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"></path><path d="m9 12 2 2 4-4"></path>',
+      "building-2": '<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"></path><path d="M6 12H4a2 2 0 0 0-2 2v8h20v-8a2 2 0 0 0-2-2h-2"></path><path d="M10 6h4"></path><path d="M10 10h4"></path><path d="M10 14h4"></path>',
+      "calendar-days": '<path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path><path d="M8 14h.01"></path><path d="M12 14h.01"></path><path d="M16 14h.01"></path><path d="M8 18h.01"></path><path d="M12 18h.01"></path><path d="M16 18h.01"></path>',
+      "circle-check": '<circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path>',
+      cpu: '<rect width="14" height="14" x="5" y="5" rx="2"></rect><path d="M9 9h6v6H9z"></path><path d="M9 1v4"></path><path d="M15 1v4"></path><path d="M9 19v4"></path><path d="M15 19v4"></path><path d="M1 9h4"></path><path d="M1 15h4"></path><path d="M19 9h4"></path><path d="M19 15h4"></path>',
+      database: '<ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"></path><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"></path>',
+      dumbbell: '<path d="m6.5 6.5 11 11"></path><path d="m21 21-1-1"></path><path d="m3 3 1 1"></path><path d="m18 22 4-4"></path><path d="m2 6 4-4"></path><path d="m3 10 7-7"></path><path d="m14 21 7-7"></path>',
+      "file-search": '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path><path d="M14 2v6h6"></path><circle cx="11.5" cy="14.5" r="2.5"></circle><path d="m13.3 16.3 1.7 1.7"></path>',
+      "file-text": '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path><path d="M14 2v6h6"></path><path d="M16 13H8"></path><path d="M16 17H8"></path><path d="M10 9H8"></path>',
+      handshake: '<path d="m11 17 2 2a2.8 2.8 0 0 0 4 0l4-4"></path><path d="m14 14 2.5 2.5a2.8 2.8 0 0 0 4 0"></path><path d="M3 7h3l4 4"></path><path d="M21 7h-3l-4 4"></path><path d="m7 15 4-4"></path><path d="m2 8 5 5"></path><path d="m22 8-5 5"></path>',
+      landmark: '<path d="M3 22h18"></path><path d="M6 18v-7"></path><path d="M10 18v-7"></path><path d="M14 18v-7"></path><path d="M18 18v-7"></path><path d="m12 2 9 5H3Z"></path>',
+      megaphone: '<path d="m3 11 18-5v12L3 14v-3Z"></path><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path>',
+      school: '<path d="m4 6 8-4 8 4"></path><path d="m18 10 4 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8l4-2"></path><path d="M6 10v12"></path><path d="M18 10v12"></path><path d="M10 22v-6h4v6"></path>',
+      search: '<circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path>',
+      users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>',
+      wrench: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.1-3.1a6 6 0 0 1-7.8 7.8L6 21l-3-3 7-7a6 6 0 0 1 7.8-7.8Z"></path>',
+    };
+    return '<svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">' + (icons[name] || icons["circle-check"]) + '</svg>';
+  }
+
+  function budgetRoute() {
+    const steps = [
+      { icon: "landmark", label: "中央/基金", role: "政策、基金或年度科目" },
+      { icon: "building-2", label: "執行單位", role: "部會、學研、地方或法人" },
+      { icon: "handshake", label: "場域/協會", role: "場館、協會或合作夥伴" },
+      { icon: "users", label: "選手/民眾", role: "訓練、使用與成果回饋" },
+    ];
+    return steps.map((step) => '<span><b aria-hidden="true">' + lucideIcon(step.icon) + '</b><strong>' + escapeHtml(step.label) + '</strong><small>' + escapeHtml(step.role) + '</small></span>').join("");
+  }
+
   function openFlowDrawer(flow) {
     closeDrawers();
     const drawer = document.createElement("div");
@@ -388,7 +402,7 @@ const staticFallbackScript = `<script>
           </dl>
           <div class="audit-summary compact-summary"><h3>查核摘要</h3><p>\${escapeHtml(flow.publicness)}</p></div>
           <div class="drawer-detail-grid">
-            <div class="flow-diagram" aria-label="預算路徑"><span>中央/基金</span><span>執行單位</span><span>場域/協會</span><span>選手/民眾</span></div>
+            <div class="flow-diagram" aria-label="預算路徑">\${budgetRoute()}</div>
             <div class="detail-groups">
               <section><h3>主要執行或合作單位</h3><ul class="inline-list">\${pills(flow.actors)}</ul></section>
               <section><h3>對應協會或運動種類</h3><ul class="inline-list">\${pills(flow.associations)}</ul></section>
@@ -412,23 +426,24 @@ const staticFallbackScript = `<script>
   function openMetricDrawer(metric) {
     closeDrawers();
     const drawer = document.createElement("div");
-    drawer.className = "metric-drawer-layer static-drawer-layer";
+    drawer.className = "drawer-layer metric-drawer-layer static-drawer-layer";
     drawer.setAttribute("role", "dialog");
     drawer.setAttribute("aria-modal", "true");
     drawer.innerHTML = \`
-      <button class="metric-drawer-backdrop" aria-label="關閉總覽說明"></button>
-      <aside class="metric-drawer-panel">
+      <button class="drawer-backdrop metric-drawer-backdrop" aria-label="關閉總覽說明"></button>
+      <aside class="drawer-panel metric-drawer-panel">
+        <div class="drawer-handle" aria-hidden="true"></div>
         <div class="drawer-topline">
           <div class="detail-header"><span>總覽指標</span><span>\${escapeHtml(metric.label)}</span></div>
           <button class="close-button" type="button">關閉</button>
         </div>
-        <div class="metric-drawer-scroll">
+        <div class="drawer-scroll metric-drawer-scroll">
           <span class="metric-drawer-label">\${escapeHtml(metric.value)}</span>
           <h2>\${escapeHtml(metric.detailTitle)}</h2>
           <p>\${escapeHtml(metric.detail)}</p>
-          <div class="metric-check-flow" aria-label="\${escapeHtml(metric.label)}查核流程">\${metric.flow.map((step) => \`<span>\${escapeHtml(step)}</span>\`).join("")}</div>
-          <section><h3>查核重點</h3><ul>\${list(metric.checks)}</ul></section>
-          <section class="metric-source-section"><h3>相關連結</h3><ul>\${sourceLinks(metric.sourceRefs)}</ul></section>
+          <div class="metric-check-flow" aria-label="\${escapeHtml(metric.label)}查核流程">\${metric.flow.map((step, index) => \`<span><b aria-hidden="true">\${lucideIcon(metric.flowIcons[index])}</b><strong>\${escapeHtml(step)}</strong><small>\${escapeHtml(metric.flowRoles[index])}</small></span>\`).join("")}</div>
+          <section class="metric-info-block"><h3>查核重點</h3><ul>\${list(metric.checks)}</ul></section>
+          <section class="metric-source-section metric-info-block compact"><h3>相關連結</h3><ul>\${sourceLinks(metric.sourceRefs)}</ul></section>
         </div>
       </aside>\`;
     drawer.querySelector(".metric-drawer-backdrop").addEventListener("click", closeDrawers);
@@ -459,22 +474,22 @@ const staticFallbackScript = `<script>
         updateResults();
       });
     });
-    document.querySelectorAll(".select-menu label").forEach((label) => {
-      label.addEventListener("change", () => {
-        const menuTitle = label.closest(".select-menu")?.querySelector("summary span")?.textContent?.trim();
-        const value = label.querySelector("span")?.textContent?.trim();
-        if (!menuTitle || !value) return;
-        const targetSet = menuTitle === "預算層級" ? selected.layers : selected.locations;
-        if (value === "全部") targetSet.clear();
-        else if (menuTitle === "預算層級") {
-          const key = label.dataset.filterLayer || Object.entries(flowData.layers).find(([, label]) => label === value)?.[0];
-          if (key) targetSet.has(key) ? targetSet.delete(key) : targetSet.add(key);
-        } else {
-          const key = label.dataset.filterLocation || value;
-          targetSet.has(key) ? targetSet.delete(key) : targetSet.add(key);
-        }
-        const menu = label.closest(".select-menu");
-        if (menu) menu.open = false;
+    document.querySelectorAll("[data-filter-layer]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const layer = button.dataset.filterLayer;
+        if (layer === "all") selected.layers.clear();
+        else if (selected.layers.has(layer)) selected.layers.delete(layer);
+        else selected.layers.add(layer);
+        closeDrawers();
+        updateResults();
+      });
+    });
+    document.querySelectorAll("[data-filter-location]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const location = button.dataset.filterLocation;
+        if (location === "all") selected.locations.clear();
+        else if (selected.locations.has(location)) selected.locations.delete(location);
+        else selected.locations.add(location);
         closeDrawers();
         updateResults();
       });

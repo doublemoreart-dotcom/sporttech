@@ -1,19 +1,23 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Nunito, Zalando_Sans_Expanded } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const nunito = Nunito({
+  display: "swap",
   subsets: ["latin"],
+  variable: "--font-nunito",
+  weight: ["400", "700", "800", "900"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const zalandoSansExpanded = Zalando_Sans_Expanded({
+  display: "swap",
   subsets: ["latin"],
+  variable: "--font-zalando-sans-expanded",
+  weight: "variable",
 });
 
 export const metadata: Metadata = {
-  title: "2022-2026 運動X科技預算查詢小幫手",
+  title: "2022-2026 運動X科技預算小幫手",
   description:
     "一頁式互動查詢工具，協助判讀運動科技預算來源、執行程度、地方場域與協會應用端角色。",
   icons: {
@@ -29,9 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-Hant">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${nunito.variable} ${zalandoSansExpanded.variable} antialiased`}>
         {children}
       </body>
     </html>
