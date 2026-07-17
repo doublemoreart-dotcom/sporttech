@@ -60,7 +60,11 @@ require_dir "${source_root}"
 require_dir "${source_root}/assets"
 require_file "${source_root}/index.html"
 require_file "${source_root}/assets/favicon.svg"
-require_file "${source_root}/assets/index-DfS8gadw.css"
+
+if ! grep -q 'assets/[^"]*\.css' "${source_root}/index.html"; then
+  echo "Static source does not reference a built CSS asset." >&2
+  exit 1
+fi
 
 if ! grep -q '運動X科技預算小幫手' "${source_root}/index.html"; then
   echo "Static source does not look like the current SportTech page." >&2
