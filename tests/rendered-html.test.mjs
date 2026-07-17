@@ -36,6 +36,11 @@ test("server-renders the sporttech budget query assistant", async () => {
   assert.match(html, /sporttech-budget-hero-small\.jpg/);
   assert.match(html, /srcSet="\/sporttech-budget-hero-small\.jpg"/);
   assert.match(html, /運動場域、資料節點與預算流向的主視覺/);
+  assert.match(html, /\/favicon\.ico/);
+  assert.match(html, /\/favicon\.svg/);
+  assert.match(html, /https:\/\/dinopeng\.com\/sporttech\/assets\/og-image\.png/);
+  assert.match(html, /property="og:image"/);
+  assert.match(html, /name="twitter:image"/);
   assert.match(html, /先判斷預算身分，再看協會是否直接承接/);
   assert.match(html, /想查一筆運動科技相關預算時/);
   assert.match(html, /14 縣市 \/ 30 案/);
@@ -67,7 +72,17 @@ test("server-renders the sporttech budget query assistant", async () => {
 });
 
 test("documents the local and git version boundary", async () => {
-  const [page, data, layout, readme, favicon, renderer, updateFlow] = await Promise.all([
+  const [
+    page,
+    data,
+    layout,
+    readme,
+    favicon,
+    renderer,
+    updateFlow,
+    syncMainSite,
+    generateShareAssets,
+  ] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/budget-data.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
@@ -75,6 +90,8 @@ test("documents the local and git version boundary", async () => {
     readFile(new URL("../public/favicon.svg", import.meta.url), "utf8"),
     readFile(new URL("../scripts/render-static-page.mjs", import.meta.url), "utf8"),
     readFile(new URL("../scripts/update-flow.sh", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/sync-main-site.sh", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/generate-share-assets.mjs", import.meta.url), "utf8"),
   ]);
 
   assert.match(page, /版號/);
@@ -107,6 +124,14 @@ test("documents the local and git version boundary", async () => {
   assert.match(page, /\/sporttech-budget-hero-small\.jpg/);
   assert.match(page, /srcSet="\/sporttech-budget-hero-small\.jpg"/);
   assert.doesNotMatch(page, /next\/image/);
+  assert.match(layout, /metadataBase: new URL\("https:\/\/dinopeng\.com"\)/);
+  assert.match(layout, /canonical: "\/sporttech\/"/);
+  assert.match(layout, /\/favicon\.ico/);
+  assert.match(layout, /\/favicon\.svg/);
+  assert.match(layout, /openGraph/);
+  assert.match(layout, /twitter/);
+  assert.match(layout, /https:\/\/dinopeng\.com\/sporttech\/assets\/og-image\.png/);
+  assert.match(layout, /summary_large_image/);
   assert.match(page, /drawerOpen/);
   assert.match(page, /setDrawerOpen\(true\)/);
   assert.match(page, /closeButtonRef/);
@@ -174,6 +199,8 @@ test("documents the local and git version boundary", async () => {
   assert.match(page, /data-stage-filter/);
   assert.match(page, /data-flow-id/);
   assert.match(renderer, /wireStaticInteractions/);
+  assert.match(renderer, /favicon\.ico/);
+  assert.match(renderer, /og-image\.png/);
   assert.match(renderer, /static-drawer-layer/);
   assert.match(renderer, /lucideIcon\(metric\.flowIcons\[index\]\)/);
   assert.match(renderer, /stroke="currentColor"/);
@@ -203,12 +230,19 @@ test("documents the local and git version boundary", async () => {
   assert.match(layout, /--font-nunito/);
   assert.match(layout, /--font-zalando-sans-expanded/);
   assert.doesNotMatch(layout, /DotGothic16|Geist|Rubik_Mono_One/);
-  assert.match(layout, /icon: "\/favicon\.svg"/);
-  assert.match(layout, /shortcut: "\/favicon\.svg"/);
+  assert.match(layout, /icon: \[/);
+  assert.match(layout, /\{ url: "https:\/\/dinopeng\.com\/sporttech\/assets\/favicon\.ico", sizes: "any" \}/);
+  assert.match(layout, /\{ url: "https:\/\/dinopeng\.com\/sporttech\/assets\/favicon\.svg", type: "image\/svg\+xml" \}/);
+  assert.match(layout, /shortcut: "https:\/\/dinopeng\.com\/sporttech\/assets\/favicon\.ico"/);
   assert.match(favicon, /viewBox="0 0 64 64"/);
   assert.match(favicon, /#F4EFE5/);
   assert.match(favicon, /#2E7068/);
   assert.match(favicon, /#A16C19/);
+  assert.match(generateShareAssets, /favicon\.ico/);
+  assert.match(generateShareAssets, /og-image\.png/);
+  assert.match(generateShareAssets, /1200, 630/);
+  assert.match(generateShareAssets, /icoFromPngs/);
+  assert.match(generateShareAssets, /sharp/);
   assert.match(readme, /## 網站架構/);
   assert.match(readme, /## 本機版/);
   assert.match(readme, /## Git 版控版/);
@@ -218,19 +252,44 @@ test("documents the local and git version boundary", async () => {
   assert.match(readme, /收到明確「推 Git」或「部署」指令前，不進行 commit、push、登入或 token 建立/);
   assert.match(readme, /### 1\. 本機審查/);
   assert.match(readme, /npm run update:local/);
-  assert.match(readme, /### 2\. Git 推版/);
+  assert.match(readme, /doublemoreart-dotcom\/sporttech/);
+  assert.match(readme, /doublemoreart-dotcom\/dinopeng-com/);
+  assert.match(readme, /正式網域主站/);
+  assert.match(readme, /### 2\. 同步正式站本機檔案/);
+  assert.match(readme, /npm run sync:main-site/);
+  assert.match(readme, /npm run sync:main-site:dry-run/);
+  assert.match(readme, /它不會 commit、不會 push/);
+  assert.match(readme, /pull --ff-only origin main/);
+  assert.match(readme, /若主站本機 repo 顯示 `behind`/);
+  assert.match(readme, /### 3\. Git 推版/);
   assert.match(readme, /git fetch origin/);
   assert.match(readme, /git status -sb/);
   assert.match(readme, /git push origin main/);
   assert.match(readme, /不要 force push/);
-  assert.match(readme, /### 3\. GitHub Pages 發布/);
+  assert.match(readme, /git add sporttech/);
+  assert.match(readme, /### 4\. GitHub Pages 發布/);
   assert.match(readme, /npm run update:deploy/);
+  assert.match(readme, /curl -L -I https:\/\/dinopeng\.com\/sporttech\//);
+  assert.match(readme, /last-modified/);
+  assert.match(readme, /Fastly 快取尚未過期/);
   assert.match(updateFlow, /Local-first update policy/);
   assert.match(updateFlow, /never commits, pushes, logs in, creates tokens, or deploys/);
-  assert.match(updateFlow, /local review first; Git push only after an explicit user request/);
+  assert.match(updateFlow, /local review first; main-site sync and Git push only after an explicit user request/);
+  assert.match(updateFlow, /doublemoreart-dotcom\/dinopeng-com/);
   assert.match(updateFlow, /skip deploy by design/);
+  assert.match(updateFlow, /Do not sync the main site or push Git until the user explicitly asks/);
+  assert.match(updateFlow, /npm run sync:main-site/);
   assert.match(updateFlow, /git status -sb/);
   assert.doesNotMatch(updateFlow, /git push|git commit|gh auth login|force push/);
+  assert.match(syncMainSite, /MAIN_SITE_ROOT/);
+  assert.match(syncMainSite, /doublemoreart-dotcom\/dinopeng-com/);
+  assert.match(syncMainSite, /npm run sync:main-site:dry-run/);
+  assert.match(syncMainSite, /rsync "\$\{rsync_args\[@\]\}"/);
+  assert.match(syncMainSite, /This command never commits or pushes/);
+  assert.match(syncMainSite, /Main-site repo is behind origin/);
+  assert.match(syncMainSite, /pull --ff-only origin main/);
+  assert.match(syncMainSite, /git -C "\$\{main_site_root\}" status -sb/);
+  assert.doesNotMatch(syncMainSite, /git push|git commit|gh auth login|force push/);
   assert.doesNotMatch(page, /_sites-preview|SkeletonPreview|codex-preview/);
 
   await assert.rejects(access(new URL("../app/_sites-preview/SkeletonPreview.tsx", import.meta.url)));

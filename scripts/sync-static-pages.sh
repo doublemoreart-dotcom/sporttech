@@ -20,20 +20,29 @@ require_file() {
 }
 
 require_file "${source_html}"
+require_file "${outputs_root}/assets/favicon.ico"
 require_file "${outputs_root}/assets/favicon.svg"
+require_file "${outputs_root}/assets/og-image.png"
 require_file "${outputs_root}/assets/sporttech-budget-hero.jpg"
 require_file "${outputs_root}/assets/sporttech-budget-hero-small.jpg"
+require_file "${public_root}/favicon.ico"
+require_file "${public_root}/og-image.png"
 require_file "${public_root}/sporttech-budget-hero-small.jpg"
-require_file "${pages_root}/assets/favicon.svg"
-require_file "${pages_root}/assets/sporttech-budget-hero.jpg"
-require_file "${pages_root}/assets/sporttech-budget-hero-small.jpg"
 
 cp "${source_html}" "${local_html}"
 cp "${source_html}" "${pages_html}"
 rsync -a --delete "${outputs_root}/assets/" "${pages_root}/assets/"
 
+require_file "${pages_root}/assets/favicon.ico"
+require_file "${pages_root}/assets/favicon.svg"
+require_file "${pages_root}/assets/og-image.png"
+require_file "${pages_root}/assets/sporttech-budget-hero.jpg"
+require_file "${pages_root}/assets/sporttech-budget-hero-small.jpg"
+
 grep -q 'href="#sources">資料來源' "${local_html}"
 grep -q 'href="#sources">資料來源' "${pages_html}"
+grep -q 'assets/favicon.ico' "${pages_html}"
+grep -q 'https://dinopeng.com/sporttech/assets/og-image.png' "${pages_html}"
 grep -q 'sporttech-budget-hero.jpg' "${pages_html}"
 grep -q 'sporttech-budget-hero-small.jpg' "${pages_html}"
 grep -q 'href="assets/' "${local_html}"

@@ -38,9 +38,15 @@ html = html
   .replaceAll('="/assets/', '="assets/')
   .replaceAll('("/assets/', '("assets/')
   .replaceAll("(/assets/", "(assets/")
+  .replaceAll('="/favicon.ico"', '="assets/favicon.ico"')
   .replaceAll('="/favicon.svg"', '="assets/favicon.svg"')
   .replaceAll('="/sporttech-budget-hero.jpg"', '="assets/sporttech-budget-hero.jpg"')
   .replaceAll('="/sporttech-budget-hero-small.jpg"', '="assets/sporttech-budget-hero-small.jpg"');
+
+html = html
+  .replaceAll("https://dinopeng.com/sporttechassets/", "https://dinopeng.com/sporttech/assets/")
+  .replaceAll("https://dinopeng.com/sporttech/assets/favicon.ico", "assets/favicon.ico")
+  .replaceAll("https://dinopeng.com/sporttech/assets/favicon.svg", "assets/favicon.svg");
 
 html = html.replace(/<script id="_R_">[\s\S]*?<\/script>/, "");
 
@@ -539,7 +545,9 @@ await rm(assetsRoot, { recursive: true, force: true });
 await mkdir(assetsRoot, { recursive: true });
 await cp(clientAssetsRoot, assetsRoot, { recursive: true });
 await Promise.all([
+  copyFile(resolve(repoRoot, "public/favicon.ico"), resolve(assetsRoot, "favicon.ico")),
   copyFile(resolve(repoRoot, "public/favicon.svg"), resolve(assetsRoot, "favicon.svg")),
+  copyFile(resolve(repoRoot, "public/og-image.png"), resolve(assetsRoot, "og-image.png")),
   copyFile(resolve(repoRoot, "public/sporttech-budget-hero.jpg"), resolve(assetsRoot, "sporttech-budget-hero.jpg")),
   copyFile(resolve(repoRoot, "public/sporttech-budget-hero-small.jpg"), resolve(assetsRoot, "sporttech-budget-hero-small.jpg")),
 ]);

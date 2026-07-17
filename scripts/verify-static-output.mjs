@@ -13,6 +13,11 @@ for (const target of targets) {
   const html = await readFile(target, "utf8");
 
   assert.match(html, /href="assets\//, `${target}: expected relative asset hrefs`);
+  assert.match(html, /assets\/favicon\.ico/, `${target}: missing ico favicon`);
+  assert.match(html, /assets\/favicon\.svg/, `${target}: missing svg favicon`);
+  assert.match(html, /https:\/\/dinopeng\.com\/sporttech\/assets\/og-image\.png/, `${target}: missing absolute social share image`);
+  assert.match(html, /property="og:image"/, `${target}: missing Open Graph image metadata`);
+  assert.match(html, /name="twitter:image"/, `${target}: missing Twitter image metadata`);
   assert.match(html, /src="assets\/sporttech-budget-hero\.jpg"/, `${target}: missing hero image`);
   assert.match(html, /srcSet="assets\/sporttech-budget-hero-small\.jpg"/, `${target}: missing responsive hero source`);
   assert.match(html, /data-filter-layer="central"/, `${target}: missing layer filter markers`);
