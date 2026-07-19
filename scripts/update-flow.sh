@@ -19,7 +19,8 @@ Local-first update policy:
   - npm run update:local checks source, rebuilds local static snapshots, and stops.
   - It never commits, pushes, logs in, creates tokens, or deploys.
   - Only run npm run update:deploy after an explicit publish decision.
-  - dinopeng.com/sporttech/ updates only after syncing the main-site repo.
+  - Pushing doublemoreart-dotcom/sporttech updates source code only.
+  - dinopeng.com/sporttech/ updates only after syncing and pushing the main-site repo.
 
 Steps:
   1. Regenerate derived favicon and social sharing assets.
@@ -90,7 +91,14 @@ echo "  ../../outputs/sporttech-budget-static-v2.html"
 echo "  ../../outputs/github-pages/sporttech/index.html"
 echo
 echo "Publish remains manual."
-echo "When the user explicitly asks to update dinopeng.com/sporttech/:"
-echo "  npm run sync:main-site"
-echo "  review the main-site repo diff"
-echo "  commit and push the main-site repo"
+echo
+echo "If the user says '推 Git' for source only:"
+echo "  commit and push this repo: doublemoreart-dotcom/sporttech"
+echo "  note: this does not update https://dinopeng.com/sporttech/"
+echo
+echo "If the user says to update https://dinopeng.com/sporttech/:"
+echo "  1. fast-forward the main-site repo: doublemoreart-dotcom/dinopeng-com"
+echo "  2. npm run sync:main-site"
+echo "  3. review the main-site repo diff under /sporttech/"
+echo "  4. commit and push the main-site repo"
+echo "  5. verify HTTP 200 and look for the latest page markers after cache clears"

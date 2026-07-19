@@ -57,6 +57,8 @@ export const metadata: Metadata = {
   },
 };
 
+const googleAnalyticsId = "G-K8SEFVT51N";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -64,6 +66,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-Hant">
+      <head>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`} />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${googleAnalyticsId}');
+`,
+          }}
+        />
+      </head>
       <body className={`${nunito.variable} ${zalandoSansExpanded.variable} antialiased`}>
         {children}
       </body>

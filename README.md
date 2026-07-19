@@ -179,7 +179,12 @@ git diff --stat
 
 ### 3. Git 推版
 
-只有收到明確「推 Git」指令才進行。若只是更新 source repo：
+只有收到明確「推 Git」指令才進行，且要先判斷這次推的是哪一種：
+
+- **Source repo 推版**：更新 `doublemoreart-dotcom/sporttech` 的原始碼、測試與靜態產出來源。這不會直接更新 `https://dinopeng.com/sporttech/`。
+- **正式網址推版**：更新 `doublemoreart-dotcom/dinopeng-com` 的 `/sporttech/` 目錄。這才會讓 `https://dinopeng.com/sporttech/` 變更。
+
+若只是更新 source repo：
 
 ```bash
 git fetch origin
@@ -190,18 +195,23 @@ git commit -m "<message>"
 git push origin main
 ```
 
-若是更新正式網址，需在主站 repo 推送 `/sporttech/` 目錄：
+若是更新正式網址，必須先同步主站 repo，再推送 `/sporttech/` 目錄：
 
 ```bash
 cd /Users/dino/Documents/Codex/2026-07-14/dinopeng-com-tptrees-dinopeng-com-aidata/work/dinopeng-com
 git fetch origin
+git pull --ff-only origin main
 git status -sb
+cd /Users/dino/Documents/Codex/2026-07-13/referenced-chatgpt-conversation-this-is-untrusted/work/sporttech-budget-map
+npm run sync:main-site
+cd /Users/dino/Documents/Codex/2026-07-14/dinopeng-com-tptrees-dinopeng-com-aidata/work/dinopeng-com
+git diff --stat
 git add sporttech
 git commit -m "Update sporttech static page"
 git push origin main
 ```
 
-推版前先確認遠端是否有新 commit；不要 force push。若只是在本機試排版或修改交付快照，先不要 commit。
+推版前先確認遠端是否有新 commit；不要 force push。正式站推完後用 `curl -L -I https://dinopeng.com/sporttech/` 確認 HTTP 200、`last-modified` 與檔案大小是否更新；若 GitHub raw 已更新但正式網址還舊，通常是 GitHub Pages/Fastly 快取尚未過期。
 
 ### 4. GitHub Pages 發布
 

@@ -38,6 +38,8 @@ test("server-renders the sporttech budget query assistant", async () => {
   assert.match(html, /運動場域、資料節點與預算流向的主視覺/);
   assert.match(html, /\/favicon\.ico/);
   assert.match(html, /\/favicon\.svg/);
+  assert.match(html, /https:\/\/www\.googletagmanager\.com\/gtag\/js\?id=G-K8SEFVT51N/);
+  assert.match(html, /gtag\('config', 'G-K8SEFVT51N'\)/);
   assert.match(html, /https:\/\/dinopeng\.com\/sporttech\/assets\/og-image\.png/);
   assert.match(html, /property="og:image"/);
   assert.match(html, /name="twitter:image"/);
@@ -280,8 +282,15 @@ test("documents the local and git version boundary", async () => {
   assert.match(readme, /pull --ff-only origin main/);
   assert.match(readme, /若主站本機 repo 顯示 `behind`/);
   assert.match(readme, /### 3\. Git 推版/);
+  assert.match(readme, /Source repo 推版/);
+  assert.match(readme, /這不會直接更新 `https:\/\/dinopeng\.com\/sporttech\/`/);
+  assert.match(readme, /正式網址推版/);
+  assert.match(readme, /這才會讓 `https:\/\/dinopeng\.com\/sporttech\/` 變更/);
   assert.match(readme, /git fetch origin/);
+  assert.match(readme, /git pull --ff-only origin main/);
+  assert.match(readme, /npm run sync:main-site/);
   assert.match(readme, /git status -sb/);
+  assert.match(readme, /git diff --stat/);
   assert.match(readme, /git push origin main/);
   assert.match(readme, /不要 force push/);
   assert.match(readme, /git add sporttech/);
@@ -292,6 +301,8 @@ test("documents the local and git version boundary", async () => {
   assert.match(readme, /Fastly 快取尚未過期/);
   assert.match(updateFlow, /Local-first update policy/);
   assert.match(updateFlow, /never commits, pushes, logs in, creates tokens, or deploys/);
+  assert.match(updateFlow, /Pushing doublemoreart-dotcom\/sporttech updates source code only/);
+  assert.match(updateFlow, /dinopeng\.com\/sporttech\/ updates only after syncing and pushing the main-site repo/);
   assert.match(updateFlow, /local review first; main-site sync and Git push only after an explicit user request/);
   assert.match(updateFlow, /doublemoreart-dotcom\/dinopeng-com/);
   assert.match(updateFlow, /regenerate derived share assets/);
@@ -306,6 +317,11 @@ test("documents the local and git version boundary", async () => {
   assert.match(updateFlow, /Local artifacts ready/);
   assert.match(updateFlow, /outputs\/github-pages\/sporttech\/index\.html/);
   assert.match(updateFlow, /Publish remains manual/);
+  assert.match(updateFlow, /If the user says '推 Git' for source only/);
+  assert.match(updateFlow, /this does not update https:\/\/dinopeng\.com\/sporttech\//);
+  assert.match(updateFlow, /If the user says to update https:\/\/dinopeng\.com\/sporttech\//);
+  assert.match(updateFlow, /fast-forward the main-site repo/);
+  assert.match(updateFlow, /verify HTTP 200 and look for the latest page markers after cache clears/);
   assert.doesNotMatch(updateFlow, /git push|git commit|gh auth login|force push/);
   assert.match(syncMainSite, /MAIN_SITE_ROOT/);
   assert.match(syncMainSite, /doublemoreart-dotcom\/dinopeng-com/);
