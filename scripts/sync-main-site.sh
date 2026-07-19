@@ -110,7 +110,7 @@ if [[ "${dry_run}" == false ]]; then
 fi
 
 echo "Main-site repo status:"
-echo "${main_status}"
+git -C "${main_site_root}" status -sb
 echo
 
 echo "Next step:"

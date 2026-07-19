@@ -349,6 +349,95 @@ const staticFallbackScript = `<script>
     updateFilterUi();
   }
 
+  const sportSortState = { key: "sport", direction: "asc" };
+
+  function sportAmountRank(value) {
+    if (value.includes("46 億元")) return 1;
+    if (value.includes("2.4 億元")) return 2;
+    if (value.includes("3,000")) return 3;
+    return 4;
+  }
+
+  function sportSortValue(row, key) {
+    if (key === "clues") return Number(row.dataset.sortClues || 0);
+    if (key === "amount") return sportAmountRank(row.dataset.sortAmount || "");
+    if (key === "status") return row.dataset.sortStatus || "";
+    return row.dataset.sortSport || "";
+  }
+
+  function updateSportToolbar() {
+    const toolbarLabel = document.querySelector(".sport-table-toolbar span");
+    const labels = {
+      sport: "運動項目",
+      clues: "對應線索",
+      amount: "可辨識金額",
+      status: "查核狀態",
+    };
+    if (toolbarLabel) {
+      toolbarLabel.textContent = \`目前排序：\${labels[sportSortState.key]} \${sportSortState.direction === "asc" ? "由小到大" : "由大到小"}\`;
+    }
+    document.querySelectorAll("[data-sport-sort]").forEach((button) => {
+      const isActive = button.dataset.sportSort === sportSortState.key;
+      button.closest("th")?.setAttribute("aria-sort", isActive ? (sportSortState.direction === "asc" ? "ascending" : "descending") : "none");
+      const arrow = button.querySelector(".sort-arrow");
+      if (arrow) arrow.textContent = isActive ? (sportSortState.direction === "asc" ? "↑" : "↓") : "↕";
+    });
+    const allDetails = Array.from(document.querySelectorAll("[data-sport-detail]"));
+    const expandedCount = allDetails.filter((row) => !row.hidden).length;
+    const expandButton = document.querySelector("[data-sport-expand-all]");
+    if (expandButton) expandButton.textContent = expandedCount === allDetails.length ? "全部收合" : "全部展開";
+  }
+
+  function sortSportRows(key) {
+    sportSortState.direction = sportSortState.key === key && sportSortState.direction === "asc" ? "desc" : "asc";
+    sportSortState.key = key;
+    const tbody = document.querySelector(".sport-budget-table tbody");
+    if (!tbody) return;
+    const groups = Array.from(tbody.querySelectorAll("[data-sport-row]")).map((summary) => ({
+      detail: tbody.querySelector(\`[data-sport-detail="\${CSS.escape(summary.dataset.sportRow)}"]\`),
+      summary,
+    }));
+    groups
+      .sort((left, right) => {
+        const leftValue = sportSortValue(left.summary, key);
+        const rightValue = sportSortValue(right.summary, key);
+        const result =
+          typeof leftValue === "number" && typeof rightValue === "number"
+            ? leftValue - rightValue
+            : String(leftValue).localeCompare(String(rightValue), "zh-Hant");
+        return sportSortState.direction === "asc" ? result : -result;
+      })
+      .forEach(({ detail, summary }) => {
+        tbody.append(summary);
+        if (detail) tbody.append(detail);
+      });
+    updateSportToolbar();
+  }
+
+  function toggleSportDetail(sport) {
+    const detail = document.querySelector(\`[data-sport-detail="\${CSS.escape(sport)}"]\`);
+    const toggle = document.querySelector(\`[data-sport-toggle="\${CSS.escape(sport)}"]\`);
+    if (!detail || !toggle) return;
+    const willOpen = detail.hidden;
+    detail.hidden = !willOpen;
+    toggle.setAttribute("aria-expanded", String(willOpen));
+    const icon = toggle.querySelector(".sport-toggle-icon");
+    if (icon) icon.textContent = willOpen ? "−" : "+";
+    updateSportToolbar();
+  }
+
+  function setAllSportDetails(open) {
+    document.querySelectorAll("[data-sport-detail]").forEach((detail) => {
+      detail.hidden = !open;
+      const sport = detail.dataset.sportDetail;
+      const toggle = document.querySelector(\`[data-sport-toggle="\${CSS.escape(sport)}"]\`);
+      toggle?.setAttribute("aria-expanded", String(open));
+      const icon = toggle?.querySelector(".sport-toggle-icon");
+      if (icon) icon.textContent = open ? "−" : "+";
+    });
+    updateSportToolbar();
+  }
+
   function closeDrawers() {
     document.querySelectorAll(".static-drawer-layer").forEach((node) => node.remove());
   }
@@ -508,6 +597,16 @@ const staticFallbackScript = `<script>
         document.querySelectorAll(".view-toggle button").forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
       });
     });
+    document.querySelectorAll("[data-sport-toggle]").forEach((button) => {
+      button.addEventListener("click", () => toggleSportDetail(button.dataset.sportToggle));
+    });
+    document.querySelectorAll("[data-sport-sort]").forEach((button) => {
+      button.addEventListener("click", () => sortSportRows(button.dataset.sportSort));
+    });
+    document.querySelector("[data-sport-expand-all]")?.addEventListener("click", () => {
+      const details = Array.from(document.querySelectorAll("[data-sport-detail]"));
+      setAllSportDetails(details.some((detail) => detail.hidden));
+    });
     allLanes().forEach((lane) => {
       lane.addEventListener("click", () => {
         const flow = flowData.flows.find((item) => item.id === lane.dataset.flowId);
@@ -520,6 +619,7 @@ const staticFallbackScript = `<script>
       if (event.key === "Escape") closeDrawers();
     });
     updateResults();
+    updateSportToolbar();
   }
 
   function startStaticFallbackIfNeeded() {

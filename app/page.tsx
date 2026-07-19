@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import {
   flows,
@@ -10,6 +10,7 @@ import {
   sourceCatalog,
   stageOrder,
   stages,
+  sportBudgetRows,
   type Layer,
   type Stage,
 } from "./budget-data";
@@ -178,6 +179,16 @@ const budgetRoute = [
   { icon: "users", label: "選手/民眾", role: "訓練、使用與成果回饋" },
 ];
 
+type SportSortKey = "sport" | "clues" | "amount" | "status";
+type SportSortDirection = "asc" | "desc";
+
+const sportSortLabels: Record<SportSortKey, string> = {
+  sport: "運動項目",
+  clues: "對應線索",
+  amount: "可辨識金額",
+  status: "查核狀態",
+};
+
 function LucideIcon({ className, name }: { className?: string; name: string }) {
   return (
     <svg
@@ -204,6 +215,11 @@ export default function Home() {
   const [activeMetric, setActiveMetric] = useState<(typeof metrics)[number] | null>(null);
   const [itemView, setItemView] = useState<"list" | "card">("card");
   const [isPreloading, setIsPreloading] = useState(true);
+  const [sportSort, setSportSort] = useState<{
+    direction: SportSortDirection;
+    key: SportSortKey;
+  }>({ direction: "asc", key: "sport" });
+  const [expandedSports, setExpandedSports] = useState<string[]>([]);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const metricCloseButtonRef = useRef<HTMLButtonElement>(null);
   const lastTriggerRef = useRef<HTMLButtonElement>(null);
@@ -234,6 +250,34 @@ export default function Home() {
     selectedLayers.length > 0 ||
     selectedStages.length > 0 ||
     selectedLocations.length > 0;
+  const flowTitleById = useMemo(
+    () => Object.fromEntries(flows.map((flow) => [flow.id, flow.title])),
+    [],
+  );
+  const sortedSportBudgetRows = useMemo(() => {
+    const amountRank = (amount: string) => {
+      if (amount.includes("46 億元")) return 1;
+      if (amount.includes("2.4 億元")) return 2;
+      if (amount.includes("3,000")) return 3;
+      return 4;
+    };
+    const valueOf = (row: (typeof sportBudgetRows)[number]) => {
+      if (sportSort.key === "clues") return row.flowRefs.length;
+      if (sportSort.key === "amount") return amountRank(row.amount);
+      if (sportSort.key === "status") return row.status;
+      return row.sport;
+    };
+
+    return [...sportBudgetRows].sort((left, right) => {
+      const leftValue = valueOf(left);
+      const rightValue = valueOf(right);
+      const result =
+        typeof leftValue === "number" && typeof rightValue === "number"
+          ? leftValue - rightValue
+          : String(leftValue).localeCompare(String(rightValue), "zh-Hant");
+      return sportSort.direction === "asc" ? result : -result;
+    });
+  }, [sportSort]);
 
   function resetFilters() {
     setSelectedLayers([]);
@@ -250,6 +294,21 @@ export default function Home() {
   function closeMetricDrawer() {
     setActiveMetric(null);
     window.requestAnimationFrame(() => lastMetricTriggerRef.current?.focus());
+  }
+
+  function toggleSportSort(key: SportSortKey) {
+    setSportSort((current) => ({
+      direction: current.key === key && current.direction === "asc" ? "desc" : "asc",
+      key,
+    }));
+  }
+
+  function toggleSportDetail(sport: string) {
+    setExpandedSports((current) =>
+      current.includes(sport)
+        ? current.filter((item) => item !== sport)
+        : [...current, sport],
+    );
   }
 
   useEffect(() => {
@@ -320,6 +379,7 @@ export default function Home() {
         <nav aria-label="主要區塊">
           <a href="#overview">總覽說明</a>
           <a href="#query">查詢預算</a>
+          <a href="#sports">運動項目表</a>
           <a href="#sources">資料來源</a>
         </nav>
       </header>
@@ -788,6 +848,161 @@ export default function Home() {
           </aside>
         </div>
       )}
+
+      <section className="sports-budget-section" id="sports" aria-labelledby="sports-title">
+        <div className="section-heading">
+          <p className="eyebrow">sport budget table</p>
+          <h2 id="sports-title"><span className="heading-icon" aria-hidden="true"><LucideIcon name="dumbbell" /></span>運動項目預算表</h2>
+          <p>
+            這張表把公開線索改用運動項目聚合，方便先看哪個運動可能對應哪些科技計畫；金額仍以「可辨識線索」呈現，避免誤讀為已完成單項運動對帳。
+          </p>
+        </div>
+        <div className="table-note" role="note">
+          <strong>閱讀提示</strong>
+          <span>表格中的「對應線索」會回扣上方 8 筆公開線索。同一運動可能同時出現在科研、地方場域、基金與協會應用端；展開後再看協會角色與下一步查核。</span>
+        </div>
+        <div className="sport-table-toolbar" aria-label="運動項目表狀態">
+          <span>目前排序：{sportSortLabels[sportSort.key]} {sportSort.direction === "asc" ? "由小到大" : "由大到小"}</span>
+          <button
+            data-sport-expand-all
+            onClick={() =>
+              setExpandedSports((current) =>
+                current.length === sportBudgetRows.length
+                  ? []
+                  : sportBudgetRows.map((row) => row.sport),
+              )
+            }
+            type="button"
+          >
+            {expandedSports.length === sportBudgetRows.length ? "全部收合" : "全部展開"}
+          </button>
+        </div>
+        <div className="sport-table-wrap" role="region" aria-label="以運動項目整理的預算線索表" tabIndex={0}>
+          <table className="sport-budget-table">
+            <thead>
+              <tr>
+                {[
+                  ["sport", "運動項目"],
+                  ["clues", "對應線索"],
+                  ["amount", "可辨識金額"],
+                  ["status", "查核狀態"],
+                ].map(([key, label]) => (
+                  <th
+                    aria-sort={
+                      sportSort.key === key
+                        ? sportSort.direction === "asc"
+                          ? "ascending"
+                          : "descending"
+                        : "none"
+                    }
+                    key={key}
+                    scope="col"
+                  >
+                    <button
+                      className="sort-button"
+                      data-sport-sort={key}
+                      onClick={() => toggleSportSort(key as SportSortKey)}
+                      type="button"
+                    >
+                      <span>{label}</span>
+                      <span aria-hidden="true" className="sort-arrow">
+                        {sportSort.key === key
+                          ? sportSort.direction === "asc"
+                            ? "↑"
+                            : "↓"
+                          : "↕"}
+                      </span>
+                    </button>
+                  </th>
+                ))}
+                <th scope="col">摘要</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedSportBudgetRows.map((row) => (
+                <Fragment key={row.sport}>
+                  <tr
+                    className="sport-summary-row"
+                    data-sort-amount={row.amount}
+                    data-sort-clues={row.flowRefs.length}
+                    data-sort-sport={row.sport}
+                    data-sort-status={row.status}
+                    data-sport-row={row.sport}
+                    key={`${row.sport}-summary`}
+                  >
+                    <th scope="row">
+                      <button
+                        aria-controls={`sport-detail-${row.sport}`}
+                        aria-expanded={expandedSports.includes(row.sport)}
+                        className="sport-toggle"
+                        data-sport-toggle={row.sport}
+                        onClick={() => toggleSportDetail(row.sport)}
+                        type="button"
+                      >
+                        <span className="sport-toggle-icon" aria-hidden="true">
+                          {expandedSports.includes(row.sport) ? "−" : "+"}
+                        </span>
+                        <span>
+                          <span className="sport-name">{row.sport}</span>
+                          <small>{row.theme}</small>
+                        </span>
+                      </button>
+                    </th>
+                    <td>
+                      <div className="linked-clues" aria-label={`${row.sport}對應公開線索`}>
+                        <strong>{row.flowRefs.length} 筆</strong>
+                        <ul>
+                          {row.flowRefs.map((flowId) => (
+                            <li key={flowId}>{flowTitleById[flowId]}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </td>
+                    <td><strong className="amount-emphasis">{row.amount}</strong></td>
+                    <td><span className="status-pill">{row.status}</span></td>
+                    <td>
+                      <p className="sport-summary-copy">{row.budgetClues.join("、")}</p>
+                    </td>
+                  </tr>
+                  <tr
+                    className="sport-detail-row"
+                    data-sport-detail={row.sport}
+                    hidden={!expandedSports.includes(row.sport)}
+                    id={`sport-detail-${row.sport}`}
+                    key={`${row.sport}-detail`}
+                  >
+                    <td colSpan={5}>
+                      <div className="sport-detail-grid">
+                        <section>
+                          <h3>協會角色</h3>
+                          <p>{row.associationRole}</p>
+                        </section>
+                        <section>
+                          <h3>下一步查核</h3>
+                          <p>{row.nextCheck}</p>
+                        </section>
+                        <section>
+                          <h3>來源</h3>
+                          <div className="table-source-links">
+                            {row.sourceRefs.map((sourceKey) => {
+                              const source = sourceCatalog[sourceKey];
+                              return (
+                                <a href={source.url} key={sourceKey} rel="noreferrer" target="_blank">
+                                  {source.label}
+                                </a>
+                              );
+                            })}
+                          </div>
+                        </section>
+                      </div>
+                    </td>
+                  </tr>
+                </Fragment>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       <section className="sources-section" id="sources" aria-labelledby="sources-title">
         <div className="section-heading">

@@ -25,6 +25,17 @@ for (const target of targets) {
   assert.match(html, /data-stage-filter="verified"/, `${target}: missing stage filter markers`);
   assert.match(html, /data-flow-id="application-budget"/, `${target}: missing flow markers`);
   assert.match(html, /lane-map card-view/, `${target}: query results should default to card view`);
+  assert.match(html, /href="#sports">運動項目表/, `${target}: missing sport budget nav anchor`);
+  assert.match(html, /id="sports"/, `${target}: missing sport budget section`);
+  assert.match(html, /sport-budget-table/, `${target}: missing sport-oriented budget table`);
+  assert.match(html, /data-sport-sort="sport"/, `${target}: missing sport table sort controls`);
+  assert.match(html, /data-sport-toggle="棒球"/, `${target}: missing sport table collapse controls`);
+  assert.match(html, /data-sport-detail="棒球"/, `${target}: missing sport table expandable detail rows`);
+  assert.match(html, /表格中的「對應線索」會回扣上方 8 筆公開線索/, `${target}: missing query/table relationship copy`);
+  assert.match(html, /以運動項目整理的預算線索表/, `${target}: missing sport budget table accessible label`);
+  assert.match(html, /棒球科技場域/, `${target}: missing baseball sport budget clue`);
+  assert.match(html, /科技防溺/, `${target}: missing swimming safety technology clue`);
+  assert.match(html, /全民運動/, `${target}: missing public sport budget row`);
   assert.match(html, /class="source-row"/, `${target}: sources should render as compact source rows`);
   assert.match(html, /heading-icon/, `${target}: section heading icons missing`);
   assert.match(html, /viewBox="0 0 24 24"/, `${target}: Lucide-style SVG icons missing`);

@@ -30,6 +30,7 @@ worker/           vinext/hosting runtime 入口
 - 46 億元是 2022-2026 跨部會政策總額，不是運動部單一預算。
 - 協會多半是應用端、合作端或場域端，不一定是科技預算直接受補助者。
 - 地方場域需要區分核定、決標、驗收、維運與實際使用。
+- 運動項目預算表採運動項目聚合公開線索，方便查棒球、羽球、游泳等主題，但不代表單項運動已完成正式對帳。
 - 尚未公開細目的計畫，以「待公開對帳」或「提案/爭取」處理。
 
 ## 本機版
@@ -121,9 +122,15 @@ npm run sync
 npm run update:local
 ```
 
-這會依序執行 lint、build、測試、同步本機靜態快照，並驗證靜態版是否保留互動所需的標記、相對素材路徑、響應式主視覺與 fallback script，最後列出 `git status -sb`。
+這會依序重產 favicon 與社群分享縮圖、執行 lint、build、測試、同步本機靜態快照，並驗證靜態版是否保留互動所需的標記、相對素材路徑、響應式主視覺、社群轉發 metadata 與 fallback script，最後列出 `git status -sb`、`git diff --stat` 與本機審查檔案位置。
 
-不要把 `npm run check`、`npm run sync` 或手動複製輸出檔並行執行；先讓檢查完成，再同步靜態輸出，才能避免舊 build、舊素材或半套 HTML 被推到 GitHub Pages。
+若只想單獨重產 favicon 與社群縮圖：
+
+```bash
+npm run assets:social
+```
+
+不要把 `npm run check`、`npm run sync` 或手動複製輸出檔並行執行；先讓資產生成與檢查完成，再同步靜態輸出，才能避免舊 build、舊素材或半套 HTML 被推到 GitHub Pages。
 
 可單獨檢查靜態輸出：
 
@@ -135,6 +142,12 @@ npm run verify:static
 
 ```text
 ../../outputs/sporttech-budget-static-v2.html
+```
+
+正式站同步來源：
+
+```text
+../../outputs/github-pages/sporttech/index.html
 ```
 
 ### 2. 同步正式站本機檔案

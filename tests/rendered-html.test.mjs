@@ -58,6 +58,14 @@ test("server-renders the sporttech budget query assistant", async () => {
   assert.match(html, /目前查詢/);
   assert.match(html, /查詢結果/);
   assert.match(html, /切換分類/);
+  assert.match(html, /href="#sports">運動項目表/);
+  assert.match(html, /id="sports"/);
+  assert.match(html, /運動項目預算表/);
+  assert.match(html, /以運動項目整理的預算線索表/);
+  assert.match(html, /可辨識金額/);
+  assert.match(html, /協會角色/);
+  assert.match(html, /棒球科技場域/);
+  assert.match(html, /科技防溺/);
   assert.match(html, /href="#sources">資料來源/);
   assert.match(html, /id="sources"/);
   assert.match(html, /source registry/);
@@ -199,6 +207,10 @@ test("documents the local and git version boundary", async () => {
   assert.match(page, /data-stage-filter/);
   assert.match(page, /data-flow-id/);
   assert.match(renderer, /wireStaticInteractions/);
+  assert.match(renderer, /sortSportRows/);
+  assert.match(renderer, /toggleSportDetail/);
+  assert.match(renderer, /data-sport-sort/);
+  assert.match(renderer, /data-sport-toggle/);
   assert.match(renderer, /favicon\.ico/);
   assert.match(renderer, /og-image\.png/);
   assert.match(renderer, /static-drawer-layer/);
@@ -252,6 +264,12 @@ test("documents the local and git version boundary", async () => {
   assert.match(readme, /收到明確「推 Git」或「部署」指令前，不進行 commit、push、登入或 token 建立/);
   assert.match(readme, /### 1\. 本機審查/);
   assert.match(readme, /npm run update:local/);
+  assert.match(readme, /npm run assets:social/);
+  assert.match(readme, /重產 favicon 與社群分享縮圖/);
+  assert.match(readme, /社群轉發 metadata/);
+  assert.match(readme, /git diff --stat/);
+  assert.match(readme, /正式站同步來源/);
+  assert.match(readme, /outputs\/github-pages\/sporttech\/index\.html/);
   assert.match(readme, /doublemoreart-dotcom\/sporttech/);
   assert.match(readme, /doublemoreart-dotcom\/dinopeng-com/);
   assert.match(readme, /正式網域主站/);
@@ -276,10 +294,18 @@ test("documents the local and git version boundary", async () => {
   assert.match(updateFlow, /never commits, pushes, logs in, creates tokens, or deploys/);
   assert.match(updateFlow, /local review first; main-site sync and Git push only after an explicit user request/);
   assert.match(updateFlow, /doublemoreart-dotcom\/dinopeng-com/);
+  assert.match(updateFlow, /regenerate derived share assets/);
+  assert.match(updateFlow, /npm run assets:social/);
+  assert.match(updateFlow, /Step 6\/6: review local change summary/);
   assert.match(updateFlow, /skip deploy by design/);
   assert.match(updateFlow, /Do not sync the main site or push Git until the user explicitly asks/);
   assert.match(updateFlow, /npm run sync:main-site/);
   assert.match(updateFlow, /git status -sb/);
+  assert.match(updateFlow, /Changed file summary/);
+  assert.match(updateFlow, /git diff --stat/);
+  assert.match(updateFlow, /Local artifacts ready/);
+  assert.match(updateFlow, /outputs\/github-pages\/sporttech\/index\.html/);
+  assert.match(updateFlow, /Publish remains manual/);
   assert.doesNotMatch(updateFlow, /git push|git commit|gh auth login|force push/);
   assert.match(syncMainSite, /MAIN_SITE_ROOT/);
   assert.match(syncMainSite, /doublemoreart-dotcom\/dinopeng-com/);
@@ -426,7 +452,14 @@ test("keeps responsive layout and interaction affordances reviewable", async () 
   assert.match(page, /aria-label="主要區塊"/);
   assert.match(page, /href="#overview"/);
   assert.match(page, /href="#query"/);
+  assert.match(page, /href="#sports"/);
   assert.match(page, /href="#sources"/);
+  assert.match(page, /sportBudgetRows/);
+  assert.match(page, /sportSort/);
+  assert.match(page, /expandedSports/);
+  assert.match(page, /sports-budget-section/);
+  assert.match(page, /sport-budget-table/);
+  assert.match(page, /table-source-links/);
   assert.match(page, /aria-label="預算層級篩選"/);
   assert.match(page, /aria-label="縣市篩選"/);
   assert.match(page, /aria-label="執行程度篩選"/);
@@ -452,11 +485,93 @@ test("keeps responsive layout and interaction affordances reviewable", async () 
   assert.match(staticVerifier, /data-filter-location="台北市"/);
   assert.match(staticVerifier, /data-stage-filter="verified"/);
   assert.match(staticVerifier, /lane-map card-view/);
+  assert.match(staticVerifier, /id="sports"/);
+  assert.match(staticVerifier, /sport-budget-table/);
+  assert.match(staticVerifier, /data-sport-sort="sport"/);
   assert.match(staticVerifier, /static-drawer-layer/);
 
   assert.doesNotMatch(css, /width:\s*100vw/);
-  assert.doesNotMatch(css, /min-width:\s*[4-9]\d{2}px/);
+  const cssWithoutScrollableSportTable = css.replace(
+    /\.sport-budget-table\s*\{[\s\S]*?\}/g,
+    "",
+  );
+  assert.doesNotMatch(cssWithoutScrollableSportTable, /min-width:\s*[4-9]\d{2}px/);
   assert.doesNotMatch(css, /overflow-x:\s*scroll/);
   assert.doesNotMatch(css, /font-size:\s*calc\([^;]*vw/);
   assert.doesNotMatch(page, /onClick=\{\(\) => window/);
+});
+
+test("adds a sport-oriented budget table for public clues", async () => {
+  const [page, data, css, staticVerifier, readme] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/budget-data.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/verify-static-output.mjs", import.meta.url), "utf8"),
+    readFile(new URL("../README.md", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(data, /export const sportBudgetRows = \[/);
+  assert.match(data, /sport: "棒球"/);
+  assert.match(data, /sport: "全民運動"/);
+  assert.match(data, /theme: "棒球科技場域、軌跡分析與國家隊支援"/);
+  assert.match(data, /theme: "科技防溺、泳池場域管理與動作資料"/);
+  assert.match(data, /flowRefs: \["taiwan-sporttech", "precision-sport-science", "baseball-made"\]/);
+  assert.match(data, /flowRefs: \["field-proof", "application-budget"\]/);
+  assert.match(data, /associationRole/);
+  assert.match(data, /nextCheck/);
+  assert.match(data, /sourceRefs: \["nstc", "gstp", "sports", "pcc"\]/);
+
+  assert.match(page, /href="#sports">運動項目表<\/a>/);
+  assert.match(page, /<section className="sports-budget-section" id="sports"/);
+  assert.match(page, /<h2 id="sports-title">/);
+  assert.match(page, /運動項目預算表/);
+  assert.match(page, /table-note/);
+  assert.match(page, /表格中的「對應線索」會回扣上方 8 筆公開線索/);
+  assert.match(page, /sport-table-toolbar/);
+  assert.match(page, /data-sport-expand-all/);
+  assert.match(page, /以運動項目整理的預算線索表/);
+  assert.match(page, /sport-budget-table/);
+  assert.match(page, /sort-button/);
+  assert.match(page, /data-sport-sort=\{key\}/);
+  assert.match(page, /toggleSportSort/);
+  assert.match(page, /aria-sort/);
+  assert.match(page, /data-sport-toggle=\{row\.sport\}/);
+  assert.match(page, /data-sport-detail=\{row\.sport\}/);
+  assert.match(page, /hidden=\{!expandedSports\.includes\(row\.sport\)\}/);
+  assert.match(page, /row\.flowRefs\.map/);
+  assert.match(page, /flowTitleById\[flowId\]/);
+  assert.match(page, /可辨識金額/);
+  assert.match(page, /查核狀態/);
+  assert.match(page, /協會角色/);
+  assert.match(page, /下一步查核/);
+  assert.match(page, /row\.budgetClues\.join/);
+  assert.match(page, /row\.sourceRefs\.map/);
+
+  assert.match(css, /\.sports-budget-section\s*\{/);
+  assert.match(css, /\.table-note\s*\{/);
+  assert.match(css, /\.sport-table-toolbar\s*\{/);
+  assert.match(css, /\.sport-table-wrap\s*\{/);
+  assert.match(css, /overflow-x: auto/);
+  assert.match(css, /\.sport-budget-table\s*\{/);
+  assert.match(css, /min-width: 1040px/);
+  assert.match(css, /\.sort-button\s*\{/);
+  assert.match(css, /\.sort-arrow\s*\{/);
+  assert.match(css, /\.sport-toggle\s*\{/);
+  assert.match(css, /\.linked-clues li::before\s*\{/);
+  assert.match(css, /\.linked-clues li::before\s*\{[\s\S]*background: var\(--teal\)/);
+  assert.match(css, /\.sport-detail-row\[hidden\]\s*\{/);
+  assert.match(css, /\.sport-detail-grid\s*\{/);
+  assert.match(css, /\.status-pill\s*\{/);
+  assert.match(css, /\.table-source-links\s*\{/);
+  assert.match(css, /@media \(max-width: 700px\)\s*\{[\s\S]*\.sport-budget-table\s*\{[\s\S]*min-width: 920px/);
+
+  assert.match(staticVerifier, /id="sports"/);
+  assert.match(staticVerifier, /sport-budget-table/);
+  assert.match(staticVerifier, /data-sport-toggle="棒球"/);
+  assert.match(staticVerifier, /data-sport-sort="sport"/);
+  assert.match(staticVerifier, /以運動項目整理的預算線索表/);
+  assert.match(staticVerifier, /棒球科技場域/);
+  assert.match(staticVerifier, /全民運動/);
+  assert.match(readme, /運動項目預算表/);
+  assert.match(readme, /運動項目聚合/);
 });
