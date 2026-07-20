@@ -182,6 +182,7 @@ git diff --stat
 只有收到明確「推 Git」指令才進行，且要先判斷這次推的是哪一種：
 
 - **Source repo 推版**：更新 `doublemoreart-dotcom/sporttech` 的原始碼、測試與靜態產出來源。這不會直接更新 `https://dinopeng.com/sporttech/`。
+- **SportTech Pages 推版**：更新 `doublemoreart-dotcom/sporttech` 的 `gh-pages` 分支。主站自動同步流程會讀這個分支。
 - **正式網址推版**：更新 `doublemoreart-dotcom/dinopeng-com` 的 `/sporttech/` 目錄。這才會讓 `https://dinopeng.com/sporttech/` 變更。
 
 若只是更新 source repo：
@@ -196,11 +197,14 @@ git push origin main
 npm run status:public
 ```
 
-`status:public` 會把三層狀態攤開：`doublemoreart-dotcom/sporttech` source、`doublemoreart-dotcom/dinopeng-com` 的 raw `/sporttech/index.html`、以及 `https://dinopeng.com/sporttech/` live HTML。若 source 已是新版但 main-site raw 還舊，代表還沒有同步主站 repo。
+`status:public` 會把四層狀態攤開：`doublemoreart-dotcom/sporttech` source main、`sporttech` 的 `gh-pages`、`doublemoreart-dotcom/dinopeng-com` 的 raw `/sporttech/index.html`，以及 `https://dinopeng.com/sporttech/` live HTML。若 source main 已是新版但 `gh-pages` 還舊，先跑 `npm run deploy:pages`；若 `gh-pages` 已是新版但 main-site raw 還舊，代表還沒有同步主站 repo。
 
-若是更新正式網址，必須先同步主站 repo，再推送 `/sporttech/` 目錄：
+若是更新正式網址，必須先補齊 `sporttech/gh-pages`，再同步主站 repo 並推送 `/sporttech/` 目錄：
 
 ```bash
+cd /Users/dino/Documents/Codex/2026-07-13/referenced-chatgpt-conversation-this-is-untrusted/work/sporttech-budget-map
+npm run sync
+npm run deploy:pages
 cd /Users/dino/Documents/Codex/2026-07-14/dinopeng-com-tptrees-dinopeng-com-aidata/work/dinopeng-com
 git fetch origin
 git pull --ff-only origin main
@@ -234,11 +238,11 @@ npm run verify:public -- --ref=<main-site-commit>
 - `https://dinopeng.com/sporttech/` 是否也送出同樣的新版標記。
 - raw HTML 與 live HTML 檔案大小是否一致。
 
-若 GitHub raw 已更新但正式網址還舊，通常是 GitHub Pages/Fastly 快取尚未過期；若 raw/main 也回到舊版，代表主站 repo 又被後續同步流程覆蓋，必須重新在最新 main 上同步 `/sporttech/`。
+若 GitHub raw 已更新但正式網址還舊，通常是 GitHub Pages/Fastly 快取尚未過期；若 raw/main 也回到舊版，先檢查 `sporttech/gh-pages` 是否舊版。主站 workflow 會從 `doublemoreart-dotcom/sporttech:gh-pages` 同步，所以正式站推版一定要先更新 `gh-pages`，再同步並推主站 repo。
 
 ### 4. GitHub Pages 發布
 
-需要發布 `doublemoreart-dotcom/sporttech` repo 自己的 GitHub Pages 時使用：
+需要發布 `doublemoreart-dotcom/sporttech` repo 自己的 GitHub Pages，或正式站要避免被主站自動同步流程覆蓋時使用：
 
 ```bash
 npm run update:deploy
@@ -246,7 +250,7 @@ npm run update:deploy
 
 `update:deploy` 會在檢查與同步通過後部署 GitHub Pages；它不會自動 commit，也不會 force push。部署前仍要先確認本機畫面、互動與 RWD。
 
-目前 `https://dinopeng.com/sporttech/` 由主站 repo 供應。若只更新本 repo 的工作流程文件或測試腳本，不一定需要同步主站；若畫面、互動或靜態輸出有變動，才需要把 `outputs/github-pages/sporttech/` 同步到主站的 `/sporttech/` 目錄後再推送主站。
+目前 `https://dinopeng.com/sporttech/` 由主站 repo 供應，但主站排程會從 `sporttech/gh-pages` 重新同步 `/sporttech/`。若只更新本 repo 的工作流程文件或測試腳本，不一定需要同步主站；若畫面、互動或靜態輸出有變動，請依序更新 source main、`gh-pages`、主站 `/sporttech/`，最後驗證 live URL。
 
 正式網址更新後可用以下方式確認：
 

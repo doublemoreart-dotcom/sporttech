@@ -2109,7 +2109,28 @@ li {
   }
 
   .site-header nav {
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
     justify-content: flex-start;
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 0 2px 8px;
+    scrollbar-width: thin;
+    width: 100%;
+  }
+
+  .site-header nav::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .site-header nav::-webkit-scrollbar-thumb {
+    background: rgba(21, 25, 27, 0.25);
+    border-radius: 999px;
+  }
+
+  .site-header a:not(.site-logo) {
+    flex: 0 0 auto;
+    white-space: nowrap;
   }
 
   h1 {

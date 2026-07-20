@@ -20,7 +20,7 @@ Local-first update policy:
   - It never commits, pushes, logs in, creates tokens, or deploys.
   - Only run npm run update:deploy after an explicit publish decision.
   - Pushing doublemoreart-dotcom/sporttech updates source code only.
-  - dinopeng.com/sporttech/ updates only after syncing and pushing the main-site repo.
+  - dinopeng.com/sporttech/ updates only after publishing sporttech gh-pages, then syncing and pushing the main-site repo.
 
 Steps:
   1. Regenerate derived favicon and social sharing assets.
@@ -49,6 +49,7 @@ cd "${repo_root}"
 echo "SportTech canonical targets:"
 echo "  Public URL: https://dinopeng.com/sporttech/"
 echo "  Repo:       https://github.com/doublemoreart-dotcom/sporttech"
+echo "  Pages src:  https://github.com/doublemoreart-dotcom/sporttech/tree/gh-pages"
 echo "  Main site:  https://github.com/doublemoreart-dotcom/dinopeng-com"
 echo "  Policy:     local review first; main-site sync and Git push only after an explicit user request"
 echo
@@ -102,9 +103,11 @@ echo "  note: this does not update https://dinopeng.com/sporttech/"
 echo "  then run npm run status:public to confirm whether main-site still needs sync"
 echo
 echo "If the user says to update https://dinopeng.com/sporttech/:"
-echo "  1. fast-forward the main-site repo: doublemoreart-dotcom/dinopeng-com"
-echo "  2. npm run sync:main-site"
-echo "  3. review the main-site repo diff under /sporttech/"
-echo "  4. commit and push the main-site repo"
-echo "  5. run npm run status:public to locate any source/main-site/live mismatch"
-echo "  6. run npm run verify:public to compare remote main, raw HTML, and live HTML markers"
+echo "  1. make sure source main is committed and pushed"
+echo "  2. npm run deploy:pages to update doublemoreart-dotcom/sporttech:gh-pages"
+echo "  3. fast-forward the main-site repo: doublemoreart-dotcom/dinopeng-com"
+echo "  4. npm run sync:main-site"
+echo "  5. review the main-site repo diff under /sporttech/"
+echo "  6. commit and push the main-site repo"
+echo "  7. run npm run status:public to locate any source/gh-pages/main-site/live mismatch"
+echo "  8. run npm run verify:public to compare remote main, raw HTML, and live HTML markers"

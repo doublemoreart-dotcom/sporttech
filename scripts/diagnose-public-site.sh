@@ -10,6 +10,7 @@ repo_root="$(git rev-parse --show-toplevel)"
 source_output="${repo_root}/../../outputs/github-pages/sporttech/index.html"
 tmp_dir="${TMPDIR:-/tmp}"
 source_raw_file="${tmp_dir}/sporttech-source-layout.tsx"
+source_pages_raw_file="${tmp_dir}/sporttech-source-gh-pages.html"
 main_raw_file="${tmp_dir}/sporttech-main-raw.html"
 live_file="${tmp_dir}/sporttech-live.html"
 
@@ -53,11 +54,13 @@ echo
 
 source_head="$(git rev-parse HEAD)"
 source_remote="$(git ls-remote "${source_repo_url}" main | awk '{print $1}')"
+source_pages_remote="$(git ls-remote "${source_repo_url}" gh-pages | awk '{print $1}')"
 main_remote="$(git ls-remote "${main_repo_url}" main | awk '{print $1}')"
 
 echo "Refs"
 echo "  Local source HEAD: ${source_head}"
 echo "  Remote source main: ${source_remote:-unresolved}"
+echo "  Remote source gh-pages: ${source_pages_remote:-unresolved}"
 echo "  Remote main-site main: ${main_remote:-unresolved}"
 if [[ -d "${main_site_root}/.git" ]]; then
   echo "  Local main-site: $(git -C "${main_site_root}" rev-parse HEAD)"
@@ -77,10 +80,17 @@ if [[ ! -f "${source_output}" ]]; then
 fi
 
 curl -fsSL "https://raw.githubusercontent.com/doublemoreart-dotcom/sporttech/${source_remote}/app/layout.tsx" -o "${source_raw_file}"
+if [[ -n "${source_pages_remote}" ]]; then
+  curl -fsSL "https://raw.githubusercontent.com/doublemoreart-dotcom/sporttech/${source_pages_remote}/index.html" -o "${source_pages_raw_file}"
+else
+  echo "Missing remote gh-pages branch for ${source_repo_url}" >&2
+  exit 1
+fi
 curl -fsSL "https://raw.githubusercontent.com/doublemoreart-dotcom/dinopeng-com/${main_remote}/sporttech/index.html" -o "${main_raw_file}"
 curl -fsSL "${public_url}?verify=${main_remote}" -o "${live_file}"
 
 source_failed=0
+source_pages_failed=0
 main_failed=0
 live_failed=0
 
@@ -89,12 +99,19 @@ require_marker "${source_raw_file}" 'title: "運動X科技預算小幫手"' "sou
 echo
 
 check_html "Local generated static output" "${source_output}" || source_failed=1
+check_html "Source repo gh-pages /index.html" "${source_pages_raw_file}" || source_pages_failed=1
 check_html "Main-site raw /sporttech/index.html" "${main_raw_file}" || main_failed=1
 check_html "Live public URL" "${live_file}" || live_failed=1
 
+if [[ "${source_pages_failed}" -ne 0 ]]; then
+  echo "Diagnosis: source main is current, but sporttech gh-pages is stale."
+  echo "Next: run npm run deploy:pages, wait for GitHub Pages to finish, then re-run npm run status:public."
+  exit 1
+fi
+
 if [[ "${main_failed}" -ne 0 ]]; then
-  echo "Diagnosis: source repo is current, but main-site repo has not been synced with the latest /sporttech/ output."
-  echo "Next: run npm run sync:main-site, review the dinopeng-com diff, then commit and push the main-site repo."
+  echo "Diagnosis: source repo and gh-pages are current, but main-site repo has not been synced with the latest /sporttech/ output."
+  echo "Next: fast-forward dinopeng-com, run npm run sync:main-site, review the diff, then commit and push the main-site repo."
   exit 1
 fi
 
@@ -110,4 +127,4 @@ if [[ "${source_failed}" -ne 0 ]]; then
   exit 1
 fi
 
-echo "Diagnosis: source repo, main-site raw output, and live URL all contain the current SportTech markers."
+echo "Diagnosis: source main, source gh-pages, main-site raw output, and live URL all contain the current SportTech markers."
