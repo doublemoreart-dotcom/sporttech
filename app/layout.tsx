@@ -18,7 +18,7 @@ const zalandoSansExpanded = Zalando_Sans_Expanded({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://dinopeng.com"),
-  title: "2022-2026 運動X科技預算小幫手",
+  title: "運動X科技預算小幫手",
   description:
     "一頁式互動查詢工具，協助判讀運動科技預算來源、執行程度、地方場域與協會應用端角色。",
   alternates: {
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     shortcut: "https://dinopeng.com/sporttech/assets/favicon.ico",
   },
   openGraph: {
-    title: "2022-2026 運動X科技預算小幫手",
+    title: "運動X科技預算小幫手",
     description:
       "查詢運動科技預算來源、執行程度、地方場域與公開資料線索。",
     url: "/sporttech/",
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "2022-2026 運動X科技預算小幫手",
+    title: "運動X科技預算小幫手",
     description:
       "查詢運動科技預算來源、執行程度、地方場域與公開資料線索。",
     images: ["https://dinopeng.com/sporttech/assets/og-image.png"],

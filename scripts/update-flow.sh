@@ -29,6 +29,9 @@ Steps:
   4. Verify static output markers, assets, and fallback interactions.
   5. Deploy the sporttech repo GitHub Pages only when --deploy is passed.
   6. Print git status, diff summary, and local review targets.
+
+After updating https://dinopeng.com/sporttech/ from the main-site repo, run:
+  npm run verify:public
 HELP
       exit 0
       ;;
@@ -101,4 +104,4 @@ echo "  1. fast-forward the main-site repo: doublemoreart-dotcom/dinopeng-com"
 echo "  2. npm run sync:main-site"
 echo "  3. review the main-site repo diff under /sporttech/"
 echo "  4. commit and push the main-site repo"
-echo "  5. verify HTTP 200 and look for the latest page markers after cache clears"
+echo "  5. run npm run verify:public to compare remote main, raw HTML, and live HTML markers"

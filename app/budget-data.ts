@@ -305,6 +305,7 @@ export const flows = [
 export const sportBudgetRows = [
   {
     sport: "棒球",
+    icon: "circle-dot",
     theme: "棒球科技場域、軌跡分析與國家隊支援",
     budgetClues: ["台灣運動 x 科技行動計畫", "精準運動科學研究專案", "國球國造：棒球運動科技場域淬鍊"],
     flowRefs: ["taiwan-sporttech", "precision-sport-science", "baseball-made"],
@@ -316,6 +317,7 @@ export const sportBudgetRows = [
   },
   {
     sport: "羽球",
+    icon: "feather",
     theme: "AI 訓練、動作分析與國家隊競技支援",
     budgetClues: ["精準運動科學研究專案", "協會端科技導入與國家隊應用"],
     flowRefs: ["precision-sport-science", "association-use"],
@@ -327,6 +329,7 @@ export const sportBudgetRows = [
   },
   {
     sport: "桌球",
+    icon: "circle-dot",
     theme: "擊球分析、戰術資料與競技表現支援",
     budgetClues: ["精準運動科學研究專案", "協會端科技導入與國家隊應用"],
     flowRefs: ["precision-sport-science", "association-use"],
@@ -338,6 +341,7 @@ export const sportBudgetRows = [
   },
   {
     sport: "舉重",
+    icon: "dumbbell",
     theme: "力量監測、疲勞分析與傷害預防",
     budgetClues: ["精準運動科學研究專案", "協會端科技導入與國家隊應用"],
     flowRefs: ["precision-sport-science", "association-use"],
@@ -349,6 +353,7 @@ export const sportBudgetRows = [
   },
   {
     sport: "自由車",
+    icon: "bike",
     theme: "功率、生理監測與訓練數據分析",
     budgetClues: ["精準運動科學研究專案", "台灣運動 x 科技行動計畫"],
     flowRefs: ["precision-sport-science", "taiwan-sporttech", "association-use"],
@@ -360,6 +365,7 @@ export const sportBudgetRows = [
   },
   {
     sport: "游泳",
+    icon: "waves",
     theme: "科技防溺、泳池場域管理與動作資料",
     budgetClues: ["地方運動科技場域實證", "運動科技應用發展"],
     flowRefs: ["field-proof", "application-budget"],
@@ -371,6 +377,7 @@ export const sportBudgetRows = [
   },
   {
     sport: "田徑",
+    icon: "activity",
     theme: "智慧跑道、走跑場域與全民運動數據",
     budgetClues: ["地方運動科技場域實證", "運動科技應用發展"],
     flowRefs: ["field-proof", "application-budget"],
@@ -382,6 +389,7 @@ export const sportBudgetRows = [
   },
   {
     sport: "全民運動",
+    icon: "users",
     theme: "智慧場館、走跑活動、運動資料平台與使用者服務",
     budgetClues: ["台灣運動 x 科技行動計畫", "地方運動科技場域實證", "運動發展基金創新研發與數位轉型"],
     flowRefs: ["taiwan-sporttech", "field-proof", "sports-fund", "application-budget"],

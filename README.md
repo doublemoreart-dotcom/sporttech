@@ -211,7 +211,26 @@ git commit -m "Update sporttech static page"
 git push origin main
 ```
 
-推版前先確認遠端是否有新 commit；不要 force push。正式站推完後用 `curl -L -I https://dinopeng.com/sporttech/` 確認 HTTP 200、`last-modified` 與檔案大小是否更新；若 GitHub raw 已更新但正式網址還舊，通常是 GitHub Pages/Fastly 快取尚未過期。
+推版前先確認遠端是否有新 commit；不要 force push。正式站推完後不要只看 HTTP 200，還要確認 GitHub 遠端 main、固定 commit raw HTML 與正式網址 HTML 都含有新版標記：
+
+```bash
+npm run verify:public
+```
+
+若要指定剛推送的主站 commit：
+
+```bash
+npm run verify:public -- --ref=<main-site-commit>
+```
+
+`verify:public` 會檢查：
+
+- `doublemoreart-dotcom/dinopeng-com` 的遠端 `main` commit。
+- 該 commit 的 `sporttech/index.html` 是否包含 GA、運動項目預算表、排序 hook、favicon 與社群縮圖。
+- `https://dinopeng.com/sporttech/` 是否也送出同樣的新版標記。
+- raw HTML 與 live HTML 檔案大小是否一致。
+
+若 GitHub raw 已更新但正式網址還舊，通常是 GitHub Pages/Fastly 快取尚未過期；若 raw/main 也回到舊版，代表主站 repo 又被後續同步流程覆蓋，必須重新在最新 main 上同步 `/sporttech/`。
 
 ### 4. GitHub Pages 發布
 
@@ -230,6 +249,7 @@ npm run update:deploy
 ```bash
 curl -L -I https://dinopeng.com/sporttech/
 curl -L https://dinopeng.com/sporttech/ | grep '運動X科技預算小幫手'
+npm run verify:public
 ```
 
 若 GitHub Pages build 已完成但正式網址還是舊版，先看 header 的 `last-modified`、`etag`、`age` 與 `expires`，通常是 GitHub Pages/Fastly 快取尚未過期。

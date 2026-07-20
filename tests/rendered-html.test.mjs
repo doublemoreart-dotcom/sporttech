@@ -29,8 +29,9 @@ test("server-renders the sporttech budget query assistant", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /2022-2026 運動X科技預算小幫手/);
+  assert.match(html, /<title>運動X科技預算小幫手<\/title>/);
   assert.match(html, /運動X科技預算小幫手/);
+  assert.match(html, /\/sporttech-menu-icon\.png/);
   assert.match(html, /<picture>/);
   assert.match(html, /sporttech-budget-hero\.jpg/);
   assert.match(html, /sporttech-budget-hero-small\.jpg/);
@@ -91,6 +92,7 @@ test("documents the local and git version boundary", async () => {
     renderer,
     updateFlow,
     syncMainSite,
+    verifyPublicSite,
     generateShareAssets,
   ] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
@@ -101,6 +103,7 @@ test("documents the local and git version boundary", async () => {
     readFile(new URL("../scripts/render-static-page.mjs", import.meta.url), "utf8"),
     readFile(new URL("../scripts/update-flow.sh", import.meta.url), "utf8"),
     readFile(new URL("../scripts/sync-main-site.sh", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/verify-public-site.sh", import.meta.url), "utf8"),
     readFile(new URL("../scripts/generate-share-assets.mjs", import.meta.url), "utf8"),
   ]);
 
@@ -113,6 +116,7 @@ test("documents the local and git version boundary", async () => {
   assert.match(page, /role="status"/);
   assert.match(page, /aria-live="polite"/);
   assert.match(page, /整理預算線索/);
+  assert.match(page, /preloader-icon/);
   assert.doesNotMatch(page, /preloader-flow/);
   assert.match(page, /略過導入/);
   assert.match(page, /className="site-footer"/);
@@ -154,6 +158,8 @@ test("documents the local and git version boundary", async () => {
   assert.match(page, /function resetFilters/);
   assert.match(page, /建議查詢流程/);
   assert.match(page, /先選預算身分/);
+  assert.match(page, /query-step/);
+  assert.match(page, /query-illustration/);
   assert.match(page, /目前查詢/);
   assert.match(page, /清除篩選/);
   assert.match(page, /查詢結果/);
@@ -169,8 +175,11 @@ test("documents the local and git version boundary", async () => {
   assert.match(page, /activeMetric/);
   assert.match(page, /setActiveMetric/);
   assert.match(page, /className="metric"/);
+  assert.match(page, /className="metric-label"/);
   assert.match(page, /metric-value-row/);
   assert.match(page, /metric-value numeric/);
+  assert.match(page, /className="card-arrow"/);
+  assert.match(page, /LucideIcon name="arrow-up-right"/);
   assert.match(page, /className="drawer-layer metric-drawer-layer"/);
   assert.match(page, /className="drawer-panel metric-drawer-panel"/);
   assert.match(page, /className="drawer-scroll metric-drawer-scroll"/);
@@ -208,6 +217,7 @@ test("documents the local and git version boundary", async () => {
   assert.match(page, /data-filter-location/);
   assert.match(page, /data-stage-filter/);
   assert.match(page, /data-flow-id/);
+  assert.match(page, /drawerOpen && active\?\.id === flow\.id \? "lane active" : "lane"/);
   assert.match(renderer, /wireStaticInteractions/);
   assert.match(renderer, /sortSportRows/);
   assert.match(renderer, /toggleSportDetail/);
@@ -216,6 +226,8 @@ test("documents the local and git version boundary", async () => {
   assert.match(renderer, /favicon\.ico/);
   assert.match(renderer, /og-image\.png/);
   assert.match(renderer, /static-drawer-layer/);
+  assert.match(renderer, /allLanes\(\)\.forEach\(\(lane\) => lane\.classList\.remove\("active"\)\)/);
+  assert.match(renderer, /openFlowDrawer\(flow\);\n\s*allLanes\(\)\.forEach\(\(item\) => item\.classList\.toggle\("active", item === lane\)\)/);
   assert.match(renderer, /lucideIcon\(metric\.flowIcons\[index\]\)/);
   assert.match(renderer, /stroke="currentColor"/);
   assert.match(renderer, /metric\.flowRoles\[index\]/);
@@ -258,6 +270,16 @@ test("documents the local and git version boundary", async () => {
   assert.match(generateShareAssets, /icoFromPngs/);
   assert.match(generateShareAssets, /sharp/);
   assert.match(readme, /## 網站架構/);
+  assert.match(readme, /npm run verify:public/);
+  assert.match(readme, /不要只看 HTTP 200/);
+  assert.match(readme, /raw\/main 也回到舊版/);
+  assert.match(verifyPublicSite, /doublemoreart-dotcom\/dinopeng-com/);
+  assert.match(verifyPublicSite, /G-K8SEFVT51N/);
+  assert.match(verifyPublicSite, /運動項目預算表/);
+  assert.match(verifyPublicSite, /data-sport-sort/);
+  assert.match(verifyPublicSite, /assets\/favicon\.ico/);
+  assert.match(verifyPublicSite, /assets\/og-image\.png/);
+  assert.match(verifyPublicSite, /Live HTML size differs from remote raw HTML/);
   assert.match(readme, /## 本機版/);
   assert.match(readme, /## Git 版控版/);
   assert.match(readme, /## 交付版/);
@@ -321,7 +343,8 @@ test("documents the local and git version boundary", async () => {
   assert.match(updateFlow, /this does not update https:\/\/dinopeng\.com\/sporttech\//);
   assert.match(updateFlow, /If the user says to update https:\/\/dinopeng\.com\/sporttech\//);
   assert.match(updateFlow, /fast-forward the main-site repo/);
-  assert.match(updateFlow, /verify HTTP 200 and look for the latest page markers after cache clears/);
+  assert.match(updateFlow, /run npm run verify:public to compare remote main, raw HTML, and live HTML markers/);
+  assert.match(updateFlow, /After updating https:\/\/dinopeng\.com\/sporttech\/ from the main-site repo, run/);
   assert.doesNotMatch(updateFlow, /git push|git commit|gh auth login|force push/);
   assert.match(syncMainSite, /MAIN_SITE_ROOT/);
   assert.match(syncMainSite, /doublemoreart-dotcom\/dinopeng-com/);
@@ -347,20 +370,41 @@ test("keeps the workbench and lane cards vertically sequenced", async () => {
   assert.match(css, /font-family: var\(--font-zalando-sans-expanded\), var\(--font-nunito\), monospace/);
   assert.match(css, /\.hero-visual picture\s*\{[\s\S]*display: block/);
   assert.match(css, /\.hero-visual img\s*\{[\s\S]*aspect-ratio: 16 \/ 6/);
+  assert.match(css, /\.audit-panel\s*\{[\s\S]*grid-column: 1 \/ -1/);
+  assert.match(css, /\.audit-panel\s*\{[\s\S]*grid-template-columns: auto minmax\(220px, 0\.45fr\) minmax\(0, 1fr\)/);
+  assert.match(css, /\.audit-panel\s*\{[\s\S]*border-left: 5px solid var\(--red\)/);
+  assert.match(css, /\.audit-panel strong\s*\{[\s\S]*font-size: 1rem/);
+  assert.match(css, /@media \(max-width: 700px\)\s*\{[\s\S]*\.audit-panel\s*\{[\s\S]*grid-template-columns: 1fr/);
+  assert.match(css, /html\s*\{[\s\S]*scroll-behavior: smooth/);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)\s*\{[\s\S]*html\s*\{[\s\S]*scroll-behavior: auto/);
   assert.match(css, /\.site-header\s*\{[\s\S]*position: sticky/);
   assert.match(css, /\.site-header\s*\{[\s\S]*top: 0/);
+  assert.match(css, /\.site-logo\s*\{[\s\S]*display: inline-flex/);
+  assert.match(css, /\.site-logo\s*\{[\s\S]*font-size: 0\.96rem/);
+  assert.match(css, /\.site-logo-mark\s*\{[\s\S]*height: 42px/);
+  assert.match(css, /\.site-logo-mark\s*\{[\s\S]*overflow: hidden/);
+  assert.match(css, /\.site-logo-mark img\s*\{[\s\S]*object-fit: cover/);
+  assert.match(css, /\.site-logo > span:not\(\.site-logo-mark\)\s*\{[\s\S]*line-height: 1\.22/);
+  assert.match(css, /@media \(max-width: 700px\)\s*\{[\s\S]*\.site-logo\s*\{[\s\S]*font-size: 0\.9rem/);
+  assert.match(css, /@media \(max-width: 700px\)\s*\{[\s\S]*\.site-logo-mark\s*\{[\s\S]*height: 38px/);
   assert.match(css, /\.site-header a:not\(\.site-logo\)\s*\{[\s\S]*font-size: 0\.94rem/);
   assert.match(css, /\.site-header a:not\(\.site-logo\)\s*\{[\s\S]*min-height: 40px/);
   assert.match(css, /\.heading-icon\s*\{[\s\S]*height: 34px/);
   assert.match(css, /\.heading-icon svg\s*\{[\s\S]*height: 18px/);
   assert.match(css, /\.metric-check-flow b svg\s*\{[\s\S]*height: 13px/);
   assert.match(css, /\.metric\s*\{[\s\S]*grid-template-rows: auto minmax\(86px, auto\) minmax\(54px, 1fr\) auto/);
+  assert.match(css, /\.metric\s*\{[\s\S]*padding: 16px 48px 14px 14px/);
+  assert.match(css, /\.metric-label\s*\{[\s\S]*font-size: 0\.76rem/);
   assert.match(css, /\.metric-value-row\s*\{[\s\S]*min-height: 86px/);
   assert.match(css, /\.metric strong\s*\{[\s\S]*font-size: clamp\(1\.75rem, 2\.8vw, 2\.35rem\)/);
   assert.match(css, /\.metric-value\.numeric\s*\{[\s\S]*font-size: clamp\(2\.35rem, 4vw, 3\.15rem\)/);
   assert.match(css, /\.panel-status strong\s*\{[\s\S]*font-size: clamp\(1\.65rem, 4vw, 2\.45rem\)/);
   assert.match(css, /\.metric:hover,\n\.metric:focus-visible\s*\{[\s\S]*transform: translate\(-2px, -2px\)/);
   assert.match(css, /\.metric::after\s*\{[\s\S]*content: "查看說明"/);
+  assert.match(css, /\.card-arrow\s*\{[\s\S]*height: 32px/);
+  assert.match(css, /\.card-arrow svg\s*\{[\s\S]*height: 16px/);
+  assert.match(css, /\.metric \.card-arrow\s*\{[\s\S]*position: absolute/);
+  assert.match(css, /\.lane:hover \.card-arrow,[\s\S]*\.lane\.active \.card-arrow\s*\{[\s\S]*background: var\(--ink\)/);
   assert.match(css, /\.metric-drawer-panel\s*\{[\s\S]*width: min\(980px, calc\(100% - 32px\)\)/);
   assert.match(css, /\.metric-drawer-scroll\s*\{[\s\S]*height: calc\(70vh - 71px\)/);
   assert.match(css, /\.metric-drawer-scroll\s*\{[\s\S]*padding: 20px 24px 28px/);
@@ -382,7 +426,9 @@ test("keeps the workbench and lane cards vertically sequenced", async () => {
   assert.match(css, /\.flow-diagram b svg\s*\{[\s\S]*height: 13px/);
   assert.match(css, /\.flow-diagram span:not\(:last-child\)::after\s*\{[\s\S]*transform: translateY\(-50%\)/);
   assert.match(css, /\.query-flow\s*\{[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
-  assert.match(css, /\.query-flow div\s*\{[\s\S]*grid-template-columns: 32px minmax\(0, 1fr\)/);
+  assert.match(css, /\.query-flow \.query-step\s*\{[\s\S]*grid-template-columns: 32px minmax\(0, 1fr\) 54px/);
+  assert.match(css, /\.query-illustration\s*\{[\s\S]*min-height: 70px/);
+  assert.match(css, /\.query-illustration svg\s*\{[\s\S]*height: 28px/);
   assert.match(css, /\.panel-status\s*\{[\s\S]*border-bottom: 1px solid var\(--line\)/);
   assert.match(css, /\.empty-state button\s*\{/);
   assert.match(css, /\.view-switcher\s*\{[\s\S]*display: flex/);
@@ -392,13 +438,20 @@ test("keeps the workbench and lane cards vertically sequenced", async () => {
   assert.match(css, /\.card-view \.lane\s*\{[\s\S]*min-height: 210px/);
   assert.match(css, /\.preloader\s*\{[\s\S]*position: fixed/);
   assert.match(css, /\.preloader-card\s*\{[\s\S]*max-width: 420px/);
+  assert.match(css, /\.preloader-icon\s*\{[\s\S]*height: 56px/);
+  assert.match(css, /\.preloader-icon img\s*\{[\s\S]*object-fit: cover/);
   assert.match(css, /\.preloader-bar span\s*\{[\s\S]*animation: preload-progress 1\.35s ease-out forwards/);
   assert.doesNotMatch(css, /\.preloader-flow/);
   assert.match(css, /@keyframes preload-progress/);
+  assert.match(css, /--anchor-offset: 128px/);
+  assert.match(css, /--section-gap: 44px/);
+  assert.match(css, /\.overview-section\s*\{[\s\S]*scroll-margin-top: var\(--anchor-offset\)/);
+  assert.match(css, /\.query-section\s*\{[\s\S]*margin-top: var\(--section-gap\)[\s\S]*scroll-margin-top: var\(--anchor-offset\)/);
+  assert.match(css, /\.sports-budget-section\s*\{[\s\S]*margin-top: var\(--section-gap\)[\s\S]*scroll-margin-top: var\(--anchor-offset\)/);
+  assert.match(css, /@media \(max-width: 700px\)\s*\{[\s\S]*:root\s*\{[\s\S]*--anchor-offset: 150px/);
   assert.match(css, /\.site-footer\s*\{[\s\S]*border-top: 4px double var\(--ink\)/);
   assert.match(css, /\.site-footer\s*\{[\s\S]*grid-template-columns: minmax\(0, 1fr\) minmax\(220px, 0\.34fr\)/);
-  assert.match(css, /\.sources-section\s*\{[\s\S]*scroll-margin-top: 88px/);
-  assert.match(css, /\.sources-section\s*\{[\s\S]*padding-top: 18px/);
+  assert.match(css, /\.sources-section\s*\{[\s\S]*scroll-margin-top: var\(--anchor-offset\)/);
   assert.match(css, /\.source-registry\s*\{[\s\S]*list-style: none/);
   assert.match(css, /\.source-row\s*\{[\s\S]*grid-template-columns: minmax\(180px, 0\.55fr\) minmax\(0, 1fr\)/);
   assert.match(css, /\.source-row a:hover,[\s\S]*\.source-row a:focus-visible\s*\{[\s\S]*transform: translateX\(2px\)/);
@@ -406,7 +459,8 @@ test("keeps the workbench and lane cards vertically sequenced", async () => {
   assert.match(css, /\.footer-meta small\s*\{[\s\S]*max-width: 320px/);
   assert.doesNotMatch(css, /release-strip/);
   assert.match(css, /\.workbench\s*\{[\s\S]*grid-template-columns: minmax\(0, 1fr\)/);
-  assert.match(css, /grid-template-areas:\s*"dot year"\s*"\. title"\s*"\. amount"/);
+  assert.match(css, /grid-template-areas:\s*"dot year arrow"\s*"\. title arrow"\s*"\. amount arrow"/);
+  assert.match(css, /\.lane \.card-arrow\s*\{[\s\S]*grid-area: arrow/);
 });
 
 test("uses a bottom drawer for detail reading", async () => {
@@ -419,6 +473,7 @@ test("uses a bottom drawer for detail reading", async () => {
   assert.match(css, /@media \(max-width: 1040px\)\s*\{[\s\S]*\.metrics\s*\{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
   assert.match(css, /@media \(max-width: 1040px\)\s*\{[\s\S]*\.query-flow\s*\{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
   assert.match(css, /@media \(max-width: 700px\)\s*\{[\s\S]*\.query-flow,[\s\S]*grid-template-columns: 1fr/);
+  assert.match(css, /@media \(max-width: 700px\)\s*\{[\s\S]*\.query-flow \.query-step\s*\{[\s\S]*grid-template-columns: 28px minmax\(0, 1fr\) 42px/);
   assert.match(css, /@media \(max-width: 700px\)\s*\{[\s\S]*\.source-row\s*\{[\s\S]*grid-template-columns: 1fr/);
   assert.match(css, /@media \(max-width: 700px\)\s*\{[\s\S]*\.metric-check-flow\s*\{[\s\S]*grid-template-columns: 1fr/);
   assert.match(css, /@keyframes drawer-rise/);
@@ -528,6 +583,9 @@ test("adds a sport-oriented budget table for public clues", async () => {
 
   assert.match(data, /export const sportBudgetRows = \[/);
   assert.match(data, /sport: "棒球"/);
+  assert.match(data, /icon: "circle-dot"/);
+  assert.match(data, /icon: "bike"/);
+  assert.match(data, /icon: "waves"/);
   assert.match(data, /sport: "全民運動"/);
   assert.match(data, /theme: "棒球科技場域、軌跡分析與國家隊支援"/);
   assert.match(data, /theme: "科技防溺、泳池場域管理與動作資料"/);
@@ -552,6 +610,8 @@ test("adds a sport-oriented budget table for public clues", async () => {
   assert.match(page, /toggleSportSort/);
   assert.match(page, /aria-sort/);
   assert.match(page, /data-sport-toggle=\{row\.sport\}/);
+  assert.match(page, /className="sport-name-icon"/);
+  assert.match(page, /LucideIcon name=\{row\.icon\}/);
   assert.match(page, /data-sport-detail=\{row\.sport\}/);
   assert.match(page, /hidden=\{!expandedSports\.includes\(row\.sport\)\}/);
   assert.match(page, /row\.flowRefs\.map/);
@@ -573,13 +633,19 @@ test("adds a sport-oriented budget table for public clues", async () => {
   assert.match(css, /\.sort-button\s*\{/);
   assert.match(css, /\.sort-arrow\s*\{/);
   assert.match(css, /\.sport-toggle\s*\{/);
+  assert.match(css, /\.sport-name\s*\{[\s\S]*display: inline-flex/);
+  assert.match(css, /\.sport-name-icon\s*\{[\s\S]*height: 30px/);
+  assert.match(css, /\.sport-name-icon svg\s*\{[\s\S]*height: 16px/);
   assert.match(css, /\.linked-clues li::before\s*\{/);
   assert.match(css, /\.linked-clues li::before\s*\{[\s\S]*background: var\(--teal\)/);
   assert.match(css, /\.sport-detail-row\[hidden\]\s*\{/);
   assert.match(css, /\.sport-detail-grid\s*\{/);
   assert.match(css, /\.status-pill\s*\{/);
+  assert.match(css, /\.status-pill\s*\{[\s\S]*border-radius: 14px/);
   assert.match(css, /\.table-source-links\s*\{/);
   assert.match(css, /@media \(max-width: 700px\)\s*\{[\s\S]*\.sport-budget-table\s*\{[\s\S]*min-width: 920px/);
+  assert.match(css, /@media \(max-width: 700px\)\s*\{[\s\S]*\.sport-budget-table th:nth-child\(4\),[\s\S]*\.sport-budget-table td:nth-child\(4\)\s*\{[\s\S]*min-width: 132px/);
+  assert.match(css, /@media \(max-width: 700px\)\s*\{[\s\S]*\.status-pill\s*\{[\s\S]*border-radius: 12px[\s\S]*max-width: 9\.5em/);
 
   assert.match(staticVerifier, /id="sports"/);
   assert.match(staticVerifier, /sport-budget-table/);

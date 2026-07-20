@@ -40,6 +40,7 @@ html = html
   .replaceAll("(/assets/", "(assets/")
   .replaceAll('="/favicon.ico"', '="assets/favicon.ico"')
   .replaceAll('="/favicon.svg"', '="assets/favicon.svg"')
+  .replaceAll('="/sporttech-menu-icon.png"', '="assets/sporttech-menu-icon.png"')
   .replaceAll('="/sporttech-budget-hero.jpg"', '="assets/sporttech-budget-hero.jpg"')
   .replaceAll('="/sporttech-budget-hero-small.jpg"', '="assets/sporttech-budget-hero-small.jpg"');
 
@@ -440,10 +441,12 @@ const staticFallbackScript = `<script>
 
   function closeDrawers() {
     document.querySelectorAll(".static-drawer-layer").forEach((node) => node.remove());
+    allLanes().forEach((lane) => lane.classList.remove("active"));
   }
 
   function lucideIcon(name) {
     const icons = {
+      "arrow-up-right": '<path d="M7 7h10v10"></path><path d="M7 17 17 7"></path>',
       "badge-check": '<path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.77 4 4 0 0 1 0 6.76 4 4 0 0 1-4.78 4.77 4 4 0 0 1-6.74 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"></path><path d="m9 12 2 2 4-4"></path>',
       "building-2": '<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"></path><path d="M6 12H4a2 2 0 0 0-2 2v8h20v-8a2 2 0 0 0-2-2h-2"></path><path d="M10 6h4"></path><path d="M10 10h4"></path><path d="M10 14h4"></path>',
       "calendar-days": '<path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path><path d="M8 14h.01"></path><path d="M12 14h.01"></path><path d="M16 14h.01"></path><path d="M8 18h.01"></path><path d="M12 18h.01"></path><path d="M16 18h.01"></path>',
@@ -611,8 +614,8 @@ const staticFallbackScript = `<script>
       lane.addEventListener("click", () => {
         const flow = flowData.flows.find((item) => item.id === lane.dataset.flowId);
         if (!flow) return;
-        allLanes().forEach((item) => item.classList.toggle("active", item === lane));
         openFlowDrawer(flow);
+        allLanes().forEach((item) => item.classList.toggle("active", item === lane));
       });
     });
     document.addEventListener("keydown", (event) => {
@@ -648,6 +651,7 @@ await Promise.all([
   copyFile(resolve(repoRoot, "public/favicon.ico"), resolve(assetsRoot, "favicon.ico")),
   copyFile(resolve(repoRoot, "public/favicon.svg"), resolve(assetsRoot, "favicon.svg")),
   copyFile(resolve(repoRoot, "public/og-image.png"), resolve(assetsRoot, "og-image.png")),
+  copyFile(resolve(repoRoot, "public/sporttech-menu-icon.png"), resolve(assetsRoot, "sporttech-menu-icon.png")),
   copyFile(resolve(repoRoot, "public/sporttech-budget-hero.jpg"), resolve(assetsRoot, "sporttech-budget-hero.jpg")),
   copyFile(resolve(repoRoot, "public/sporttech-budget-hero-small.jpg"), resolve(assetsRoot, "sporttech-budget-hero-small.jpg")),
 ]);

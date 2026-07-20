@@ -16,6 +16,27 @@ import {
 } from "./budget-data";
 
 const lucidePaths: Record<string, ReactNode> = {
+  activity: (
+    <>
+      <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+    </>
+  ),
+  "arrow-up-right": (
+    <>
+      <path d="M7 7h10v10" />
+      <path d="M7 17 17 7" />
+    </>
+  ),
+  bike: (
+    <>
+      <circle cx="18.5" cy="17.5" r="3.5" />
+      <circle cx="5.5" cy="17.5" r="3.5" />
+      <path d="M15 6h3" />
+      <path d="M6 17.5 9 11h4l2 6.5" />
+      <path d="m9 11 3 6.5" />
+      <path d="m13 11 2-5" />
+    </>
+  ),
   "badge-check": (
     <>
       <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.77 4 4 0 0 1 0 6.76 4 4 0 0 1-4.78 4.77 4 4 0 0 1-6.74 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
@@ -107,6 +128,19 @@ const lucidePaths: Record<string, ReactNode> = {
       <path d="M10 9H8" />
     </>
   ),
+  "circle-dot": (
+    <>
+      <circle cx="12" cy="12" r="10" />
+      <circle cx="12" cy="12" r="2" />
+    </>
+  ),
+  feather: (
+    <>
+      <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5Z" />
+      <line x1="16" x2="2" y1="8" y2="22" />
+      <line x1="17.5" x2="9" y1="15" y2="15" />
+    </>
+  ),
   handshake: (
     <>
       <path d="m11 17 2 2a2.8 2.8 0 0 0 4 0l4-4" />
@@ -163,6 +197,13 @@ const lucidePaths: Record<string, ReactNode> = {
       <circle cx="9" cy="7" r="4" />
       <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
       <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </>
+  ),
+  waves: (
+    <>
+      <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5S12 7 14.5 7 17 5 19.5 5c1.3 0 1.9.5 2.5 1" />
+      <path d="M2 12c.6.5 1.2 1 2.5 1C7 13 7 11 9.5 11s2.5 2 5 2 2.5-2 5-2c1.3 0 1.9.5 2.5 1" />
+      <path d="M2 18c.6.5 1.2 1 2.5 1C7 19 7 17 9.5 17s2.5 2 5 2 2.5-2 5-2c1.3 0 1.9.5 2.5 1" />
     </>
   ),
   wrench: (
@@ -359,6 +400,10 @@ export default function Home() {
           role="status"
         >
           <div className="preloader-card">
+            <span className="preloader-icon" aria-hidden="true">
+              {/* eslint-disable-next-line @next/next/no-img-element -- Static export needs a plain image path. */}
+              <img src="/sporttech-menu-icon.png" alt="" width={512} height={512} />
+            </span>
             <span className="preloader-kicker">budget query assistant</span>
             <h2>整理預算線索</h2>
             <div className="preloader-bar" aria-hidden="true">
@@ -372,17 +417,21 @@ export default function Home() {
       )}
 
       <main className={isPreloading ? "site-shell loading-shell" : "site-shell"} id="top">
-      <header className="site-header" aria-label="頁面導覽">
-        <a className="site-logo" href="#top" aria-label="回到頁首">
-          運動X科技預算小幫手
-        </a>
-        <nav aria-label="主要區塊">
-          <a href="#overview">總覽說明</a>
-          <a href="#query">查詢預算</a>
-          <a href="#sports">運動項目表</a>
-          <a href="#sources">資料來源</a>
-        </nav>
-      </header>
+        <header className="site-header" aria-label="頁面導覽">
+          <a className="site-logo" href="#top" aria-label="回到頁首">
+            <span className="site-logo-mark" aria-hidden="true">
+              {/* eslint-disable-next-line @next/next/no-img-element -- Static export needs a plain image path. */}
+              <img src="/sporttech-menu-icon.png" alt="" width={512} height={512} />
+            </span>
+            <span>運動X科技預算小幫手</span>
+          </a>
+          <nav aria-label="主要區塊">
+            <a href="#overview">總覽說明</a>
+            <a href="#query">查詢預算</a>
+            <a href="#sports">運動項目表</a>
+            <a href="#sources">資料來源</a>
+          </nav>
+        </header>
       <section className="masthead">
         <figure className="hero-visual">
           <picture>
@@ -432,13 +481,16 @@ export default function Home() {
               }}
               type="button"
             >
-              <span>{metric.label}</span>
+              <span className="metric-label">{metric.label}</span>
               <div className="metric-value-row">
                 <strong className={/\d/.test(metric.value) ? "metric-value numeric" : "metric-value"}>
                   {metric.value}
                 </strong>
               </div>
               <small>{metric.note}</small>
+              <span className="card-arrow" aria-hidden="true">
+                <LucideIcon name="arrow-up-right" />
+              </span>
             </button>
           ))}
         </div>
@@ -453,20 +505,35 @@ export default function Home() {
         </div>
 
         <div className="query-flow" aria-label="建議查詢流程">
-          <div>
-            <span>1</span>
-            <strong>先選預算身分</strong>
-            <p>從中央、科研、地方、產業或協會應用端縮小範圍。</p>
+          <div className="query-step">
+            <span className="query-step-index">1</span>
+            <span className="query-step-copy">
+              <strong>先選預算身分</strong>
+              <p>從中央、科研、地方、產業或協會應用端縮小範圍。</p>
+            </span>
+            <b className="query-illustration" aria-hidden="true">
+              <LucideIcon name="building-2" />
+            </b>
           </div>
-          <div>
-            <span>2</span>
-            <strong>再看執行程度</strong>
-            <p>區分提案、執行中、已有成果與仍待公開對帳的項目。</p>
+          <div className="query-step">
+            <span className="query-step-index">2</span>
+            <span className="query-step-copy">
+              <strong>再看執行程度</strong>
+              <p>區分提案、執行中、已有成果與仍待公開對帳的項目。</p>
+            </span>
+            <b className="query-illustration" aria-hidden="true">
+              <LucideIcon name="badge-check" />
+            </b>
           </div>
-          <div>
-            <span>3</span>
-            <strong>最後打開詳情</strong>
-            <p>核對來源連結、公開資訊進度與下一步查核問題。</p>
+          <div className="query-step">
+            <span className="query-step-index">3</span>
+            <span className="query-step-copy">
+              <strong>最後打開詳情</strong>
+              <p>核對來源連結、公開資訊進度與下一步查核問題。</p>
+            </span>
+            <b className="query-illustration" aria-hidden="true">
+              <LucideIcon name="file-search" />
+            </b>
           </div>
         </div>
 
@@ -629,7 +696,7 @@ export default function Home() {
             <div className={`lane-map ${itemView === "card" ? "card-view" : "list-view"}`} aria-label="預算項目清單">
               {filtered.map((flow) => (
                 <button
-                  className={active?.id === flow.id ? "lane active" : "lane"}
+                  className={drawerOpen && active?.id === flow.id ? "lane active" : "lane"}
                   data-flow-id={flow.id}
                   data-flow-layer={flow.layer}
                   data-flow-locations={flow.locations.join("|")}
@@ -648,6 +715,9 @@ export default function Home() {
                     <small>{layerNames[flow.layer]} / {stages[flow.stage]}</small>
                   </span>
                   <span className="amount">{flow.amount}</span>
+                  <span className="card-arrow" aria-hidden="true">
+                    <LucideIcon name="arrow-up-right" />
+                  </span>
                 </button>
               ))}
               {filtered.length === 0 && (
@@ -943,7 +1013,12 @@ export default function Home() {
                           {expandedSports.includes(row.sport) ? "−" : "+"}
                         </span>
                         <span>
-                          <span className="sport-name">{row.sport}</span>
+                          <span className="sport-name">
+                            <span className="sport-name-icon" aria-hidden="true">
+                              <LucideIcon name={row.icon} />
+                            </span>
+                            <span>{row.sport}</span>
+                          </span>
                           <small>{row.theme}</small>
                         </span>
                       </button>
