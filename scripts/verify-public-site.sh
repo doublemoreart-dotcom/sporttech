@@ -56,6 +56,8 @@ require_html_markers() {
 
   require_marker "${file}" "G-K8SEFVT51N" "Google Analytics id"
   require_marker "${file}" "googletagmanager.com/gtag/js?id=G-K8SEFVT51N" "Google tag script"
+  require_marker "${file}" "<title>運動X科技預算小幫手</title>" "current browser title"
+  require_marker "${file}" "sporttech-menu-icon.png" "menu/preload icon asset"
   require_marker "${file}" "運動項目預算表" "sport budget table title"
   require_marker "${file}" "data-sport-sort" "sport table sorting hook"
   require_marker "${file}" "href=\"#sports\"" "sports anchor"

@@ -93,7 +93,9 @@ test("documents the local and git version boundary", async () => {
     updateFlow,
     syncMainSite,
     verifyPublicSite,
+    diagnosePublicSite,
     generateShareAssets,
+    packageJson,
   ] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/budget-data.ts", import.meta.url), "utf8"),
@@ -104,7 +106,9 @@ test("documents the local and git version boundary", async () => {
     readFile(new URL("../scripts/update-flow.sh", import.meta.url), "utf8"),
     readFile(new URL("../scripts/sync-main-site.sh", import.meta.url), "utf8"),
     readFile(new URL("../scripts/verify-public-site.sh", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/diagnose-public-site.sh", import.meta.url), "utf8"),
     readFile(new URL("../scripts/generate-share-assets.mjs", import.meta.url), "utf8"),
+    readFile(new URL("../package.json", import.meta.url), "utf8"),
   ]);
 
   assert.match(page, /版號/);
@@ -271,15 +275,27 @@ test("documents the local and git version boundary", async () => {
   assert.match(generateShareAssets, /sharp/);
   assert.match(readme, /## 網站架構/);
   assert.match(readme, /npm run verify:public/);
+  assert.match(readme, /npm run status:public/);
+  assert.match(readme, /source 已是新版但 main-site raw 還舊/);
   assert.match(readme, /不要只看 HTTP 200/);
   assert.match(readme, /raw\/main 也回到舊版/);
+  assert.match(packageJson, /"status:public": "bash scripts\/diagnose-public-site\.sh"/);
   assert.match(verifyPublicSite, /doublemoreart-dotcom\/dinopeng-com/);
   assert.match(verifyPublicSite, /G-K8SEFVT51N/);
+  assert.match(verifyPublicSite, /<title>運動X科技預算小幫手<\/title>/);
+  assert.match(verifyPublicSite, /sporttech-menu-icon\.png/);
   assert.match(verifyPublicSite, /運動項目預算表/);
   assert.match(verifyPublicSite, /data-sport-sort/);
   assert.match(verifyPublicSite, /assets\/favicon\.ico/);
   assert.match(verifyPublicSite, /assets\/og-image\.png/);
   assert.match(verifyPublicSite, /Live HTML size differs from remote raw HTML/);
+  assert.match(diagnosePublicSite, /SportTech public deployment status/);
+  assert.match(diagnosePublicSite, /doublemoreart-dotcom\/sporttech/);
+  assert.match(diagnosePublicSite, /doublemoreart-dotcom\/dinopeng-com/);
+  assert.match(diagnosePublicSite, /Local generated static output/);
+  assert.match(diagnosePublicSite, /Main-site raw \/sporttech\/index\.html/);
+  assert.match(diagnosePublicSite, /Live public URL/);
+  assert.match(diagnosePublicSite, /source repo is current, but main-site repo has not been synced/);
   assert.match(readme, /## 本機版/);
   assert.match(readme, /## Git 版控版/);
   assert.match(readme, /## 交付版/);
@@ -341,13 +357,18 @@ test("documents the local and git version boundary", async () => {
   assert.match(updateFlow, /Publish remains manual/);
   assert.match(updateFlow, /If the user says '推 Git' for source only/);
   assert.match(updateFlow, /this does not update https:\/\/dinopeng\.com\/sporttech\//);
+  assert.match(updateFlow, /then run npm run status:public/);
   assert.match(updateFlow, /If the user says to update https:\/\/dinopeng\.com\/sporttech\//);
   assert.match(updateFlow, /fast-forward the main-site repo/);
+  assert.match(updateFlow, /run npm run status:public to locate any source\/main-site\/live mismatch/);
   assert.match(updateFlow, /run npm run verify:public to compare remote main, raw HTML, and live HTML markers/);
   assert.match(updateFlow, /After updating https:\/\/dinopeng\.com\/sporttech\/ from the main-site repo, run/);
   assert.doesNotMatch(updateFlow, /git push|git commit|gh auth login|force push/);
   assert.match(syncMainSite, /MAIN_SITE_ROOT/);
   assert.match(syncMainSite, /doublemoreart-dotcom\/dinopeng-com/);
+  assert.match(syncMainSite, /<title>運動X科技預算小幫手<\/title>/);
+  assert.match(syncMainSite, /sporttech-menu-icon\.png/);
+  assert.match(syncMainSite, /href="#sports"/);
   assert.match(syncMainSite, /npm run sync:main-site:dry-run/);
   assert.match(syncMainSite, /rsync "\$\{rsync_args\[@\]\}"/);
   assert.match(syncMainSite, /This command never commits or pushes/);

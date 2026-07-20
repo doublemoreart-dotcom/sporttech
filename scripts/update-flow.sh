@@ -31,6 +31,7 @@ Steps:
   6. Print git status, diff summary, and local review targets.
 
 After updating https://dinopeng.com/sporttech/ from the main-site repo, run:
+  npm run status:public
   npm run verify:public
 HELP
       exit 0
@@ -98,10 +99,12 @@ echo
 echo "If the user says '推 Git' for source only:"
 echo "  commit and push this repo: doublemoreart-dotcom/sporttech"
 echo "  note: this does not update https://dinopeng.com/sporttech/"
+echo "  then run npm run status:public to confirm whether main-site still needs sync"
 echo
 echo "If the user says to update https://dinopeng.com/sporttech/:"
 echo "  1. fast-forward the main-site repo: doublemoreart-dotcom/dinopeng-com"
 echo "  2. npm run sync:main-site"
 echo "  3. review the main-site repo diff under /sporttech/"
 echo "  4. commit and push the main-site repo"
-echo "  5. run npm run verify:public to compare remote main, raw HTML, and live HTML markers"
+echo "  5. run npm run status:public to locate any source/main-site/live mismatch"
+echo "  6. run npm run verify:public to compare remote main, raw HTML, and live HTML markers"

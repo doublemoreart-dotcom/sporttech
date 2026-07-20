@@ -60,16 +60,27 @@ require_dir "${source_root}"
 require_dir "${source_root}/assets"
 require_file "${source_root}/index.html"
 require_file "${source_root}/assets/favicon.svg"
+require_file "${source_root}/assets/sporttech-menu-icon.png"
 
 if ! grep -q 'assets/[^"]*\.css' "${source_root}/index.html"; then
   echo "Static source does not reference a built CSS asset." >&2
   exit 1
 fi
 
-if ! grep -q '運動X科技預算小幫手' "${source_root}/index.html"; then
-  echo "Static source does not look like the current SportTech page." >&2
-  exit 1
-fi
+require_marker() {
+  local marker="$1"
+  local label="$2"
+
+  if ! grep -qF "${marker}" "${source_root}/index.html"; then
+    echo "Static source missing ${label}: ${marker}" >&2
+    exit 1
+  fi
+}
+
+require_marker '<title>運動X科技預算小幫手</title>' "current browser title"
+require_marker 'sporttech-menu-icon.png' "menu/preload icon"
+require_marker 'href="#sports"' "sport section nav anchor"
+require_marker '運動項目預算表' "sport budget section"
 
 require_dir "${main_site_root}/.git"
 main_remote="$(git -C "${main_site_root}" remote get-url origin)"
@@ -106,7 +117,9 @@ echo
 
 if [[ "${dry_run}" == false ]]; then
   require_file "${target_root}/index.html"
-  grep -q '運動X科技預算小幫手' "${target_root}/index.html"
+  grep -qF '<title>運動X科技預算小幫手</title>' "${target_root}/index.html"
+  grep -qF 'sporttech-menu-icon.png' "${target_root}/index.html"
+  grep -qF 'href="#sports"' "${target_root}/index.html"
 fi
 
 echo "Main-site repo status:"

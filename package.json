@@ -18,6 +18,7 @@
     "sync:main-site:dry-run": "bash scripts/sync-main-site.sh --dry-run",
     "verify:static": "node scripts/verify-static-output.mjs",
     "verify:public": "bash scripts/verify-public-site.sh",
+    "status:public": "bash scripts/diagnose-public-site.sh",
     "deploy:pages": "bash scripts/deploy-gh-pages.sh",
     "update:local": "bash scripts/update-flow.sh",
     "update:deploy": "bash scripts/update-flow.sh --deploy"

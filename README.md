@@ -193,7 +193,10 @@ git log --oneline -5
 git add <changed files>
 git commit -m "<message>"
 git push origin main
+npm run status:public
 ```
+
+`status:public` 會把三層狀態攤開：`doublemoreart-dotcom/sporttech` source、`doublemoreart-dotcom/dinopeng-com` 的 raw `/sporttech/index.html`、以及 `https://dinopeng.com/sporttech/` live HTML。若 source 已是新版但 main-site raw 還舊，代表還沒有同步主站 repo。
 
 若是更新正式網址，必須先同步主站 repo，再推送 `/sporttech/` 目錄：
 
@@ -214,6 +217,7 @@ git push origin main
 推版前先確認遠端是否有新 commit；不要 force push。正式站推完後不要只看 HTTP 200，還要確認 GitHub 遠端 main、固定 commit raw HTML 與正式網址 HTML 都含有新版標記：
 
 ```bash
+npm run status:public
 npm run verify:public
 ```
 
@@ -226,7 +230,7 @@ npm run verify:public -- --ref=<main-site-commit>
 `verify:public` 會檢查：
 
 - `doublemoreart-dotcom/dinopeng-com` 的遠端 `main` commit。
-- 該 commit 的 `sporttech/index.html` 是否包含 GA、運動項目預算表、排序 hook、favicon 與社群縮圖。
+- 該 commit 的 `sporttech/index.html` 是否包含新版 title、menu icon、GA、運動項目預算表、排序 hook、favicon 與社群縮圖。
 - `https://dinopeng.com/sporttech/` 是否也送出同樣的新版標記。
 - raw HTML 與 live HTML 檔案大小是否一致。
 
